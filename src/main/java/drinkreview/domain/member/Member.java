@@ -1,6 +1,6 @@
 package drinkreview.domain.member;
 
-import drinkreview.domain.BaseEntity;
+import drinkreview.domain.TimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends TimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue
