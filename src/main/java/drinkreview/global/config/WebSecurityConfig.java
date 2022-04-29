@@ -1,5 +1,6 @@
 package drinkreview.global.config;
 
+import drinkreview.domain.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +16,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MemberServiceImpl memberServiceImpl;
+    private final MemberService memberService;
 
     @Override
     public void configure(WebSecurity webSecurity) {
@@ -41,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .formLogin()
-                .loginPage("/")
+                .loginPage("/login")
 
                 .and()
 
@@ -53,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(memberServiceImpl)
+                .userDetailsService(memberService)
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
 }
