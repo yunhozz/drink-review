@@ -7,10 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -28,17 +25,31 @@ public class Drink extends TimeEntity {
     private String country;
     private LocalDate productionDate;
     private int price;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private Byte[] image;
+
     private double gpa;
     private int stockQuantity;
 
     @Builder
-    private Drink(String name, String country, LocalDate productionDate, int price, double gpa, int stockQuantity) {
+    private Drink(String name, String country, LocalDate productionDate, int price, Byte[] image, double gpa, int stockQuantity) {
         this.name = name;
         this.country = country;
         this.productionDate = productionDate;
         this.price = price;
+        this.image = image;
         this.gpa = gpa;
         this.stockQuantity = stockQuantity;
+    }
+
+    public void updateImage(Byte[] image) {
+        if (this.image != null) {
+            throw new IllegalStateException("This entity's image field is not null.");
+        }
+
+        this.image = image;
     }
 
     public void addQuantity(int stockQuantity) {
