@@ -43,7 +43,7 @@ public class Order extends TimeEntity {
         this.status = status;
     }
 
-    public static Order createOrder(Delivery delivery, OrderDrink... orderDrinks) {
+    public static Order createOrder(Delivery delivery, List<OrderDrink> orderDrinks) {
         Order order = new Order(LocalDateTime.now(), OrderStatus.ORDER);
         order.setDelivery(delivery);
 
