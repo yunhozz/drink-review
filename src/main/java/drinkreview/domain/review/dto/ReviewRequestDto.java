@@ -3,10 +3,11 @@ package drinkreview.domain.review.dto;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.review.Review;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class ReviewRequestDto {
 
@@ -16,6 +17,16 @@ public class ReviewRequestDto {
     private String content;
     private String writer;
     private double score;
+
+    @Builder
+    private ReviewRequestDto(Member member, Drink drink, String title, String content, String writer, double score) {
+        this.member = member;
+        this.drink = drink;
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.score = score;
+    }
 
     public Review toEntity() {
         return Review.builder()

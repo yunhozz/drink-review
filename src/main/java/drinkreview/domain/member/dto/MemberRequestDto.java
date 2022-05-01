@@ -1,11 +1,12 @@
 package drinkreview.domain.member.dto;
 
 import drinkreview.domain.member.Member;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class MemberRequestDto {
 
@@ -14,6 +15,15 @@ public class MemberRequestDto {
     private String name;
     private int age;
     private String auth;
+
+    @Builder
+    private MemberRequestDto(String memberId, String memberPw, String name, int age, String auth) {
+        this.memberId = memberId;
+        this.memberPw = memberPw;
+        this.name = name;
+        this.age = age;
+        this.auth = auth;
+    }
 
     public Member toEntity() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
