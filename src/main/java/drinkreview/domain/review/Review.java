@@ -55,7 +55,7 @@ public class Review extends TimeEntity {
         this.view = view;
     }
 
-    public void update(String title, String content, double score) {
+    public void updateField(String title, String content, double score) {
         this.title = title;
         this.content = content;
         this.score = score;

@@ -24,7 +24,7 @@ public class Comment extends TimeEntity {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "review_id")
     private Review review;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -40,6 +40,10 @@ public class Comment extends TimeEntity {
         comment.setReview(review);
 
         return comment;
+    }
+
+    public void updateComments(String comments) {
+        this.comments = comments;
     }
 
     /**

@@ -55,7 +55,7 @@ public class Order extends TimeEntity {
     }
 
     //주문 수량 변경
-    public void update(OrderDrink orderDrink, int count) {
+    public void updateCountOfDrink(OrderDrink orderDrink, int count) {
         if (orderDrinks.stream().anyMatch(o -> o.getId().equals(orderDrink.getId()))) {
             if (orderDrink.getCount() == count) {
                 throw new NotAllowedUpdateOrderException("Order count is same.");
@@ -69,7 +69,7 @@ public class Order extends TimeEntity {
     }
 
     //주문 취소
-    public void cancel() {
+    public void cancelOrder() {
         if (status == OrderStatus.CANCEL || delivery.getStatus() == DeliveryStatus.COMPLETE) {
             throw new NotAllowedCancelOrderException("This order can't be canceled.");
         }
