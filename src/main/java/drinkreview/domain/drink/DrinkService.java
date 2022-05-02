@@ -22,9 +22,8 @@ public class DrinkService {
         return drink.getId();
     }
 
-    public void saveImageFile(Long drinkId, MultipartFile file) {
-        Drink drink = drinkRepository.findById(drinkId)
-                .orElseThrow(() -> new IllegalStateException("Drink is null."));
+    public void uploadImageFile(Long drinkId, MultipartFile file) {
+        Drink drink = this.findDrink(drinkId);
 
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
@@ -35,7 +34,6 @@ public class DrinkService {
             }
 
             drink.updateImage(byteObjects);
-            drinkRepository.save(drink);
 
         } catch (Exception e) {
             e.printStackTrace();
