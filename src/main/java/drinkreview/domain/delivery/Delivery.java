@@ -4,6 +4,7 @@ import drinkreview.domain.Address;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.order.Order;
 import drinkreview.global.enums.DeliveryStatus;
+import drinkreview.global.exception.NotShippingException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,15 +27,29 @@ public class Delivery extends TimeEntity {
     private Address address;
 
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus status; //PREPARING, COMPLETE, CANCELED
+    private DeliveryStatus status; //PREPARING, DELIVERING, COMPLETE, CANCELED
 
     public Delivery(Address address, DeliveryStatus status) {
         this.address = address;
         this.status = status;
     }
 
+    public void shipping() {
+        if (status == DeliveryStatus.PREPARING) {
+            status = DeliveryStatus.DELIVERING;
+
+        } else {
+            throw new NotShippingException("This delivery of order is already start.");
+        }
+    }
+
     public void cancel() {
-        status = DeliveryStatus.CANCELED;
+        if (status == DeliveryStatus.PREPARING) {
+            status = DeliveryStatus.CANCELED;
+
+        } else {
+            throw new NotShippingException("Can't cancel this delivery.");
+        }
     }
 
     /**
