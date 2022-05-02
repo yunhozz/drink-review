@@ -3,7 +3,6 @@ package drinkreview.domain.order;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.orderDrink.OrderDrink;
-import drinkreview.global.enums.DeliveryStatus;
 import drinkreview.global.enums.OrderStatus;
 import drinkreview.global.exception.NotAllowedCancelOrderException;
 import drinkreview.global.exception.NotAllowedUpdateOrderException;
@@ -70,7 +69,7 @@ public class Order extends TimeEntity {
 
     //주문 취소
     public void cancel() {
-        if (status == OrderStatus.CANCEL || delivery.getStatus() == DeliveryStatus.COMPLETE) {
+        if (status == OrderStatus.CANCEL) {
             throw new NotAllowedCancelOrderException("This order can't be canceled.");
         }
 
