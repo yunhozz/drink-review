@@ -33,7 +33,7 @@ public class Delivery extends TimeEntity {
         this.status = status;
     }
 
-    public void cancelDelivery() {
+    public void cancel() {
         status = DeliveryStatus.CANCELED;
     }
 

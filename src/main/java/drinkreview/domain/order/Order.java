@@ -69,7 +69,7 @@ public class Order extends TimeEntity {
     }
 
     //주문 취소
-    public void cancelOrder() {
+    public void cancel() {
         if (status == OrderStatus.CANCEL || delivery.getStatus() == DeliveryStatus.COMPLETE) {
             throw new NotAllowedCancelOrderException("This order can't be canceled.");
         }
@@ -78,7 +78,7 @@ public class Order extends TimeEntity {
             orderDrink.cancelOrder();
         }
 
-        delivery.cancelDelivery();
+        delivery.cancel();
         status = OrderStatus.CANCEL;
     }
 
