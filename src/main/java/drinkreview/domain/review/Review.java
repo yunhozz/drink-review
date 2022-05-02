@@ -20,7 +20,6 @@ public class Review extends TimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "post_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,5 +58,9 @@ public class Review extends TimeEntity {
         this.title = title;
         this.content = content;
         this.score = score;
+    }
+
+    public void takeView() {
+        view++;
     }
 }
