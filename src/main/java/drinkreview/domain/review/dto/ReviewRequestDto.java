@@ -15,16 +15,14 @@ public class ReviewRequestDto {
     private Drink drink;
     private String title;
     private String content;
-    private String writer;
     private double score;
 
     @Builder
-    private ReviewRequestDto(Member member, Drink drink, String title, String content, String writer, double score) {
+    private ReviewRequestDto(Member member, Drink drink, String title, String content, double score) {
         this.member = member;
         this.drink = drink;
         this.title = title;
         this.content = content;
-        this.writer = writer;
         this.score = score;
     }
 
@@ -34,7 +32,7 @@ public class ReviewRequestDto {
                 .drink(drink)
                 .title(title)
                 .content(content)
-                .writer(writer)
+                .writer(member.getName())
                 .score(score)
                 .view(0)
                 .build();
