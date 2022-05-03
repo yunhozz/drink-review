@@ -3,7 +3,6 @@ package drinkreview.domain.member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -27,21 +26,29 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
+    //로그인
+    @Transactional(readOnly = true)
+    public Member login(String memberId, String memberPw) {
+        Member member = this.loadUserByUsername(memberId);
+        return member.getMemberPw().equals(memberPw) ? member : null;
+    }
+
     //회원 탈퇴
-    public void withdraw(Long memberId) {
-        Member member = this.findMember(memberId);
+    public void withdraw(Long id) {
+        Member member = this.findMember(id);
         memberRepository.delete(member);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+    @Transactional(readOnly = true)
+    public Member loadUserByUsername(String memberId) throws UsernameNotFoundException {
         return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Member is null."));
+                .orElseThrow(() -> new UsernameNotFoundException(memberId));
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(Long memberId) {
-        return memberRepository.findById(memberId)
+    public Member findMember(Long id) {
+        return memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
     }
 
