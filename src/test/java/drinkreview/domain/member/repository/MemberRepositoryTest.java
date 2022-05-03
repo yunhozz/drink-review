@@ -1,7 +1,7 @@
 package drinkreview.domain.member.repository;
 
 import drinkreview.domain.member.Member;
-import drinkreview.domain.member.MemberSearchCondition;
+import drinkreview.domain.member.dto.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +112,87 @@ class MemberRepositoryTest {
         assertThat(result.size()).isEqualTo(2);
         assertThat(result).contains(member1, member2);
         assertThat(result).doesNotContain(member3);
+    }
+
+    @Test
+    void findPage() throws Exception {
+        //given
+        Member member1 = createMember("qkrdbsgh1", "111", "yunho1", 27, "ADMIN");
+        Member member2 = createMember("qkrdbsgh2", "222", "yunho2", 27, "USER");
+        Member member3 = createMember("qkrdbsgh3", "333", "yunho3", 27, "USER");
+        Member member4 = createMember("qkrdbsgh4", "444", "yunho4", 30, "ADMIN");
+        Member member5 = createMember("qkrdbsgh5", "555", "yunho5", 30, "USER");
+
+        PageRequest pageRequest = PageRequest.of(1, 3);
+
+        //when
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        memberRepository.save(member5);
+
+        Page<Member> result = memberRepository.findPage(pageRequest);
+
+        //then
+        assertThat(result.getContent().size()).isEqualTo(2);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.getContent()).extracting("name")
+                .containsExactly("yunho4", "yunho5");
+    }
+
+    @Test
+    void findPageByAge() throws Exception {
+        //given
+        Member member1 = createMember("qkrdbsgh1", "111", "yunho1", 27, "ADMIN");
+        Member member2 = createMember("qkrdbsgh2", "222", "yunho2", 30, "USER");
+        Member member3 = createMember("qkrdbsgh3", "333", "yunho3", 27, "USER");
+        Member member4 = createMember("qkrdbsgh4", "444", "yunho4", 30, "ADMIN");
+        Member member5 = createMember("qkrdbsgh5", "555", "yunho5", 27, "USER");
+
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        //when
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        memberRepository.save(member5);
+
+        Page<Member> result = memberRepository.findPageByAge(27, pageRequest);
+
+        //then
+        assertThat(result.getContent().size()).isEqualTo(3);
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getContent()).extracting("name")
+                .containsExactly("yunho1", "yunho3", "yunho5");
+    }
+
+    @Test
+    void findPageByAuth() throws Exception {
+        //given
+        Member member1 = createMember("qkrdbsgh1", "111", "yunho1", 27, "ADMIN");
+        Member member2 = createMember("qkrdbsgh2", "222", "yunho2", 27, "USER");
+        Member member3 = createMember("qkrdbsgh3", "333", "yunho3", 27, "USER");
+        Member member4 = createMember("qkrdbsgh4", "444", "yunho4", 30, "ADMIN");
+        Member member5 = createMember("qkrdbsgh5", "555", "yunho5", 30, "USER");
+
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        //when
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        memberRepository.save(member5);
+
+        Page<Member> result = memberRepository.findPageByAuth("USER", pageRequest);
+
+        //then
+        assertThat(result.getContent().size()).isEqualTo(3);
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getContent()).extracting("name")
+                .containsExactly("yunho2", "yunho3", "yunho5");
     }
 
     @Test
