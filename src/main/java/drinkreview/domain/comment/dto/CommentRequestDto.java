@@ -4,10 +4,10 @@ import drinkreview.domain.comment.Comment;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.review.Review;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class CommentRequestDto {
 

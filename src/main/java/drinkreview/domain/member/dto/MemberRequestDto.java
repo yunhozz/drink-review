@@ -1,29 +1,21 @@
 package drinkreview.domain.member.dto;
 
 import drinkreview.domain.member.Member;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Getter
+import javax.validation.constraints.NotEmpty;
+
+@Data
 @NoArgsConstructor
 public class MemberRequestDto {
 
-    private String memberId;
-    private String memberPw;
-    private String name;
-    private int age;
-    private String auth;
-
-    @Builder
-    private MemberRequestDto(String memberId, String memberPw, String name, int age, String auth) {
-        this.memberId = memberId;
-        this.memberPw = memberPw;
-        this.name = name;
-        this.age = age;
-        this.auth = auth;
-    }
+    @NotEmpty private String memberId;
+    @NotEmpty private String memberPw;
+    @NotEmpty private String name;
+    @NotEmpty private int age;
+    @NotEmpty private String auth;
 
     public Member toEntity() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
