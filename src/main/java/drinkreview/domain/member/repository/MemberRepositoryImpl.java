@@ -2,25 +2,34 @@ package drinkreview.domain.member.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import drinkreview.domain.member.MemberSearchCondition;
+import drinkreview.domain.member.dto.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
 import drinkreview.domain.member.dto.QMemberQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static drinkreview.domain.member.QMember.member;
 
-@Repository
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Boolean exist(Long id) {
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(member)
+                .where(member.id.eq(id))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
 
     @Override
     public List<MemberQueryDto> searchByCondition(MemberSearchCondition condition) {
