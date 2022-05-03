@@ -17,7 +17,7 @@ import static drinkreview.domain.review.QReview.review;
 @RequiredArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Boolean exist(Long id) {
@@ -39,8 +39,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.id, drink.name
                 ))
                 .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.drink, drink).fetchJoin()
+                .join(review.member, member)
+                .join(review.drink, drink)
                 .orderBy(review.lastModifiedDate.desc())
                 .fetch();
     }
@@ -54,8 +54,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.drink, drink).fetchJoin()
+                .join(review.member, member)
+                .join(review.drink, drink)
                 .orderBy(review.score.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -73,8 +73,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.drink, drink).fetchJoin()
+                .join(review.member, member)
+                .join(review.drink, drink)
                 .orderBy(review.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
