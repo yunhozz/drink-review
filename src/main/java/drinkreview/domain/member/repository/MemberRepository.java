@@ -1,6 +1,8 @@
 package drinkreview.domain.member.repository;
 
 import drinkreview.domain.member.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,11 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     @Query("select m from Member m where m.name in :names")
     List<Member> findWithNames(@Param("names") Collection<String> names);
+
+    @Query("select m from Member m")
+    Page<Member> findPage(Pageable pageable);
+
+    Page<Member> findPageByAge(int age, Pageable pageable);
+
+    Page<Member> findPageByAuth(String auth, Pageable pageable);
 }
