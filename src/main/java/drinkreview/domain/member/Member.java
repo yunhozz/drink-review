@@ -36,6 +36,12 @@ public class Member extends TimeEntity implements UserDetails {
     private int age;
     private String auth;
 
+    public Member(String memberId, String memberPw, int age) {
+        this.memberId = memberId;
+        this.memberPw = memberPw;
+        this.age = age;
+    }
+
     @Builder
     private Member(String memberId, String memberPw, String name, int age, String auth) {
         this.memberId = memberId;
