@@ -1,20 +1,15 @@
 package drinkreview.domain.orderDrink;
 
 import drinkreview.domain.drink.Drink;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class OrderDrinkRequestDto {
 
     private Drink drink;
     private int count;
-
-    public OrderDrinkRequestDto(Drink drink, int count) {
-        this.drink = drink;
-        this.count = count;
-    }
 
     public OrderDrink toEntity() {
         return OrderDrink.builder()
