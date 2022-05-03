@@ -1,13 +1,14 @@
 package drinkreview.domain.member.dto;
 
 import drinkreview.domain.member.Member;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class MemberResponseDto {
 
+    private Long id;
     private String memberId;
     private String memberPw;
     private String name;
@@ -15,6 +16,7 @@ public class MemberResponseDto {
     private String auth;
 
     public MemberResponseDto(Member member) {
+        this.id = member.getId();
         this.memberId = member.getMemberId();
         this.memberPw = member.getMemberPw();
         this.name = member.getName();
