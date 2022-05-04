@@ -1,9 +1,7 @@
 package drinkreview.domain.review.repository;
 
 import drinkreview.domain.drink.Drink;
-import drinkreview.domain.drink.DrinkRepository;
 import drinkreview.domain.member.Member;
-import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.Review;
 import drinkreview.domain.review.dto.ReviewQueryDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,8 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReviewRepositoryTest {
 
     @Autowired ReviewRepository reviewRepository;
-    @Autowired MemberRepository memberRepository;
-    @Autowired DrinkRepository drinkRepository;
     @Autowired EntityManager em;
     Member member;
     Drink drink;
@@ -63,6 +57,21 @@ class ReviewRepositoryTest {
         assertThat(result.size()).isEqualTo(3);
         assertThat(result).contains(review1, review2, review3);
         assertThat(result).doesNotContain(review4, review5);
+    }
+
+    @Test
+    void addView() throws Exception {
+        //given
+        Review review = createReview(member, drink, "title", "content", 100);
+
+        //when
+        reviewRepository.save(review);
+        int result = reviewRepository.addView(review.getId());
+
+        //then
+        assertThat(result).isEqualTo(1);
+        assertThat(review.getView()).isEqualTo(0);
+        //DB 에서 조회한 값(view = 1)을 버리고 영속성 컨텍스트에서 조회한 값(view = 0)을 반환함
     }
 
     @Test
@@ -123,7 +132,6 @@ class ReviewRepositoryTest {
     }
 
     @Test
-    @Commit
     void searchPageByDateOrder() throws Exception {
         //given
         for (int i = 1; i <= 10; i++) {
