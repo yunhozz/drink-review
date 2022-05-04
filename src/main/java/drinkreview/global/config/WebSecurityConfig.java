@@ -1,6 +1,6 @@
 package drinkreview.global.config;
 
-import drinkreview.domain.member.MemberService;
+import drinkreview.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
