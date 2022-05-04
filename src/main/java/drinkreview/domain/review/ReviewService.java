@@ -50,13 +50,17 @@ public class ReviewService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
 
-        //어드민 권한 or 게시글 작성자만 삭제 가능
-        if (member.getAuthorities().contains("ADMIN") || review.getMember().getId().equals(member.getId())) {
+        //게시글 작성자만 삭제 가능
+        if (review.getMember().getId().equals(member.getId())) {
             reviewRepository.delete(review); //cascade : delete Comment
 
         } else {
             throw new IllegalStateException("You do not have permission.");
         }
+    }
+
+    public void updateView(Long reviewId) {
+        reviewRepository.addView(reviewId);
     }
 
     @Transactional(readOnly = true)
