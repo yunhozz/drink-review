@@ -1,10 +1,9 @@
-package drinkreview.domain.member;
+package drinkreview.domain.member.service;
 
+import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
 
@@ -26,24 +25,10 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
-    //로그인
-    @Transactional(readOnly = true)
-    public Member login(String memberId, String memberPw) {
-        Member member = this.loadUserByUsername(memberId);
-        return member.getMemberPw().equals(memberPw) ? member : null;
-    }
-
     //회원 탈퇴
     public void withdraw(Long id) {
         Member member = this.findMember(id);
         memberRepository.delete(member);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Member loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException(memberId));
     }
 
     @Transactional(readOnly = true)
