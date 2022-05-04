@@ -4,19 +4,20 @@ import drinkreview.domain.drink.Drink;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 public class DrinkRequestDto {
 
-    private String name;
-    private String country;
-    private int year;
-    private int month;
-    private int day;
-    private int price;
-    private int stockQuantity;
+    @NotEmpty private String name;
+    @NotEmpty private String country;
+    @NotEmpty private int year;
+    @NotEmpty private int month;
+    @NotEmpty private int day;
+    @NotEmpty private int price;
+    @NotEmpty private int stockQuantity;
 
     public Drink toEntity() {
         return Drink.builder()
