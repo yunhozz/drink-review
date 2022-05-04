@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -38,6 +39,30 @@ class ReviewRepositoryTest {
 
         drink = createDrink("drink");
         em.persist(drink);
+    }
+
+    @Test
+    void findWithKeyword() throws Exception {
+        //given
+        Review review1 = createReview(member, drink, "ABCfind", "content", 1);
+        Review review2 = createReview(member, drink, "review", "findABC", 2);
+        Review review3 = createReview(member, drink, "ABCfindABC", "ABCfindABC", 3);
+        Review review4 = createReview(member, drink, "title", "content", 4);
+        Review review5 = createReview(member, drink, "title", "content", 5);
+
+        //when
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
+        reviewRepository.save(review3);
+        reviewRepository.save(review4);
+        reviewRepository.save(review5);
+
+        List<Review> result = reviewRepository.findWithKeyword("find");
+
+        //then
+        assertThat(result.size()).isEqualTo(3);
+        assertThat(result).contains(review1, review2, review3);
+        assertThat(result).doesNotContain(review4, review5);
     }
 
     @Test
@@ -98,19 +123,23 @@ class ReviewRepositoryTest {
     }
 
     @Test
+    @Commit
     void searchPageByDateOrder() throws Exception {
         //given
         for (int i = 1; i <= 10; i++) {
             Review review = createReview(member, drink, "review" + i, "content" + i, i);
             reviewRepository.save(review);
 
-            Thread.sleep(5);
+            Thread.sleep(10);
         }
+
+        Review findReview = reviewRepository.findById(7L).get();
+        findReview.updateField("update", "update", 100); //업데이트
 
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         //when
-        Page<ReviewQueryDto> result = reviewRepository.searchPageByScoreOrder(pageRequest);
+        Page<ReviewQueryDto> result = reviewRepository.searchPageByDateOrder(pageRequest);
 
         //then
         assertThat(result.getContent().size()).isEqualTo(3);
