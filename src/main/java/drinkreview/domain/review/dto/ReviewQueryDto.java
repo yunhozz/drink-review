@@ -24,17 +24,6 @@ public class ReviewQueryDto {
     private String drinkName;
 
     @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, String content, double score, String memberId, String memberName, String drinkName) {
-        this.reviewId = reviewId;
-        this.title = title;
-        this.content = content;
-        this.score = score;
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.drinkName = drinkName;
-    }
-
-    @QueryProjection
     public ReviewQueryDto(Long reviewId, String title, String content, double score, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
         this.reviewId = reviewId;
         this.title = title;
