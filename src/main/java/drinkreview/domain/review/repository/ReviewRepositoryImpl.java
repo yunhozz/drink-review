@@ -50,8 +50,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
                         review.id, review.title, review.content, review.score,
-                        member.memberId, member.name,
-                        drink.name
+                        member.id, member.memberId, member.name,
+                        drink.id, drink.name
                 ))
                 .from(review)
                 .join(review.member, member)
@@ -69,13 +69,32 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
                         review.id, review.title, review.content, review.score,
-                        member.memberId, member.name,
-                        drink.name
+                        member.id, member.memberId, member.name,
+                        drink.id, drink.name
                 ))
                 .from(review)
                 .join(review.member, member)
                 .join(review.drink, drink)
                 .orderBy(review.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(content, pageable, content.size());
+    }
+
+    @Override
+    public Page<ReviewQueryDto> searchPageByViewOrder(Pageable pageable) {
+        List<ReviewQueryDto> content = queryFactory
+                .select(new QReviewQueryDto(
+                        review.id, review.title, review.content, review.score,
+                        member.id, member.memberId, member.name,
+                        drink.id, drink.name
+                ))
+                .from(review)
+                .join(review.member, member)
+                .join(review.drink, drink)
+                .orderBy(review.view.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

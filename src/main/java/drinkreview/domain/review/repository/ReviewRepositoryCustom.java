@@ -12,4 +12,5 @@ public interface ReviewRepositoryCustom {
     List<ReviewQueryDto> searchList();
     Page<ReviewQueryDto> searchPageByScoreOrder(Pageable pageable); //평점순
     Page<ReviewQueryDto> searchPageByDateOrder(Pageable pageable); //최신순
+    Page<ReviewQueryDto> searchPageByViewOrder(Pageable pageable); //인기순
 }
