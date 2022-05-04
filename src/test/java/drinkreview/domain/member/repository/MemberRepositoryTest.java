@@ -1,7 +1,7 @@
 package drinkreview.domain.member.repository;
 
 import drinkreview.domain.member.Member;
-import drinkreview.domain.member.dto.MemberSearchCondition;
+import drinkreview.domain.member.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

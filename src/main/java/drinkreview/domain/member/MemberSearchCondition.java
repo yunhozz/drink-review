@@ -1,4 +1,4 @@
-package drinkreview.domain.member.dto;
+package drinkreview.domain.member;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

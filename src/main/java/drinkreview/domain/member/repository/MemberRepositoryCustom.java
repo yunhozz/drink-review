@@ -1,6 +1,6 @@
 package drinkreview.domain.member.repository;
 
-import drinkreview.domain.member.dto.MemberSearchCondition;
+import drinkreview.domain.member.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

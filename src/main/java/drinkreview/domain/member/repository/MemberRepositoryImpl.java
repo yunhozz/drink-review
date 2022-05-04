@@ -2,7 +2,7 @@ package drinkreview.domain.member.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import drinkreview.domain.member.dto.MemberSearchCondition;
+import drinkreview.domain.member.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
 import drinkreview.domain.member.dto.QMemberQueryDto;
 import lombok.RequiredArgsConstructor;
