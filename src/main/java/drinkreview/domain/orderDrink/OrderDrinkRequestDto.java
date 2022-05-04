@@ -12,10 +12,6 @@ public class OrderDrinkRequestDto {
     private int count;
 
     public OrderDrink toEntity() {
-        return OrderDrink.builder()
-                .drink(drink)
-                .orderPrice(drink.getPrice() * count)
-                .count(count)
-                .build();
+        return new OrderDrink(drink, drink.getPrice() * count, count);
     }
 }

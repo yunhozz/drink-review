@@ -3,7 +3,6 @@ package drinkreview.domain.orderDrink;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.order.Order;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,8 +28,7 @@ public class OrderDrink {
     private int orderPrice; //음료 하나의 가격 x count = 총 가격
     private int count;
 
-    @Builder
-    private OrderDrink(Drink drink, int orderPrice, int count) {
+    public OrderDrink(Drink drink, int orderPrice, int count) {
         this.drink = drink;
         this.orderPrice = orderPrice;
         this.count = count;
