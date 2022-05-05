@@ -101,4 +101,26 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
         return new PageImpl<>(content, pageable, content.size());
     }
+
+    @Override
+    public Page<ReviewQueryDto> searchPageByKeyword(String keyword, Pageable pageable) {
+        List<ReviewQueryDto> content = queryFactory
+                .select(new QReviewQueryDto(
+                        review.id, review.title, review.content, review.score,
+                        member.id, member.memberId, member.name,
+                        drink.id, drink.name
+                ))
+                .from(review)
+                .join(review.member, member)
+                .join(review.drink, drink)
+                .where(review.title.contains(keyword)
+                        .or(review.content.contains(keyword))
+                )
+                .orderBy(review.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(content, pageable, content.size());
+    }
 }
