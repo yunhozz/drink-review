@@ -1,12 +1,11 @@
 package drinkreview.domain.drink;
 
 import drinkreview.domain.drink.dto.DrinkRequestDto;
+import drinkreview.domain.drink.dto.DrinkResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -23,7 +22,8 @@ public class DrinkService {
     }
 
     public void uploadImageFile(Long drinkId, MultipartFile file) {
-        Drink drink = this.findDrink(drinkId);
+        Drink drink = drinkRepository.findById(drinkId)
+                .orElseThrow(() -> new IllegalStateException("Drink is null."));
 
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
@@ -41,13 +41,10 @@ public class DrinkService {
     }
 
     @Transactional(readOnly = true)
-    public Drink findDrink(Long drinkId) {
-        return drinkRepository.findById(drinkId)
+    public DrinkResponseDto findDrink(Long drinkId) {
+        Drink drink = drinkRepository.findById(drinkId)
                 .orElseThrow(() -> new IllegalStateException("Drink is null."));
-    }
 
-    @Transactional(readOnly = true)
-    public List<Drink> findDrinks() {
-        return drinkRepository.findAll();
+        return new DrinkResponseDto(drink);
     }
 }
