@@ -3,7 +3,6 @@ package drinkreview.domain.member.controller;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.service.MemberService;
-import drinkreview.domain.member.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -12,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,6 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-    private final UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("/join")
     public String joinForm(Model model) {
@@ -31,7 +30,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@Valid MemberRequestDto memberRequestDto, BindingResult result) {
+    public String join(@RequestBody @Valid MemberRequestDto memberRequestDto, BindingResult result) {
         if (result.hasErrors()) {
             return "member/join";
         }
@@ -48,7 +47,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginForm loginForm, BindingResult result, Model model) {
+    public String login(@RequestBody @Valid LoginForm loginForm, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "member/login";
         }
