@@ -5,12 +5,11 @@ import drinkreview.domain.drink.DrinkRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.dto.ReviewRequestDto;
+import drinkreview.domain.review.dto.ReviewResponseDto;
 import drinkreview.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -36,7 +35,8 @@ public class ReviewService {
     }
 
     public void updateReview(ReviewRequestDto dto, Long reviewId, Long userId) {
-        Review review = this.findReview(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalStateException("Review is null."));
 
         if (!review.getMember().getId().equals(userId)) {
             throw new IllegalStateException("You do not have permission.");
@@ -46,7 +46,9 @@ public class ReviewService {
     }
 
     public void deleteReview(Long reviewId, Long userId) {
-        Review review = this.findReview(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalStateException("Review is null."));
+
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
 
@@ -64,13 +66,10 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review findReview(Long reviewId) {
-        return reviewRepository.findById(reviewId)
+    public ReviewResponseDto findReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalStateException("Review is null."));
-    }
 
-    @Transactional(readOnly = true)
-    public List<Review> findReviewList() {
-        return reviewRepository.findAll();
+        return new ReviewResponseDto(review);
     }
 }
