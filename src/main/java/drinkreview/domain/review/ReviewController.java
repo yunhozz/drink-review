@@ -1,12 +1,11 @@
 package drinkreview.domain.review;
 
-import drinkreview.domain.comment.Comment;
+import drinkreview.domain.comment.dto.CommentResponseDto;
 import drinkreview.domain.drink.DrinkService;
-import drinkreview.domain.drink.dto.DrinkRequestDto;
-import drinkreview.domain.member.dto.MemberRequestDto;
+import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.service.MemberService;
-import drinkreview.domain.review.dto.ReviewRequestDto;
+import drinkreview.domain.review.dto.ReviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -34,10 +32,6 @@ public class ReviewController {
 
     @GetMapping("/review/write")
     public String writeForm(Model model) {
-        model.addAttribute("memberDto", new MemberRequestDto());
-        model.addAttribute("drinkDto", new DrinkRequestDto());
-        model.addAttribute("reviewDto", new ReviewRequestDto());
-
         return "review/write";
     }
 
@@ -47,23 +41,22 @@ public class ReviewController {
     }
 
     @GetMapping("/review/read/{id}")
-    public String readForm(@PathVariable Long reviewId, @Valid MemberSessionResponseDto memberSessionResponseDto,
-                           HttpServletRequest request, Model model) {
-
-        Review review = reviewService.findReview(reviewId);
-        List<Comment> comments = review.getComments();
+    public String readForm(@PathVariable Long reviewId, HttpServletRequest request, Model model) {
+        ReviewResponseDto reviewResponseDto = reviewService.findReview(reviewId);
+        List<CommentResponseDto> comments = reviewResponseDto.getComments();
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
 
         HttpSession session = request.getSession();
-        MemberSessionResponseDto member = (MemberSessionResponseDto) session.getAttribute("memberId");
+        Member member = (Member) session.getAttribute("member");
+        MemberSessionResponseDto memberSessionResponseDto = new MemberSessionResponseDto(member);
 
-        if (member != null) {
-            model.addAttribute("memberId", member.getMemberId());
+        if (memberSessionResponseDto != null) {
+            model.addAttribute("memberId", memberSessionResponseDto.getMemberId());
 
-            if (review.getMember().getId().equals(member.getId())) {
+            if (reviewResponseDto.getUserId().equals(memberSessionResponseDto.getId())) {
                 model.addAttribute("writer", true);
             }
         }
