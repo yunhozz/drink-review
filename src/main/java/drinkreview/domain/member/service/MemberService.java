@@ -1,6 +1,7 @@
 package drinkreview.domain.member.service;
 
 import drinkreview.domain.member.Member;
+import drinkreview.domain.member.controller.LoginForm;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
     //회원 가입
     public Long join(MemberRequestDto memberRequestDto) {
@@ -23,6 +25,20 @@ public class MemberService {
         memberRepository.save(member);
 
         return member.getId();
+    }
+
+    //로그인
+    public Member login(LoginForm loginForm) {
+        Member member = memberRepository.findByMemberId(loginForm.getMemberId())
+                .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
+
+        if (!loginForm.getMemberPw().equals(member.getMemberPw())) {
+            throw new IllegalStateException("The password is different. Please enter it again.");
+        }
+
+        userDetailsService.loadUserByUsername(member.getMemberId());
+
+        return member;
     }
 
     //회원 탈퇴
