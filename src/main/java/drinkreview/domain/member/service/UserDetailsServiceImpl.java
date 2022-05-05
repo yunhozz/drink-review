@@ -20,12 +20,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final HttpServletRequest httpServletRequest;
 
-    //memberId 가 DB 에 있는지 확인 -> 스프링 시큐리티 세션에 유저 정보 저장
+    //스프링 시큐리티 세션에 유저 정보 저장
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        Member member = memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Can't find this member : " + memberId));
-
+        Member member = memberRepository.findByMemberId(memberId).get();
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("member", new MemberSessionResponseDto(member));
 
