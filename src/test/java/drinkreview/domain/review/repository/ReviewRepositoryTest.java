@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -154,6 +155,47 @@ class ReviewRepositoryTest {
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result).extracting("title")
                 .containsExactly("review10", "review9", "review8");
+    }
+
+    @Test
+    @Commit
+    void searchPageByKeyword() throws Exception {
+        //given
+        for (int i = 1; i <= 5; i++) {
+            Review review = createReview(member, drink, "find" + i, "content" + i, i);
+            reviewRepository.save(review);
+            Thread.sleep(5);
+        }
+
+        for (int i = 6; i <= 10; i++) {
+            Review review = createReview(member, drink, "review" + i, "find" + i, i);
+            reviewRepository.save(review);
+            Thread.sleep(5);
+        }
+
+        for (int i = 11; i <= 15; i++) {
+            Review review = createReview(member, drink, "find" + i, "find" + i, i);
+            reviewRepository.save(review);
+            Thread.sleep(5);
+        }
+
+        for (int i = 16; i <= 20; i++) {
+            Review review = createReview(member, drink, "review" + i, "content" + i, i);
+            reviewRepository.save(review);
+            Thread.sleep(5);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        //when
+        Page<ReviewQueryDto> result = reviewRepository.searchPageByKeyword("find", pageRequest);
+
+        //then
+        assertThat(result.getContent().size()).isEqualTo(10);
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result).extracting("title")
+                .containsExactly("find15", "find14", "find13", "find12", "find11",
+                        "review10", "review9", "review8", "review7", "review6");
     }
 
     private Review createReview(Member member, Drink drink, String title, String content, double score) {
