@@ -4,6 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class ReviewQueryDto {
@@ -13,6 +15,7 @@ public class ReviewQueryDto {
     private String title;
     private String content;
     private double score;
+    private LocalDateTime createdDate;
 
     //Member
     private Long userId;
@@ -24,11 +27,12 @@ public class ReviewQueryDto {
     private String drinkName;
 
     @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, String content, double score, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
+    public ReviewQueryDto(Long reviewId, String title, String content, double score, LocalDateTime createdDate, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
         this.reviewId = reviewId;
         this.title = title;
         this.content = content;
         this.score = score;
+        this.createdDate = createdDate;
         this.userId = userId;
         this.memberId = memberId;
         this.memberName = memberName;

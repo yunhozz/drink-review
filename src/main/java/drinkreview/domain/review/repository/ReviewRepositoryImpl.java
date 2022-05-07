@@ -34,7 +34,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     public List<ReviewQueryDto> searchList() {
         return queryFactory
                 .select(new QReviewQueryDto(
-                        review.id, review.title, review.content, review.score,
+                        review.id, review.title, review.content, review.score, review.createdDate,
                         member.id, member.memberId, member.name,
                         drink.id, drink.name
                 ))
@@ -49,7 +49,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     public Page<ReviewQueryDto> searchPageByScoreOrder(Pageable pageable) {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
-                        review.id, review.title, review.content, review.score,
+                        review.id, review.title, review.content, review.score, review.createdDate,
                         member.id, member.memberId, member.name,
                         drink.id, drink.name
                 ))
@@ -68,7 +68,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     public Page<ReviewQueryDto> searchPageByDateOrder(Pageable pageable) {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
-                        review.id, review.title, review.content, review.score,
+                        review.id, review.title, review.content, review.score, review.createdDate,
                         member.id, member.memberId, member.name,
                         drink.id, drink.name
                 ))
@@ -87,7 +87,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     public Page<ReviewQueryDto> searchPageByViewOrder(Pageable pageable) {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
-                        review.id, review.title, review.content, review.score,
+                        review.id, review.title, review.content, review.score, review.createdDate,
                         member.id, member.memberId, member.name,
                         drink.id, drink.name
                 ))
@@ -106,7 +106,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     public Page<ReviewQueryDto> searchPageByKeyword(String keyword, Pageable pageable) {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
-                        review.id, review.title, review.content, review.score,
+                        review.id, review.title, review.content, review.score, review.createdDate,
                         member.id, member.memberId, member.name,
                         drink.id, drink.name
                 ))
