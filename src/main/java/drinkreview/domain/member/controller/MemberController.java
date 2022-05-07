@@ -2,6 +2,7 @@ package drinkreview.domain.member.controller;
 
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
+import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,11 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody @Valid MemberRequestDto memberRequestDto, BindingResult result) {
+    public String join(@Valid MemberRequestDto memberRequestDto, BindingResult result) {
         if (result.hasErrors()) {
             return "member/join";
         }
@@ -47,7 +48,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody @Valid LoginForm loginForm, BindingResult result, Model model) {
+    public String login(@Valid LoginForm loginForm, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "member/login";
         }
@@ -64,5 +65,13 @@ public class MemberController {
                 .logout(request, response, SecurityContextHolder.getContext().getAuthentication());
 
         return "redirect:/";
+    }
+
+    @GetMapping("/members")
+    public String memberList(Model model) {
+        List<MemberResponseDto> membersDto = memberService.findMembersDto();
+        model.addAttribute("members", membersDto);
+
+        return "member/memberList";
     }
 }
