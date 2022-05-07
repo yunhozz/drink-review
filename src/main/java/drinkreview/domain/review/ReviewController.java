@@ -2,7 +2,8 @@ package drinkreview.domain.review;
 
 import drinkreview.domain.comment.dto.CommentResponseDto;
 import drinkreview.domain.drink.DrinkService;
-import drinkreview.domain.member.Member;
+import drinkreview.domain.member.UserDetailsImpl;
+import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.service.MemberService;
 import drinkreview.domain.review.dto.ReviewResponseDto;
@@ -42,7 +43,7 @@ public class ReviewController {
 
     @GetMapping("/review/read/{id}")
     public String readForm(@PathVariable Long reviewId, HttpServletRequest request, Model model) {
-        ReviewResponseDto reviewResponseDto = reviewService.findReview(reviewId);
+        ReviewResponseDto reviewResponseDto = reviewService.findReviewDto(reviewId);
         List<CommentResponseDto> comments = reviewResponseDto.getComments();
 
         if (comments != null && !comments.isEmpty()) {
@@ -50,13 +51,13 @@ public class ReviewController {
         }
 
         HttpSession session = request.getSession();
-        Member member = (Member) session.getAttribute("member");
-        MemberSessionResponseDto memberSessionResponseDto = new MemberSessionResponseDto(member);
+        UserDetailsImpl memberDetails = (UserDetailsImpl) session.getAttribute("member");
+        MemberResponseDto memberResponseDto = new MemberResponseDto(memberDetails.getMember());
 
-        if (memberSessionResponseDto != null) {
-            model.addAttribute("memberId", memberSessionResponseDto.getMemberId());
+        if (memberDetails != null) {
+            model.addAttribute("memberId", memberDetails.getMember().getMemberId());
 
-            if (reviewResponseDto.getUserId().equals(memberSessionResponseDto.getId())) {
+            if (reviewResponseDto.getUserId().equals(memberDetails.getMember().getId())) {
                 model.addAttribute("writer", true);
             }
         }
