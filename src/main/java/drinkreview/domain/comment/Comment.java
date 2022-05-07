@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,22 +29,34 @@ public class Comment extends TimeEntity {
     private Review review;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String comments;
+    private String content;
 
-    private Comment(Member member, String comments) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> child = new ArrayList<>();
+
+    public Comment(Member member, String content, Comment parent) {
         this.member = member;
-        this.comments = comments;
+        this.content = content;
+        this.parent = parent;
     }
 
-    public static Comment createComment(Member member, Review review, String comments) {
-        Comment comment = new Comment(member, comments);
+    public static Comment createComment(Member member, Review review, String content, Comment parent, List<Comment> childList) {
+        Comment comment = new Comment(member, content, parent);
         comment.setReview(review);
+
+        for (Comment child : childList) {
+            comment.setChild(child);
+        }
 
         return comment;
     }
 
-    public void updateComments(String comments) {
-        this.comments = comments;
+    public void updateContent(String content) {
+        this.content = content;
     }
 
     /**
@@ -51,5 +65,9 @@ public class Comment extends TimeEntity {
     private void setReview(Review review) {
         this.review = review;
         review.getComments().add(this);
+    }
+
+    private void setChild(Comment child) {
+        this.child.add(child);
     }
 }
