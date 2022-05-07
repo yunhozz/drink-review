@@ -1,6 +1,8 @@
 package drinkreview.domain.comment;
 
 import drinkreview.domain.comment.dto.CommentRequestDto;
+import drinkreview.domain.comment.dto.CommentResponseDto;
+import drinkreview.domain.comment.repository.CommentRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.Review;
@@ -8,8 +10,6 @@ import drinkreview.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -41,7 +41,7 @@ public class CommentService {
             throw new IllegalStateException("You do not have permission.");
         }
 
-        comment.updateComments(dto.getComments());
+        comment.updateContent(dto.getContent());
     }
 
     public void deleteComment(Long commentId, Long userId) {
@@ -59,13 +59,14 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public Comment findComment(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalStateException("Comment is null."));
+    public CommentResponseDto findCommentDto(Long commentId) {
+        Comment comment = this.findComment(commentId);
+        return new CommentResponseDto(comment);
     }
 
     @Transactional(readOnly = true)
-    public List<Comment> findCommentList() {
-        return commentRepository.findAll();
+    private Comment findComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalStateException("Comment is null."));
     }
 }
