@@ -35,8 +35,7 @@ public class ReviewService {
     }
 
     public void updateReview(ReviewRequestDto dto, Long reviewId, Long userId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalStateException("Review is null."));
+        Review review = this.findReview(reviewId);
 
         if (!review.getMember().getId().equals(userId)) {
             throw new IllegalStateException("You do not have permission.");
@@ -46,9 +45,7 @@ public class ReviewService {
     }
 
     public void deleteReview(Long reviewId, Long userId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalStateException("Review is null."));
-
+        Review review = this.findReview(reviewId);
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
 
@@ -66,10 +63,14 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public ReviewResponseDto findReview(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalStateException("Review is null."));
-
+    public ReviewResponseDto findReviewDto(Long reviewId) {
+        Review review = this.findReview(reviewId);
         return new ReviewResponseDto(review);
+    }
+
+    @Transactional(readOnly = true)
+    private Review findReview(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalStateException("Review is null."));
     }
 }

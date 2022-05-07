@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,22 +45,36 @@ public class MemberService {
 
     //회원 탈퇴
     public void withdraw(Long id) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Member is null."));
-
+        Member member = this.findMember(id);
         memberRepository.delete(member);
     }
 
     @Transactional(readOnly = true)
-    public MemberResponseDto findMember(Long id) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Member is null."));
-
+    public MemberResponseDto findMemberDto(Long id) {
+        Member member = this.findMember(id);
         return new MemberResponseDto(member);
     }
 
     @Transactional(readOnly = true)
-    public List<Member> findMembers() {
+    public List<MemberResponseDto> findMembersDto() {
+        List<Member> members = this.findMembers();
+        List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
+
+        for (Member member : members) {
+            memberResponseDtoList.add(new MemberResponseDto(member));
+        }
+
+        return memberResponseDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    private Member findMember(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Member is null."));
+    }
+
+    @Transactional(readOnly = true)
+    private List<Member> findMembers() {
         return memberRepository.findAll();
     }
 

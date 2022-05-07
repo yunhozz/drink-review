@@ -22,8 +22,7 @@ public class DrinkService {
     }
 
     public void uploadImageFile(Long drinkId, MultipartFile file) {
-        Drink drink = drinkRepository.findById(drinkId)
-                .orElseThrow(() -> new IllegalStateException("Drink is null."));
+        Drink drink = this.findDrink(drinkId);
 
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
@@ -41,10 +40,16 @@ public class DrinkService {
     }
 
     @Transactional(readOnly = true)
-    public DrinkResponseDto findDrink(Long drinkId) {
+    public DrinkResponseDto findDrinkDto(Long drinkId) {
         Drink drink = drinkRepository.findById(drinkId)
                 .orElseThrow(() -> new IllegalStateException("Drink is null."));
 
         return new DrinkResponseDto(drink);
+    }
+
+    @Transactional(readOnly = true)
+    private Drink findDrink(Long drinkId) {
+        return drinkRepository.findById(drinkId)
+                .orElseThrow(() -> new IllegalStateException("Drink is null."));
     }
 }
