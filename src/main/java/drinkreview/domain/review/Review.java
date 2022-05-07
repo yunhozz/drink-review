@@ -33,9 +33,7 @@ public class Review extends TimeEntity {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @Column(nullable = false)
     private String title;
-
     private String content;
     private String writer;
     private double score;
