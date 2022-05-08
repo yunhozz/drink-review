@@ -1,11 +1,12 @@
 package drinkreview.domain.member.controller;
 
-import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.service.MemberService;
+import drinkreview.domain.member.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("/join")
     public String joinForm(Model model) {
@@ -53,7 +54,8 @@ public class MemberController {
             return "member/login";
         }
 
-        Member loginMember = memberService.login(loginForm);
+        MemberResponseDto member = memberService.login(loginForm);
+        UserDetails loginMember = userDetailsService.loadUserByUsername(member.getMemberId());
         model.addAttribute("loginMember", loginMember);
 
         return "redirect:/";
@@ -65,13 +67,5 @@ public class MemberController {
                 .logout(request, response, SecurityContextHolder.getContext().getAuthentication());
 
         return "redirect:/";
-    }
-
-    @GetMapping("/members")
-    public String memberList(Model model) {
-        List<MemberResponseDto> membersDto = memberService.findMembersDto();
-        model.addAttribute("members", membersDto);
-
-        return "member/memberList";
     }
 }
