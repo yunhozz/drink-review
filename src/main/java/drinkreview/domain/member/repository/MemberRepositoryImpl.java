@@ -44,8 +44,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(
                         memberIdEq(condition.getMemberId()),
                         memberNameEq(condition.getName()),
-                        memberAgeGoe(condition.getAgeGoe()),
-                        memberAgeLoe(condition.getAgeLoe()),
+                        memberAgeEq(condition.getAge()),
+                        memberAgeBetween(condition.getAgeGoe(), condition.getAgeLoe()),
                         memberAuthEq(condition.getAuth())
                 )
                 .fetch();
@@ -81,8 +81,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(
                         memberIdEq(condition.getMemberId()),
                         memberNameEq(condition.getName()),
-                        memberAgeGoe(condition.getAgeGoe()),
-                        memberAgeLoe(condition.getAgeLoe()),
+                        memberAgeEq(condition.getAge()),
+                        memberAgeBetween(condition.getAgeGoe(), condition.getAgeLoe()),
                         memberAuthEq(condition.getAuth())
                 )
                 .offset(pageable.getOffset())
@@ -100,12 +100,25 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return StringUtils.hasText(name) ? member.name.eq(name) : null;
     }
 
+    private BooleanExpression memberAgeEq(Integer age) {
+        return age != null ? member.age.eq(age) : null;
+    }
+
     private BooleanExpression memberAgeGoe(Integer ageGoe) {
         return ageGoe != null ? member.age.goe(ageGoe) : null;
     }
 
     private BooleanExpression memberAgeLoe(Integer ageLoe) {
         return ageLoe != null ? member.age.loe(ageLoe) : null;
+    }
+
+    private BooleanExpression memberAgeBetween(Integer ageGoe, Integer ageLoe) {
+        if (ageGoe != null && ageLoe != null) {
+            return memberAgeGoe(ageGoe).and(memberAgeLoe(ageLoe));
+
+        } else {
+            return null;
+        }
     }
 
     private BooleanExpression memberAuthEq(String auth) {
