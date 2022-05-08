@@ -9,7 +9,8 @@ public class MemberSearchCondition {
 
     private String memberId;
     private String name;
-    private int ageGoe;
-    private int ageLoe;
+    private Integer age;
+    private Integer ageGoe;
+    private Integer ageLoe;
     private String auth;
 }
