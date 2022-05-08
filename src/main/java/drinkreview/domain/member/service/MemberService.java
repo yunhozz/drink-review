@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +17,6 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final UserDetailsServiceImpl userDetailsService;
 
     //회원 가입
     public Long join(MemberRequestDto memberRequestDto) {
@@ -30,17 +28,16 @@ public class MemberService {
     }
 
     //로그인
-    public Member login(LoginForm loginForm) {
+    public MemberResponseDto login(LoginForm loginForm) {
         Member member = memberRepository.findByMemberId(loginForm.getMemberId())
                 .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
 
+        //비밀번호 일치 여부 확인
         if (!loginForm.getMemberPw().equals(member.getMemberPw())) {
             throw new IllegalStateException("The password is different. Please enter it again.");
         }
 
-        userDetailsService.loadUserByUsername(member.getMemberId());
-
-        return member;
+        return new MemberResponseDto(member);
     }
 
     //회원 탈퇴
@@ -53,18 +50,6 @@ public class MemberService {
     public MemberResponseDto findMemberDto(Long id) {
         Member member = this.findMember(id);
         return new MemberResponseDto(member);
-    }
-
-    @Transactional(readOnly = true)
-    public List<MemberResponseDto> findMembersDto() {
-        List<Member> members = this.findMembers();
-        List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
-
-        for (Member member : members) {
-            memberResponseDtoList.add(new MemberResponseDto(member));
-        }
-
-        return memberResponseDtoList;
     }
 
     @Transactional(readOnly = true)
