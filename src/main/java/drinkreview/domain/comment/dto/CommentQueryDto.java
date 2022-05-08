@@ -14,7 +14,7 @@ public class CommentQueryDto {
     //Comment
     private Long commentId;
     private Long parentId;
-    private List<ChildResponseDto> child;
+    private List<ChildResponseDto> childList;
     private String content;
     private LocalDateTime createDate;
 
@@ -27,10 +27,10 @@ public class CommentQueryDto {
     private Long reviewId;
 
     @QueryProjection
-    public CommentQueryDto(Long commentId, Long parentId, List<ChildResponseDto> child, String content, LocalDateTime createDate, Long userId, String memberId, String name, Long reviewId) {
+    public CommentQueryDto(Long commentId, Long parentId, List<ChildResponseDto> childList, String content, LocalDateTime createDate, Long userId, String memberId, String name, Long reviewId) {
         this.commentId = commentId;
         this.parentId = parentId;
-        this.child = child;
+        this.childList = childList;
         this.content = content;
         this.createDate = createDate;
         this.userId = userId;
