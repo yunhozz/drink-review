@@ -1,6 +1,7 @@
 package drinkreview.domain.comment.dto;
 
 import drinkreview.domain.comment.Comment;
+import drinkreview.global.enums.DeleteStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,8 @@ public class CommentResponseDto {
     private Long reviewId;
     private String content;
     private Long parentId;
-    private List<ChildResponseDto> child;
+    private DeleteStatus isDeleted;
+    private List<ChildResponseDto> childList;
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
@@ -23,7 +25,8 @@ public class CommentResponseDto {
         this.reviewId = comment.getReview().getId();
         this.content = comment.getContent();
         this.parentId = comment.getParent().getId();
-        this.child = comment.getChild().stream()
+        this.isDeleted = comment.getIsDeleted();
+        this.childList = comment.getChildList().stream()
                 .map(ChildResponseDto::new)
                 .toList();
     }

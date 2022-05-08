@@ -3,6 +3,7 @@ package drinkreview.domain.comment;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.review.Review;
+import drinkreview.global.enums.DeleteStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,23 +34,26 @@ public class Comment extends TimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Comment parent;
+    private Comment parent; //상위 댓글
 
-    @OneToMany(mappedBy = "parent")
-    private List<Comment> child = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> childList = new ArrayList<>(); //하위 댓글
 
-    public Comment(Member member, String content, Comment parent) {
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus isDeleted;
+
+    private Comment(Member member, String content, DeleteStatus isDeleted) {
         this.member = member;
         this.content = content;
-        this.parent = parent;
+        this.isDeleted = isDeleted;
     }
 
-    public static Comment createComment(Member member, Review review, String content, Comment parent, List<Comment> childList) {
-        Comment comment = new Comment(member, content, parent);
+    public static Comment createComment(Member member, Review review, String content, Comment parent) {
+        Comment comment = new Comment(member, content, DeleteStatus.N);
         comment.setReview(review);
 
-        for (Comment child : childList) {
-            comment.setChild(child);
+        if (parent != null) {
+            comment.setParent(parent);
         }
 
         return comment;
@@ -59,15 +63,13 @@ public class Comment extends TimeEntity {
         this.content = content;
     }
 
-    /**
-     * 연관관계 편의 메소드
-     */
+    //연관관계 편의 메소드
     private void setReview(Review review) {
         this.review = review;
         review.getComments().add(this);
     }
 
-    private void setChild(Comment child) {
-        this.child.add(child);
+    private void setParent(Comment parent) {
+        this.parent = parent;
     }
 }
