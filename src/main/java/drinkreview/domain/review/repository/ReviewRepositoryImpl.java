@@ -56,6 +56,10 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .where(review.id.eq(reviewId))
                 .fetchOne();
 
+        if (findReview == null) {
+            throw new IllegalStateException("Can't find this review : " + reviewId);
+        }
+
         List<CommentQueryDto> comments = queryFactory
                 .select(new QCommentQueryDto(
                         comment.id,
@@ -70,11 +74,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .where(comment.review.id.eq(findReview.getReviewId()))
                 .fetch();
 
-        //key: reviewId & value: List<CommentQueryDto>
-        Map<Long, List<CommentQueryDto>> commentMap = comments.stream()
-                .collect(Collectors.groupingBy(commentQueryDto -> commentQueryDto.getReviewId()));
-
-        findReview.setComments(commentMap.get(findReview.getReviewId()));
+        findReview.setComments(comments);
 
         return findReview;
     }
