@@ -1,12 +1,14 @@
 package drinkreview.domain.review.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Getter;
+import drinkreview.domain.comment.dto.CommentQueryDto;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class ReviewQueryDto {
 
@@ -15,6 +17,7 @@ public class ReviewQueryDto {
     private String title;
     private String content;
     private double score;
+    private int view;
     private LocalDateTime createdDate;
 
     //Member
@@ -26,12 +29,30 @@ public class ReviewQueryDto {
     private Long drinkId;
     private String drinkName;
 
+    //Comment
+    private List<CommentQueryDto> comments;
+
+    //리스트
     @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, String content, double score, LocalDateTime createdDate, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
+    public ReviewQueryDto(Long reviewId, String title, double score, LocalDateTime createdDate, Long userId, String memberName, Long drinkId, String drinkName) {
+        this.reviewId = reviewId;
+        this.title = title;
+        this.score = score;
+        this.createdDate = createdDate;
+        this.userId = userId;
+        this.memberName = memberName;
+        this.drinkId = drinkId;
+        this.drinkName = drinkName;
+    }
+
+    //세부 내용 + comments
+    @QueryProjection
+    public ReviewQueryDto(Long reviewId, String title, String content, double score, int view, LocalDateTime createdDate, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
         this.reviewId = reviewId;
         this.title = title;
         this.content = content;
         this.score = score;
+        this.view = view;
         this.createdDate = createdDate;
         this.userId = userId;
         this.memberId = memberId;
