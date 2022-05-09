@@ -1,6 +1,7 @@
-package drinkreview.domain.orderDrink;
+package drinkreview.domain.orderDrink.dto;
 
 import drinkreview.domain.drink.Drink;
+import drinkreview.domain.orderDrink.OrderDrink;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
