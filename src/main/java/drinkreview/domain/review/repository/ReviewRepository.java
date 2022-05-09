@@ -1,6 +1,8 @@
 package drinkreview.domain.review.repository;
 
 import drinkreview.domain.review.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
     @Modifying(clearAutomatically = true)
     @Query("update Review r set r.view = r.view + 1 where r.id = :reviewId")
     int addView(@Param("reviewId") Long reviewId); //조회수 증가
+
+    @Query("select r from Review r")
+    Page<Review> findPage(Pageable pageable);
 }

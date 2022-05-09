@@ -8,6 +8,7 @@ import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.Review;
 import drinkreview.domain.review.dto.ReviewQueryDto;
+import drinkreview.domain.review.dto.ReviewResponseDto;
 import drinkreview.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,14 @@ public class ReviewApiController {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final DrinkRepository drinkRepository;
+
+    @GetMapping("/reviews")
+    public Page<ReviewResponseDto> findPage(Pageable pageable) {
+        Page<Review> page = reviewRepository.findPage(pageable);
+        Page<ReviewResponseDto> pageDto = page.map(ReviewResponseDto::new);
+
+        return pageDto;
+    }
 
     @GetMapping("/review/{id}")
     public ReviewQueryDto findReview(@PathVariable("id") Long reviewId) {
