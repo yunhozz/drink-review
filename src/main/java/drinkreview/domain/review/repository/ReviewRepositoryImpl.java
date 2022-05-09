@@ -83,7 +83,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
     @Override
     public List<ReviewQueryDto> findReviewList() {
-        List<ReviewQueryDto> findReviews = queryFactory
+        List<ReviewQueryDto> reviews = queryFactory
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
@@ -102,7 +102,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .join(review.drink, drink)
                 .fetch();
 
-        List<Long> reviewIds = findReviews.stream()
+        List<Long> reviewIds = reviews.stream()
                 .map(reviewQueryDto -> reviewQueryDto.getReviewId())
                 .toList();
 
@@ -125,9 +125,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         Map<Long, List<CommentQueryDto>> commentMap = comments.stream()
                 .collect(Collectors.groupingBy(commentQueryDto -> commentQueryDto.getReviewId()));
 
-        findReviews.forEach(reviewQueryDto -> reviewQueryDto.setComments(commentMap.get(reviewQueryDto.getReviewId())));
+        reviews.forEach(reviewQueryDto -> reviewQueryDto.setComments(commentMap.get(reviewQueryDto.getReviewId())));
 
-        return findReviews;
+        return reviews;
     }
 
     @Override
