@@ -42,7 +42,7 @@ public class ReviewController {
     }
 
     @GetMapping("/review/read/{id}")
-    public String readForm(@PathVariable Long reviewId, HttpServletRequest request, Model model) {
+    public String readForm(@PathVariable("id") Long reviewId, HttpServletRequest request, Model model) {
         ReviewResponseDto reviewResponseDto = reviewService.findReviewDto(reviewId);
         List<CommentResponseDto> comments = reviewResponseDto.getComments();
 
@@ -52,12 +52,12 @@ public class ReviewController {
 
         HttpSession session = request.getSession();
         UserDetailsImpl memberDetails = (UserDetailsImpl) session.getAttribute("member");
-        MemberResponseDto memberResponseDto = new MemberResponseDto(memberDetails.getMember());
+        MemberResponseDto member = new MemberResponseDto(memberDetails.getMember());
 
-        if (memberDetails != null) {
-            model.addAttribute("memberId", memberDetails.getMember().getMemberId());
+        if (member != null) {
+            model.addAttribute("memberId", member.getMemberId());
 
-            if (reviewResponseDto.getUserId().equals(memberDetails.getMember().getId())) {
+            if (reviewResponseDto.getUserId().equals(member.getId())) {
                 model.addAttribute("writer", true);
             }
         }
