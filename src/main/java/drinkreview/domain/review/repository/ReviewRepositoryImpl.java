@@ -51,6 +51,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.id,
                         drink.name
                 ))
+                .from(review)
                 .join(review.member, member)
                 .join(review.drink, drink)
                 .where(review.id.eq(reviewId))
@@ -70,6 +71,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         member.name,
                         comment.review.id
                 ))
+                .from(comment)
                 .join(comment.member, member)
                 .where(comment.review.id.eq(findReview.getReviewId()))
                 .fetch();
@@ -95,6 +97,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.id,
                         drink.name
                 ))
+                .from(review)
                 .join(review.member, member)
                 .join(review.drink, drink)
                 .fetch();
@@ -113,6 +116,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         member.name,
                         comment.review.id
                 ))
+                .from(comment)
                 .join(comment.member, member)
                 .where(comment.review.id.in(reviewIds))
                 .fetch();
