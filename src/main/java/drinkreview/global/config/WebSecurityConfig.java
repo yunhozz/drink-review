@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,36 +18,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/css/**", "/js/**", "/h2-console/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/h2-console/**", "/test/**").permitAll()
-                .anyRequest().authenticated()
-
-                .and()
-
-                .csrf().ignoringAntMatchers("/h2-console/**")
-
-                .and()
-
-                .headers().addHeaderWriter(
-                        new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+                .anyRequest().permitAll()
 
                 .and()
 
                 .formLogin()
-                .loginPage("/")
+                .loginPage("/login")
+                .defaultSuccessUrl("/")
+                .failureUrl("/login")
 
                 .and()
 
                 .logout()
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true);
+    }
+
+    @Override
+    public void configure(WebSecurity webSecurity) {
+        webSecurity.ignoring().antMatchers("/resources/**", "/h2-console/**");
     }
 
     @Override
