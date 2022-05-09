@@ -13,9 +13,8 @@ public class CommentRequestDto {
     private Member member;
     private Review review;
     private String content;
-    private Comment parent;
 
     public Comment toEntity() {
-        return Comment.createComment(member, review, content, parent);
+        return Comment.createComment(member, review, content);
     }
 }

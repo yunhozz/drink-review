@@ -1,20 +1,17 @@
 package drinkreview.domain.comment.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class CommentQueryDto {
 
     //Comment
     private Long commentId;
-    private Long parentId;
-    private List<ChildResponseDto> childList;
     private String content;
     private LocalDateTime createDate;
 
@@ -27,10 +24,8 @@ public class CommentQueryDto {
     private Long reviewId;
 
     @QueryProjection
-    public CommentQueryDto(Long commentId, Long parentId, List<ChildResponseDto> childList, String content, LocalDateTime createDate, Long userId, String memberId, String name, Long reviewId) {
+    public CommentQueryDto(Long commentId, String content, LocalDateTime createDate, Long userId, String memberId, String name, Long reviewId) {
         this.commentId = commentId;
-        this.parentId = parentId;
-        this.childList = childList;
         this.content = content;
         this.createDate = createDate;
         this.userId = userId;

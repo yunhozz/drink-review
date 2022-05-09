@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -32,13 +30,6 @@ public class Comment extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parent; //상위 댓글
-
-    @OneToMany(mappedBy = "parent", orphanRemoval = true)
-    private List<Comment> childList = new ArrayList<>(); //하위 댓글
-
     @Enumerated(EnumType.STRING)
     private DeleteStatus isDeleted;
 
@@ -48,13 +39,9 @@ public class Comment extends TimeEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static Comment createComment(Member member, Review review, String content, Comment parent) {
+    public static Comment createComment(Member member, Review review, String content) {
         Comment comment = new Comment(member, content, DeleteStatus.N);
         comment.setReview(review);
-
-        if (parent != null) {
-            comment.setParent(parent);
-        }
 
         return comment;
     }
@@ -67,9 +54,5 @@ public class Comment extends TimeEntity {
     private void setReview(Review review) {
         this.review = review;
         review.getComments().add(this);
-    }
-
-    private void setParent(Comment parent) {
-        this.parent = parent;
     }
 }
