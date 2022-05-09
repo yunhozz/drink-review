@@ -58,6 +58,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         orderDrink.orderPrice,
                         orderDrink.count
                 ))
+                .from(orderDrink)
                 .join(orderDrink.drink, drink)
                 .where(orderDrink.order.id.in(orderIds))
                 .fetch();
