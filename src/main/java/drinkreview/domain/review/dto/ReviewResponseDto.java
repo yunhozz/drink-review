@@ -16,7 +16,6 @@ public class ReviewResponseDto {
     private Long drinkId;
     private String title;
     private String content;
-    private String writer;
     private double score;
     private int view;
     private List<CommentResponseDto> comments;
@@ -27,7 +26,6 @@ public class ReviewResponseDto {
         this.drinkId = review.getDrink().getId();
         this.title = review.getTitle();
         this.content = review.getContent();
-        this.writer = review.getWriter();
         this.score = review.getScore();
         this.view = review.getView();
         this.comments = review.getComments().stream()

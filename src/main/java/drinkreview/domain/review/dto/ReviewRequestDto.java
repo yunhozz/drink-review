@@ -24,7 +24,6 @@ public class ReviewRequestDto {
                 .drink(drink)
                 .title(title)
                 .content(content)
-                .writer(member.getName())
                 .score(score)
                 .view(0)
                 .build();
