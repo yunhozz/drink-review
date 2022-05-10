@@ -13,6 +13,6 @@ public class OrderDrinkRequestDto {
     private int count;
 
     public OrderDrink toEntity() {
-        return new OrderDrink(drink, drink.getPrice() * count, count);
+        return OrderDrink.createOrderDrink(drink, count);
     }
 }
