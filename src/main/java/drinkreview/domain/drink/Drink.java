@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -44,9 +45,16 @@ public class Drink extends TimeEntity {
         this.stockQuantity = stockQuantity;
     }
 
-    public void updateImage(Byte[] image) {
+    public void updateImage(MultipartFile file) throws Exception {
         if (this.image != null) {
             throw new IllegalStateException("This entity's image field is not null.");
+        }
+
+        Byte[] image = new Byte[file.getBytes().length];
+        int i = 0;
+
+        for (Byte b : image) {
+            image[i++] = b;
         }
 
         this.image = image;
