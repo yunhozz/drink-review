@@ -20,7 +20,8 @@ public class Delivery extends TimeEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Embedded
@@ -29,7 +30,8 @@ public class Delivery extends TimeEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status; //PREPARING, DELIVERING, COMPLETE, CANCELED
 
-    public Delivery(Address address, DeliveryStatus status) {
+    public Delivery(Order order, Address address, DeliveryStatus status) {
+        setOrder(order);
         this.address = address;
         this.status = status;
     }
@@ -52,10 +54,9 @@ public class Delivery extends TimeEntity {
         }
     }
 
-    /**
-     * 연관관계 편의 메소드
-     */
-    public void setOrder(Order order) {
+    //연관관계 편의 메소드
+    private void setOrder(Order order) {
         this.order = order;
+        order.setDelivery(this);
     }
 }

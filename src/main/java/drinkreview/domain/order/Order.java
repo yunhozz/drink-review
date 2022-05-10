@@ -34,8 +34,7 @@ public class Order extends TimeEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDrink> orderDrinks = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_id")
+    @OneToOne(mappedBy = "order")
     private Delivery delivery;
 
     private LocalDateTime orderDate;
@@ -49,9 +48,8 @@ public class Order extends TimeEntity {
         this.status = status;
     }
 
-    public static Order createOrder(Member member, Delivery delivery, List<OrderDrink> orderDrinks) {
+    public static Order createOrder(Member member, List<OrderDrink> orderDrinks) {
         Order order = new Order(member, LocalDateTime.now(), OrderStatus.ORDER);
-        order.setDelivery(delivery);
 
         for (OrderDrink orderDrink : orderDrinks) {
             order.setOrderDrink(orderDrink);
@@ -100,8 +98,7 @@ public class Order extends TimeEntity {
     }
 
     //연관관계 편의 메소드
-    private void setDelivery(Delivery delivery) {
+    public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
-        delivery.setOrder(this);
     }
 }
