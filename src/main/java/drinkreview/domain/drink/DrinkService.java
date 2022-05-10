@@ -21,29 +21,19 @@ public class DrinkService {
         return drink.getId();
     }
 
-    public void uploadImageFile(Long drinkId, MultipartFile file) {
+    public void uploadImageFile(Long drinkId, MultipartFile file) throws Exception {
         Drink drink = this.findDrink(drinkId);
+        drink.updateImage(file);
+    }
 
-        try {
-            Byte[] byteObjects = new Byte[file.getBytes().length];
-            int i = 0;
-
-            for (Byte b : byteObjects) {
-                byteObjects[i++] = b;
-            }
-
-            drink.updateImage(byteObjects);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void deleteDrink(Long drinkId) {
+        Drink drink = this.findDrink(drinkId);
+        drinkRepository.delete(drink);
     }
 
     @Transactional(readOnly = true)
     public DrinkResponseDto findDrinkDto(Long drinkId) {
-        Drink drink = drinkRepository.findById(drinkId)
-                .orElseThrow(() -> new IllegalStateException("Drink is null."));
-
+        Drink drink = this.findDrink(drinkId);
         return new DrinkResponseDto(drink);
     }
 
