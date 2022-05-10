@@ -60,9 +60,14 @@ public class ReviewApiController {
         return reviewRepository.searchPageByViewOrder(pageable);
     }
 
-    @GetMapping("/review/list/search")
-    public Page<ReviewQueryDto> reviewByKeyword(@RequestParam("word") String keyword, Pageable pageable) {
-        return reviewRepository.searchPageByKeyword(keyword, pageable);
+    @GetMapping("/review/list/search/date")
+    public Page<ReviewQueryDto> reviewDateByKeyword(@RequestParam("word") String keyword, Pageable pageable) {
+        return reviewRepository.searchPageDateByKeyword(keyword, pageable);
+    }
+
+    @GetMapping("/review/list/search/accuracy")
+    public Page<ReviewQueryDto> reviewAccuracyByKeyword(@RequestParam("word") String keyword, Pageable pageable) {
+        return reviewRepository.searchPageAccuracyByKeyword(keyword, pageable);
     }
 
 //    @PostConstruct

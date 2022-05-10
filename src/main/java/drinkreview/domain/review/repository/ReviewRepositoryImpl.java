@@ -10,8 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static drinkreview.domain.comment.QComment.comment;
@@ -223,7 +222,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public Page<ReviewQueryDto> searchPageByKeyword(String keyword, Pageable pageable) {
+    public Page<ReviewQueryDto> searchPageDateByKeyword(String keyword, Pageable pageable) {
         List<ReviewQueryDto> content = queryFactory
                 .select(new QReviewQueryDto(
                         review.id,
@@ -247,5 +246,53 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .fetch();
 
         return new PageImpl<>(content, pageable, content.size());
+    }
+
+    @Override
+    public Page<ReviewQueryDto> searchPageAccuracyByKeyword(String keyword, Pageable pageable) {
+        List<ReviewQueryDto> reviews = queryFactory
+                .select(new QReviewQueryDto(
+                        review.id,
+                        review.title,
+                        review.score,
+                        review.createdDate,
+                        member.id,
+                        member.name,
+                        drink.id,
+                        drink.name
+                ))
+                .from(review)
+                .join(review.member, member)
+                .join(review.drink, drink)
+                .where(review.title.contains(keyword)
+                        .or(review.content.contains(keyword))
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Map<ReviewQueryDto, Integer> countMap = new HashMap<>();
+
+        for (ReviewQueryDto review : reviews) {
+            int count1 = countKeyword(review.getTitle(), keyword);
+            int count2 = countKeyword(review.getContent(), keyword);
+
+            countMap.put(review, count1 + count2);
+        }
+
+        List<Map.Entry<ReviewQueryDto, Integer>> entries = new ArrayList<>(countMap.entrySet());
+        Collections.sort(entries, (o1, o2) -> o2.getValue().compareTo(o1.getValue())); //내림차순 정렬
+
+        List<ReviewQueryDto> sortedReviews = new ArrayList<>();
+
+        for (Map.Entry<ReviewQueryDto, Integer> entry : entries) {
+            sortedReviews.add(entry.getKey());
+        }
+
+        return new PageImpl<>(sortedReviews, pageable, sortedReviews.size());
+    }
+
+    private int countKeyword(String str, String keyword) {
+        return str.length() - str.replace(keyword, "").length();
     }
 }

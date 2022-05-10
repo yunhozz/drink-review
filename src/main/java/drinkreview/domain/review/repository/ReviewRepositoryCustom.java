@@ -11,10 +11,10 @@ public interface ReviewRepositoryCustom {
     Boolean exist(Long reviewId);
     ReviewQueryDto findReview(Long reviewId);
     List<ReviewQueryDto> findReviewList();
-
     List<ReviewQueryDto> searchList();
     Page<ReviewQueryDto> searchPageByScoreOrder(Pageable pageable); //평점순
     Page<ReviewQueryDto> searchPageByDateOrder(Pageable pageable); //최신순
     Page<ReviewQueryDto> searchPageByViewOrder(Pageable pageable); //인기순
-    Page<ReviewQueryDto> searchPageByKeyword(String keyword, Pageable pageable); //검색 기능 + 페이징
+    Page<ReviewQueryDto> searchPageDateByKeyword(String keyword, Pageable pageable); //검색 + 최신순
+    Page<ReviewQueryDto> searchPageAccuracyByKeyword(String keyword, Pageable pageable); //검색 + 정확도순
 }

@@ -188,7 +188,7 @@ class ReviewRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         //when
-        Page<ReviewQueryDto> result = reviewRepository.searchPageByKeyword("find", pageRequest);
+        Page<ReviewQueryDto> result = reviewRepository.searchPageDateByKeyword("find", pageRequest);
 
         //then
         assertThat(result.getContent().size()).isEqualTo(10);
