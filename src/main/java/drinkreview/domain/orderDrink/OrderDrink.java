@@ -1,5 +1,6 @@
 package drinkreview.domain.orderDrink;
 
+import drinkreview.domain.TimeEntity;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.order.Order;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderDrink {
+public class OrderDrink extends TimeEntity {
 
     @Id
     @GeneratedValue
@@ -35,10 +36,7 @@ public class OrderDrink {
     }
 
     public static OrderDrink createOrderDrink(Drink drink, int count) {
-        OrderDrink orderDrink = new OrderDrink(drink, drink.getPrice() * count, count);
-        orderDrink.getDrink().removeQuantity(count);
-
-        return orderDrink;
+        return new OrderDrink(drink, drink.getPrice() * count, count);
     }
 
     public void updateOrder(int count) {
@@ -52,15 +50,20 @@ public class OrderDrink {
         }
 
         orderPrice = drink.getPrice() * count;
+        this.count = updatedCount;
     }
 
+    //주문 접수
+    public void createOrder() {
+        drink.removeQuantity(count);
+    }
+
+    //Order -> 전체 주문 취소
     public void cancelOrder() {
         drink.addQuantity(count);
     }
 
-    /**
-     * 연관관계 편의 메소드
-     */
+    //연관관계 편의 메소드
     public void setOrder(Order order) {
         this.order = order;
     }
