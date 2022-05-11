@@ -15,7 +15,6 @@ public class OrderResponseDto {
 
     private Long id;
     private Long userId;
-    private Long deliveryId;
     private LocalDateTime orderDate;
     private OrderStatus status;
     private List<OrderDrinkResponseDto> orderDrinks;
@@ -23,7 +22,6 @@ public class OrderResponseDto {
     public OrderResponseDto(Order order) {
         this.id = order.getId();
         this.userId = order.getMember().getId();
-        this.deliveryId = order.getDelivery().getId();
         this.orderDate = order.getOrderDate();
         this.status = order.getStatus();
         this.orderDrinks = order.getOrderDrinks().stream()
