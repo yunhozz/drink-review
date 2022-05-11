@@ -23,7 +23,7 @@ public class OrderService {
     private final OrderDrinkRepository orderDrinkRepository;
     private final MemberRepository memberRepository;
 
-    public Long makeOrder(OrderRequestDto dto, Long userId, List<Long> orderDrinkIds) {
+    public Long makeOrder(Long userId, List<Long> orderDrinkIds) {
         List<OrderDrink> orderDrinks = new ArrayList<>();
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
@@ -35,6 +35,7 @@ public class OrderService {
             orderDrinks.add(orderDrink);
         }
 
+        OrderRequestDto dto = new OrderRequestDto();
         dto.setMember(member);
         dto.setOrderDrinks(orderDrinks);
         Order order = orderRepository.save(dto.toEntity());
