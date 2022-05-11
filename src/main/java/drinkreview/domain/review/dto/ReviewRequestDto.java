@@ -3,13 +3,13 @@ package drinkreview.domain.review.dto;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.review.Review;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class ReviewRequestDto {
 
     @NotEmpty private Member member;

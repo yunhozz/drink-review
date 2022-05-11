@@ -2,13 +2,13 @@ package drinkreview.domain.review.dto;
 
 import drinkreview.domain.comment.dto.CommentResponseDto;
 import drinkreview.domain.review.Review;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewResponseDto {
 
     private Long id;

@@ -1,14 +1,14 @@
 package drinkreview.domain.drink.dto;
 
 import drinkreview.domain.drink.Drink;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class DrinkRequestDto {
 
     @NotEmpty private String name;

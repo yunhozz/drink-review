@@ -1,11 +1,11 @@
 package drinkreview.domain.orderDrink.dto;
 
 import drinkreview.domain.orderDrink.OrderDrink;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDrinkResponseDto {
 
     private Long id;

@@ -1,14 +1,14 @@
 package drinkreview.domain.member.dto;
 
 import drinkreview.domain.member.Member;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotEmpty;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class MemberRequestDto {
 
     @NotEmpty private String memberId;

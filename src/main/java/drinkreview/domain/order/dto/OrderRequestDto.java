@@ -3,17 +3,18 @@ package drinkreview.domain.order.dto;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.order.Order;
 import drinkreview.domain.orderDrink.OrderDrink;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class OrderRequestDto {
 
-    private Member member;
-    private List<OrderDrink> orderDrinks;
+    @NotEmpty private Member member;
+    @NotEmpty private List<OrderDrink> orderDrinks;
 
     public Order toEntity() {
         return Order.createOrder(member, orderDrinks);

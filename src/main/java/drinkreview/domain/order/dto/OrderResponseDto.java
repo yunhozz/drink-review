@@ -3,14 +3,14 @@ package drinkreview.domain.order.dto;
 import drinkreview.domain.order.Order;
 import drinkreview.domain.orderDrink.dto.OrderDrinkResponseDto;
 import drinkreview.global.enums.OrderStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class OrderResponseDto {
 
     private Long id;

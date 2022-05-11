@@ -5,11 +5,11 @@ import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.order.Order;
 import drinkreview.global.enums.City;
 import drinkreview.global.enums.DeliveryStatus;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class DeliveryRequestDto {
 
     private Order order;
