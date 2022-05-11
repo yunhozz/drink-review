@@ -54,7 +54,7 @@ public class MemberController {
             return "member/login";
         }
 
-        MemberResponseDto member = memberService.login(loginForm);
+        MemberResponseDto member = memberService.login(loginForm.getMemberId(), loginForm.getMemberPw());
         UserDetails loginMember = userDetailsService.loadUserByUsername(member.getMemberId());
         model.addAttribute("loginMember", loginMember);
 

@@ -1,11 +1,11 @@
 package drinkreview.domain.member.service;
 
 import drinkreview.domain.member.Member;
-import drinkreview.domain.member.controller.LoginForm;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +28,14 @@ public class MemberService {
     }
 
     //로그인
-    public MemberResponseDto login(LoginForm loginForm) {
-        Member member = memberRepository.findByMemberId(loginForm.getMemberId())
+    public MemberResponseDto login(String memberId, String memberPw) {
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         //비밀번호 일치 여부 확인
-        if (!loginForm.getMemberPw().equals(member.getMemberPw())) {
+        if (!encoder.matches(memberPw, member.getMemberPw())) {
             throw new IllegalStateException("The password is different. Please enter it again.");
         }
 
