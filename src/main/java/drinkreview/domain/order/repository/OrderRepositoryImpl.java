@@ -46,7 +46,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .fetch();
 
         List<Long> orderIds = orders.stream()
-                .map(orderQueryDto -> orderQueryDto.getId())
+                .map(OrderQueryDto::getId)
                 .toList();
 
         List<OrderDrinkResponseDto> orderDrinks = queryFactory
@@ -64,7 +64,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .fetch();
 
         Map<Long, List<OrderDrinkResponseDto>> orderDrinkMap = orderDrinks.stream()
-                .collect(Collectors.groupingBy(orderDrinkResponseDto -> orderDrinkResponseDto.getOrderId()));
+                .collect(Collectors.groupingBy(OrderDrinkResponseDto::getOrderId));
 
         orders.forEach(orderQueryDto -> orderQueryDto.setOrderDrinks(orderDrinkMap.get(orderQueryDto.getId())));
 
