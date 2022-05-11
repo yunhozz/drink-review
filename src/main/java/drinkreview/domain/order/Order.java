@@ -31,7 +31,7 @@ public class Order extends TimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     private List<OrderDrink> orderDrinks = new ArrayList<>();
 
     @OneToOne(mappedBy = "order")
@@ -53,6 +53,7 @@ public class Order extends TimeEntity {
 
         for (OrderDrink orderDrink : orderDrinks) {
             order.setOrderDrink(orderDrink);
+            orderDrink.createOrder();
         }
 
         return order;
@@ -77,7 +78,7 @@ public class Order extends TimeEntity {
         }
     }
 
-    //주문 취소
+    //전체 주문 취소
     public void cancel() {
         if (status == OrderStatus.CANCEL) {
             throw new NotAllowedCancelOrderException("This order can't be canceled.");
