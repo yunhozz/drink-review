@@ -50,7 +50,7 @@ public class OrderDrink extends TimeEntity {
         }
 
         orderPrice = drink.getPrice() * count;
-        this.count = updatedCount;
+        this.count = count;
     }
 
     //주문 접수
