@@ -15,14 +15,21 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     Optional<Member> findByMemberId(String memberId);
 
+    //ID 리스트 조회
     @Query("select m.memberId from Member m")
     List<String> findMemberIdList();
 
+    //이름, 나이로 조회
     @Query("select m from Member m where m.name = :name and m.age = :age")
     List<Member> findWithNameAndAge(@Param("name") String name, @Param("age") int age);
 
+    //이름 컬렉션으로 조회
     @Query("select m from Member m where m.name in :names")
     List<Member> findWithNames(@Param("names") Collection<String> names);
+
+    //한건이라도 주문한 고객 조회
+    @Query("select m from Member m where (select o from Order o where o.member = m) > 0")
+    List<Member> findAtLeastOneOrder();
 
     @Query("select m from Member m")
     Page<Member> findPage(Pageable pageable);
