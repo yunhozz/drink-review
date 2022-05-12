@@ -1,13 +1,13 @@
 package drinkreview.domain.comment.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class CommentQueryDto {
 
     //Comment
