@@ -4,14 +4,14 @@ import com.querydsl.core.annotations.QueryProjection;
 import drinkreview.domain.orderDrink.dto.OrderDrinkResponseDto;
 import drinkreview.global.enums.DeliveryStatus;
 import drinkreview.global.enums.OrderStatus;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class OrderQueryDto {
 
     //Order
