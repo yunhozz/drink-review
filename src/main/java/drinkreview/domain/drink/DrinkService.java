@@ -26,11 +26,6 @@ public class DrinkService {
         drink.updateImage(file);
     }
 
-    public void deleteDrink(Long drinkId) {
-        Drink drink = this.findDrink(drinkId);
-        drinkRepository.delete(drink);
-    }
-
     @Transactional(readOnly = true)
     public DrinkResponseDto findDrinkDto(Long drinkId) {
         Drink drink = this.findDrink(drinkId);
