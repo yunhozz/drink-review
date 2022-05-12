@@ -1,6 +1,7 @@
 package drinkreview.domain.drink;
 
 import drinkreview.domain.TimeEntity;
+import drinkreview.global.enums.DrinkStatus;
 import drinkreview.global.exception.NotEnoughStockException;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,8 +35,11 @@ public class Drink extends TimeEntity {
     private double gpa;
     private int stockQuantity;
 
+    @Enumerated(EnumType.STRING)
+    private DrinkStatus status; //ON_SALE, OUT_OF_STOCK
+
     @Builder
-    private Drink(String name, String country, LocalDate productionDate, int price, Byte[] image, double gpa, int stockQuantity) {
+    private Drink(String name, String country, LocalDate productionDate, int price, Byte[] image, double gpa, int stockQuantity, DrinkStatus status) {
         this.name = name;
         this.country = country;
         this.productionDate = productionDate;
@@ -43,6 +47,7 @@ public class Drink extends TimeEntity {
         this.image = image;
         this.gpa = gpa;
         this.stockQuantity = stockQuantity;
+        this.status = status;
     }
 
     public void updateImage(MultipartFile file) throws Exception {
@@ -71,6 +76,10 @@ public class Drink extends TimeEntity {
             throw new NotEnoughStockException("Not enough stock.");
         }
 
-        this.stockQuantity = remainQuantity;
+        if (remainQuantity == 0) {
+            status = DrinkStatus.OUT_OF_STOCK;
+        } else {
+            this.stockQuantity = remainQuantity;
+        }
     }
 }
