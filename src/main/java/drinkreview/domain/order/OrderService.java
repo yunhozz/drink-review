@@ -4,6 +4,7 @@ import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.order.dto.OrderRequestDto;
 import drinkreview.domain.order.dto.OrderResponseDto;
+import drinkreview.domain.order.repository.OrderHistoryRepository;
 import drinkreview.domain.order.repository.OrderRepository;
 import drinkreview.domain.orderDrink.OrderDrink;
 import drinkreview.domain.orderDrink.OrderDrinkRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,6 +23,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDrinkRepository orderDrinkRepository;
+    private final OrderHistoryRepository orderHistoryRepository;
     private final MemberRepository memberRepository;
 
     public Long makeOrder(Long userId, List<Long> orderDrinkIds) {
@@ -39,6 +42,18 @@ public class OrderService {
         dto.setMember(member);
         dto.setOrderDrinks(orderDrinks);
         Order order = orderRepository.save(dto.toEntity());
+
+        Optional<OrderHistory> findHistory = orderHistoryRepository.findByUserId(member.getId());
+        OrderEntity orderEntity = new OrderEntity(order.getId());
+
+        if (findHistory.isEmpty()) {
+            OrderHistory orderHistory = new OrderHistory(member, orderEntity);
+            orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
+        } else {
+            OrderHistory orderHistory = findHistory.get();
+            orderHistory.update(orderEntity);
+            orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
+        }
 
         return order.getId();
     }
