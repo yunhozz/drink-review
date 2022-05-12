@@ -2,14 +2,14 @@ package drinkreview.domain.review.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import drinkreview.domain.comment.dto.CommentQueryDto;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class ReviewQueryDto {
 
     //Review
