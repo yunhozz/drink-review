@@ -29,14 +29,17 @@ public class OrderDrink extends TimeEntity {
     private int orderPrice; //음료 하나의 가격 x count = 총 가격
     private int count;
 
-    private OrderDrink(Drink drink, int orderPrice, int count) {
+    private OrderDrink(Drink drink, int count) {
         this.drink = drink;
-        this.orderPrice = orderPrice;
         this.count = count;
+        this.orderPrice = drink.getPrice() * count;
     }
 
     public static OrderDrink createOrderDrink(Drink drink, int count) {
-        return new OrderDrink(drink, drink.getPrice() * count, count);
+        OrderDrink orderDrink = new OrderDrink(drink, count);
+        orderDrink.getDrink().removeQuantity(count);
+
+        return orderDrink;
     }
 
     public void updateOrder(int count) {
