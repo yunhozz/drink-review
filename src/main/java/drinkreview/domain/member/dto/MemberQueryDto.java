@@ -1,11 +1,11 @@
 package drinkreview.domain.member.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class MemberQueryDto {
 
     private String memberId;
