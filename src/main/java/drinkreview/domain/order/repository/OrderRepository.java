@@ -18,6 +18,11 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     @Query("select o from Order o where o.status = 'CANCEL'")
     List<Order> findCanceledOrder();
 
+    //전체 상품 각각의 재고보다 주문량이 많은 주문들
+    @Query("select distinct o from Order o join fetch o.orderDrinks od" +
+            " where od.count > all(select d.stockQuantity from Drink d)")
+    List<Order> findOrderThanDrinkStock();
+
     @Query(value = "select o from Order o join fetch o.member m",
             countQuery = "select count(o) from Order o")
     Page<Order> findPage(Pageable pageable);
