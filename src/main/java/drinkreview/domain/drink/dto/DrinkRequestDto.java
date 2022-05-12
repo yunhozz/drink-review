@@ -1,6 +1,7 @@
 package drinkreview.domain.drink.dto;
 
 import drinkreview.domain.drink.Drink;
+import drinkreview.global.enums.DrinkStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,8 +26,9 @@ public class DrinkRequestDto {
                 .country(country)
                 .productionDate(LocalDate.of(year, month, day))
                 .price(price)
-                .stockQuantity(stockQuantity)
                 .gpa(0)
+                .stockQuantity(stockQuantity)
+                .status(DrinkStatus.ON_SALE)
                 .build();
     }
 }
