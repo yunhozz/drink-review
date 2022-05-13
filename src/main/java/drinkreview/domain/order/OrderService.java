@@ -48,10 +48,10 @@ public class OrderService {
         OrderHistory orderHistory;
 
         if (findHistory.isEmpty()) {
-            orderHistory = new OrderHistory(member, orderEntity);
+            orderHistory = OrderHistory.createOrderHistory(member, orderEntity);
         } else {
             orderHistory = findHistory.get();
-            orderHistory.update(orderEntity);
+            orderHistory.updateOrderEntity(orderEntity);
         }
 
         orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
