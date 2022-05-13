@@ -31,10 +31,17 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     @Query("select m from Member m where (select o from Order o where o.member = m) > 0")
     List<Member> findAtLeastOneOrder();
 
+    //한건이라도 주문상태인 고객인지 ?
+    @Query("select case" +
+            " when (select o from Order o where o.status = 'ORDER' and o.member = m) > 0 then true" +
+            " else false end" +
+            " from Member m" +
+            " where m.id = :id")
+    Boolean isOrdering(@Param("id") Long userId);
+
     @Query("select m from Member m")
     Page<Member> findPage(Pageable pageable);
 
     Page<Member> findPageByAge(int age, Pageable pageable);
-
     Page<Member> findPageByAuth(String auth, Pageable pageable);
 }
