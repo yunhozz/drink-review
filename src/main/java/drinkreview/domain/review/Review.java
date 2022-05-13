@@ -55,8 +55,4 @@ public class Review extends TimeEntity {
         this.content = content;
         this.score = score;
     }
-
-    public void takeView() {
-        view++;
-    }
 }
