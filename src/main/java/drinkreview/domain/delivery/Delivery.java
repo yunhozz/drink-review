@@ -52,7 +52,14 @@ public class Delivery extends TimeEntity {
         }
     }
 
-    public void cancel() {
+    public void complete() {
+        if (status == DeliveryStatus.DELIVERING) {
+            status = DeliveryStatus.COMPLETE;
+            order.complete();
+        }
+    }
+
+    public void canceled() {
         if (status == DeliveryStatus.PREPARING) {
             status = DeliveryStatus.CANCELED;
 
