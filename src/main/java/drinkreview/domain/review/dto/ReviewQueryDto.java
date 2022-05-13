@@ -16,6 +16,7 @@ public class ReviewQueryDto {
     private Long reviewId;
     private String title;
     private String content;
+    private String memberName;
     private double score;
     private int view;
     private LocalDateTime createdDate;
@@ -23,7 +24,7 @@ public class ReviewQueryDto {
     //Member
     private Long userId;
     private String memberId;
-    private String memberName;
+    private String name;
 
     //Drink
     private Long drinkId;
@@ -34,20 +35,19 @@ public class ReviewQueryDto {
 
     //리스트
     @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, double score, LocalDateTime createdDate, Long userId, String memberName, Long drinkId, String drinkName) {
+    public ReviewQueryDto(Long reviewId, String title, String memberName, double score, LocalDateTime createdDate, Long drinkId, String drinkName) {
         this.reviewId = reviewId;
         this.title = title;
+        this.memberName = memberName;
         this.score = score;
         this.createdDate = createdDate;
-        this.userId = userId;
-        this.memberName = memberName;
         this.drinkId = drinkId;
         this.drinkName = drinkName;
     }
 
     //세부 내용 + comments
     @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, String content, double score, int view, LocalDateTime createdDate, Long userId, String memberId, String memberName, Long drinkId, String drinkName) {
+    public ReviewQueryDto(Long reviewId, String title, String content, double score, int view, LocalDateTime createdDate, Long userId, String memberId, String name, Long drinkId, String drinkName) {
         this.reviewId = reviewId;
         this.title = title;
         this.content = content;
@@ -56,7 +56,21 @@ public class ReviewQueryDto {
         this.createdDate = createdDate;
         this.userId = userId;
         this.memberId = memberId;
+        this.name = name;
+        this.drinkId = drinkId;
+        this.drinkName = drinkName;
+    }
+
+    //세부 내용 + comments + member null
+    @QueryProjection
+    public ReviewQueryDto(Long reviewId, String title, String content, String memberName, double score, int view, LocalDateTime createdDate, Long drinkId, String drinkName) {
+        this.reviewId = reviewId;
+        this.title = title;
+        this.content = content;
         this.memberName = memberName;
+        this.score = score;
+        this.view = view;
+        this.createdDate = createdDate;
         this.drinkId = drinkId;
         this.drinkName = drinkName;
     }
