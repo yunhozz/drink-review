@@ -35,7 +35,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public ReviewQueryDto findReview(Long reviewId) {
+    public ReviewQueryDto selectReview(Long reviewId) {
         ReviewQueryDto findReview = queryFactory
                 .select(new QReviewQueryDto(
                         review.id,
@@ -73,6 +73,49 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .from(comment)
                 .join(comment.member, member)
                 .where(comment.review.id.eq(findReview.getReviewId()))
+                .fetch();
+
+        findReview.setComments(comments);
+
+        return findReview;
+    }
+
+    @Override
+    public ReviewQueryDto selectReviewWithoutMember(Long reviewId) {
+        ReviewQueryDto findReview = queryFactory
+                .select(new QReviewQueryDto(
+                        review.id,
+                        review.title,
+                        review.content,
+                        review.memberName,
+                        review.score,
+                        review.view,
+                        review.createdDate,
+                        drink.id,
+                        drink.name
+                ))
+                .from(review)
+                .join(review.drink, drink)
+                .where(review.id.eq(reviewId))
+                .fetchOne();
+
+        if (findReview == null) {
+            throw new IllegalStateException("Can't find this review : " + reviewId);
+        }
+
+        List<CommentQueryDto> comments = queryFactory
+                .select(new QCommentQueryDto(
+                        comment.id,
+                        comment.content,
+                        comment.createdDate,
+                        member.id,
+                        member.memberId,
+                        member.name,
+                        comment.review.id
+                ))
+                .from(comment)
+                .join(comment.member, member)
+                .where(comment.review.id.eq(reviewId))
                 .fetch();
 
         findReview.setComments(comments);
@@ -135,10 +178,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
@@ -155,10 +197,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
@@ -179,10 +220,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
@@ -203,10 +243,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
@@ -227,10 +266,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
@@ -254,10 +292,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.memberName,
                         review.score,
                         review.createdDate,
-                        member.id,
-                        member.name,
                         drink.id,
                         drink.name
                 ))
