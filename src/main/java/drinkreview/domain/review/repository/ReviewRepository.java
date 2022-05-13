@@ -21,6 +21,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
     @Query("update Review r set r.view = r.view + 1 where r.id = :reviewId")
     int addView(@Param("reviewId") Long reviewId);
 
+    //member 필드가 null 인지 ?
+    @Query("select case when r.member is null then true else false end from Review r where r.id = :id")
+    boolean isMemberNull(@Param("id") Long reviewId);
+
+    @Query("select r from Review r join fetch r.member m where m.id = :id")
+    List<Review> findWithUserId(@Param("id") Long userId);
+
     @Query("select r from Review r")
     Page<Review> findPage(Pageable pageable);
 }

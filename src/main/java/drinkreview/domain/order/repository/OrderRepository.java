@@ -11,6 +11,9 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
+    @Query("select o from Order o join fetch o.member m where m.id = :id")
+    List<Order> findWithUserId(@Param("id") Long userId);
+
     //주문 완료된 주문건 조회
     @Query("select o from Order o where o.status = 'ORDER'")
     List<Order> findCompleteOrder();
