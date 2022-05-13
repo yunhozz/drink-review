@@ -1,5 +1,6 @@
 package drinkreview.domain.order;
 
+import drinkreview.domain.MemberInfo;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.member.Member;
 import lombok.AccessLevel;
@@ -23,18 +24,21 @@ public class OrderHistory extends TimeEntity {
     @JoinColumn(name = "order_history_id")
     private List<OrderEntity> orderEntities = new ArrayList<>(); //orderIds
 
-    private Long userId;
-    private String memberId;
-    private String name;
+    @Embedded
+    private MemberInfo memberInfo;
 
-    public OrderHistory(Member member, OrderEntity orderEntity) {
-        this.userId = member.getId();
-        this.memberId = member.getMemberId();
-        this.name = member.getName();
-        this.orderEntities.add(orderEntity);
+    private OrderHistory(MemberInfo memberInfo) {
+        this.memberInfo = memberInfo;
     }
 
-    public void update(OrderEntity orderEntity) {
+    public static OrderHistory createOrderHistory(Member member, OrderEntity orderEntity) {
+        OrderHistory orderHistory = new OrderHistory(new MemberInfo(member.getId(), member.getMemberId(), member.getName()));
+        orderHistory.orderEntities.add(orderEntity);
+
+        return orderHistory;
+    }
+
+    public void updateOrderEntity(OrderEntity orderEntity) {
         this.orderEntities.add(orderEntity);
     }
 }
