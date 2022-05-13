@@ -45,15 +45,16 @@ public class OrderService {
 
         Optional<OrderHistory> findHistory = orderHistoryRepository.findByUserId(member.getId());
         OrderEntity orderEntity = new OrderEntity(order.getId());
+        OrderHistory orderHistory;
 
         if (findHistory.isEmpty()) {
-            OrderHistory orderHistory = new OrderHistory(member, orderEntity);
-            orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
+            orderHistory = new OrderHistory(member, orderEntity);
         } else {
-            OrderHistory orderHistory = findHistory.get();
+            orderHistory = findHistory.get();
             orderHistory.update(orderEntity);
-            orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
         }
+
+        orderHistoryRepository.save(orderHistory); //cascade : orderEntity persist
 
         return order.getId();
     }
