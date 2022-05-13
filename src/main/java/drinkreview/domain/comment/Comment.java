@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,11 +29,15 @@ public class Comment extends TimeEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "comment_id")
+    private List<CommentChild> commentChildList = new ArrayList<>();
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private DeleteStatus isDeleted;
+    private DeleteStatus isDeleted; //Y, N
 
     private Comment(Member member, String content, DeleteStatus isDeleted) {
         this.member = member;
@@ -48,6 +54,10 @@ public class Comment extends TimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void addCommentChild(CommentChild commentChild) {
+        this.commentChildList.add(commentChild);
     }
 
     //연관관계 편의 메소드
