@@ -6,6 +6,7 @@ import drinkreview.domain.drink.Drink;
 import drinkreview.domain.drink.dto.DrinkRequestDto;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
+import drinkreview.domain.order.repository.OrderHistoryRepository;
 import drinkreview.domain.order.repository.OrderRepository;
 import drinkreview.domain.orderDrink.OrderDrinkService;
 import drinkreview.global.enums.City;
@@ -29,6 +30,7 @@ class OrderServiceTest {
     @Autowired OrderService orderService;
     @Autowired OrderRepository orderRepository;
     @Autowired OrderDrinkService orderDrinkService;
+    @Autowired OrderHistoryRepository orderHistoryRepository;
     @Autowired EntityManager em;
     Member member;
     Drink drink;
@@ -52,13 +54,22 @@ class OrderServiceTest {
         Long id3 = orderDrinkService.makeOrderDrink(drink.getId(), 3);
 
         //when
-        Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
-        Order order = orderRepository.findById(orderId).get();
+        Long orderId1 = orderService.makeOrder(member.getId(), List.of(id1, id2));
+        Long orderId2 = orderService.makeOrder(member.getId(), List.of(id3));
+
+        Order order1 = orderRepository.findById(orderId1).get();
+        Order order2 = orderRepository.findById(orderId2).get();
+
+        OrderHistory history = orderHistoryRepository.findByUserId(member.getId()).get();
 
         //then
-        assertThat(order.getId()).isEqualTo(orderId);
-        assertThat(order.getMember().getId()).isEqualTo(member.getId());
-        assertThat(order.getOrderDrinks()).hasSize(3);
+        assertThat(order1.getId()).isEqualTo(orderId1);
+        assertThat(order2.getId()).isEqualTo(orderId2);
+        assertThat(order1.getMember().getId()).isEqualTo(member.getId());
+        assertThat(order1.getOrderDrinks()).hasSize(2);
+        assertThat(order2.getOrderDrinks()).hasSize(1);
+        assertThat(history.getMemberId()).isEqualTo("qkrdbsgh");
+        assertThat(history.getOrderEntities()).hasSize(2);
     }
 
     @Test
@@ -146,7 +157,6 @@ class OrderServiceTest {
 
         //then
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCEL);
-        assertThat(order.getOrderDrinks().get(0).getDrink().getStockQuantity()).isEqualTo(100);
         assertThat(delivery.getStatus()).isEqualTo(DeliveryStatus.CANCELED);
     }
 
