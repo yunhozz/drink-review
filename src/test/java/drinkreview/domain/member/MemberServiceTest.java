@@ -1,13 +1,18 @@
 package drinkreview.domain.member;
 
+import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
+import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.member.service.MemberService;
+import drinkreview.domain.review.Review;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberServiceTest {
 
     @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
+    @Autowired EntityManager em;
 
     @Test
     @Commit
@@ -88,19 +95,20 @@ class MemberServiceTest {
         //when
         Long memberId1 = memberService.join(memberDto1);
         Long memberId2 = memberService.join(memberDto2);
+        Member member1 = memberRepository.findById(memberId1).get();
+        Member member2 = memberRepository.findById(memberId2).get();
+
+        Review review1 = createReview(member1, null, "title1", "content1", 4.6);
+        Review review2 = createReview(member2, null, "title2", "content2", 3.8);
+        em.persist(review1);
+        em.persist(review2);
 
         memberService.withdraw(memberId1);
 
-        MemberResponseDto result2 = memberService.findMemberDto(memberId2);
-
         //then
-        assertThat(result2.getMemberId()).isEqualTo(memberDto2.getMemberId());
-
-        try {
-            memberService.findMemberDto(memberId1);
-        } catch (Exception e) {
-            assertThat(e.getMessage()).isEqualTo("Member is null.");
-        }
+        assertThat(review1.getMember()).isNull();
+        assertThat(review2.getMember()).isNotNull();
+        assertThat(review1.getTitle()).isEqualTo("title1");
     }
 
     private MemberRequestDto createMemberDto(String memberId, String memberPw, String name, int age, String auth) {
@@ -112,5 +120,16 @@ class MemberServiceTest {
         dto.setAuth(auth);
 
         return dto;
+    }
+
+    private Review createReview(Member member, Drink drink, String title, String content, double score) {
+        return Review.builder()
+                .member(member)
+                .drink(drink)
+                .title(title)
+                .content(content)
+                .memberName(member.getName())
+                .score(score)
+                .build();
     }
 }
