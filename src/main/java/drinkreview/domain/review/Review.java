@@ -35,17 +35,19 @@ public class Review extends TimeEntity {
 
     private String title;
     private String content;
+    private String memberName;
     private double score;
 
     @Column(columnDefinition = "integer default 0")
     private int view;
 
     @Builder
-    private Review(Member member, Drink drink, String title, String content, double score, int view) {
+    private Review(Member member, Drink drink, String title, String content, String memberName, double score, int view) {
         this.member = member;
         this.drink = drink;
         this.title = title;
         this.content = content;
+        this.memberName = memberName;
         this.score = score;
         this.view = view;
     }
@@ -54,5 +56,15 @@ public class Review extends TimeEntity {
         this.title = title;
         this.content = content;
         this.score = score;
+    }
+
+    public void updateMemberName(String memberName) {
+        this.memberName = memberName;
+    }
+
+    public void deleteMember() {
+        if (this.member != null) {
+            this.member = null;
+        }
     }
 }

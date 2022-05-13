@@ -36,17 +36,20 @@ public class Comment extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    private String memberName;
+
     @Enumerated(EnumType.STRING)
     private DeleteStatus isDeleted; //Y, N
 
-    private Comment(Member member, String content, DeleteStatus isDeleted) {
+    private Comment(Member member, String content, String memberName, DeleteStatus isDeleted) {
         this.member = member;
         this.content = content;
+        this.memberName = memberName;
         this.isDeleted = isDeleted;
     }
 
     public static Comment createComment(Member member, Review review, String content) {
-        Comment comment = new Comment(member, content, DeleteStatus.N);
+        Comment comment = new Comment(member, content, member.getName(), DeleteStatus.N);
         comment.setReview(review);
 
         return comment;
@@ -56,8 +59,18 @@ public class Comment extends TimeEntity {
         this.content = content;
     }
 
+    public void updateMemberName(String memberName) {
+        this.memberName = memberName;
+    }
+
     public void addCommentChild(CommentChild commentChild) {
         this.commentChildList.add(commentChild);
+    }
+
+    public void deleteMember() {
+        if (this.member != null) {
+            this.member = null;
+        }
     }
 
     //연관관계 편의 메소드
