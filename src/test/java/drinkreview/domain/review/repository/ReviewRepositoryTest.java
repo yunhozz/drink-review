@@ -76,6 +76,24 @@ class ReviewRepositoryTest {
     }
 
     @Test
+    void isMemberNull() throws Exception {
+        //given
+        Review review1 = createReview(member, drink, "ABCfind", "content", 1);
+        Review review2 = createReview(null, drink, "review", "findABC", 2);
+
+        //when
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
+
+        boolean result1 = reviewRepository.isMemberNull(review1.getId());
+        boolean result2 = reviewRepository.isMemberNull(review2.getId());
+
+        //then
+        assertThat(result1).isFalse();
+        assertThat(result2).isTrue();
+    }
+
+    @Test
     void exist() throws Exception {
         //given
         Review review = createReview(member, drink, "review", "content", 1);
