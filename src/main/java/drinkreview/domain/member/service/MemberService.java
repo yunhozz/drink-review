@@ -45,6 +45,12 @@ public class MemberService {
     //회원 탈퇴
     public void withdraw(Long id) {
         Member member = this.findMember(id);
+
+        //주문 상태인지 확인
+        if (memberRepository.isOrdering(member.getId())) {
+            throw new IllegalStateException("This member has at least one order : " + member.getId());
+        }
+
         memberRepository.delete(member);
     }
 
