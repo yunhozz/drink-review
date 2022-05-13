@@ -224,7 +224,7 @@ class OrderRepositoryTest {
     }
 
     private OrderDrink createOrderDrink(Drink drink, int count) {
-        return OrderDrink.createOrderDrink(drink, count);
+        return new OrderDrink(drink, count);
     }
 
     private Drink createDrink(String name, int price, int stockQuantity) {
