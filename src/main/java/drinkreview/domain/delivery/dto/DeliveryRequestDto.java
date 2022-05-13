@@ -1,10 +1,8 @@
 package drinkreview.domain.delivery.dto;
 
-import drinkreview.domain.Address;
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.order.Order;
 import drinkreview.global.enums.City;
-import drinkreview.global.enums.DeliveryStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +16,6 @@ public class DeliveryRequestDto {
     private String etc;
 
     public Delivery toEntity() {
-        Address address = new Address(city, street, etc);
-        return new Delivery(order, address, DeliveryStatus.PREPARING);
+        return Delivery.createDelivery(order, city, street, etc);
     }
 }
