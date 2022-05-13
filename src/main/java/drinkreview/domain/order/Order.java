@@ -40,7 +40,7 @@ public class Order extends TimeEntity {
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status; //ORDER, CANCEL
+    private OrderStatus status; //ORDER, CANCEL, COMPLETE
 
     private Order(Member member, LocalDateTime orderDate, OrderStatus status) {
         this.member = member;
@@ -78,6 +78,12 @@ public class Order extends TimeEntity {
         }
     }
 
+    public void complete() {
+        if (status == OrderStatus.ORDER) {
+            status = OrderStatus.COMPLETE;
+        }
+    }
+
     //전체 주문 취소
     public void cancel() {
         if (status == OrderStatus.CANCEL) {
@@ -88,8 +94,14 @@ public class Order extends TimeEntity {
             orderDrink.cancelOrder();
         }
 
-        delivery.cancel();
+        delivery.canceled();
         status = OrderStatus.CANCEL;
+    }
+
+    public void deleteMember() {
+        if (this.member != null) {
+            this.member = null;
+        }
     }
 
     //연관관계 편의 메소드
