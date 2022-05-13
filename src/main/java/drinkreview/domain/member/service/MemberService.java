@@ -1,9 +1,15 @@
 package drinkreview.domain.member.service;
 
+import drinkreview.domain.comment.Comment;
+import drinkreview.domain.comment.repository.CommentRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;
+import drinkreview.domain.order.Order;
+import drinkreview.domain.order.repository.OrderRepository;
+import drinkreview.domain.review.Review;
+import drinkreview.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,12 +23,16 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ReviewRepository reviewRepository;
+    private final CommentRepository commentRepository;
+    private final OrderRepository orderRepository;
 
     //회원 가입
-    public Long join(MemberRequestDto memberRequestDto) {
-        Member member = memberRequestDto.toEntity();
-        validateDuplicated(member); //아이디 중복 검사
-        memberRepository.save(member);
+    public Long join(MemberRequestDto dto) {
+        validateDuplicated(dto.getMemberId()); //아이디 중복 검사
+
+        dto.setAuth("USER");
+        Member member = memberRepository.save(dto.toEntity());
 
         return member.getId();
     }
@@ -48,7 +58,25 @@ public class MemberService {
 
         //주문 상태인지 확인
         if (memberRepository.isOrdering(member.getId())) {
-            throw new IllegalStateException("This member has at least one order : " + member.getId());
+            throw new IllegalStateException("This member has at least one order now : " + member.getId());
+        }
+
+        List<Review> reviews = reviewRepository.findWithUserId(id);
+        List<Comment> comments = commentRepository.findWithUserId(id);
+        List<Order> orders = orderRepository.findWithUserId(id);
+
+        for (Review review : reviews) {
+            review.deleteMember();
+            review.updateMemberName("탈퇴 멤버");
+        }
+
+        for (Comment comment : comments) {
+            comment.deleteMember();
+            comment.updateMemberName("탈퇴 멤버");
+        }
+
+        for (Order order : orders) {
+            order.deleteMember();
         }
 
         memberRepository.delete(member);
@@ -71,8 +99,8 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    private void validateDuplicated(Member member) {
-        if (this.findMembers().stream().anyMatch(m -> m.getMemberId().equals(member.getMemberId()))) {
+    private void validateDuplicated(String memberId) {
+        if (this.findMembers().stream().anyMatch(m -> m.getMemberId().equals(memberId))) {
             throw new IllegalStateException("There is duplicated member ID.");
         }
     }
