@@ -3,6 +3,7 @@ package drinkreview.domain.orderDrink;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.order.Order;
+import drinkreview.global.enums.DrinkStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,17 +30,14 @@ public class OrderDrink extends TimeEntity {
     private int orderPrice; //음료 하나의 가격 x count = 총 가격
     private int count;
 
-    private OrderDrink(Drink drink, int count) {
+    public OrderDrink(Drink drink, int count) {
+        if (drink.getStatus() == DrinkStatus.OUT_OF_STOCK) {
+            throw new IllegalStateException("Drink is out of stock.");
+        }
+
         this.drink = drink;
         this.count = count;
         this.orderPrice = drink.getPrice() * count;
-    }
-
-    public static OrderDrink createOrderDrink(Drink drink, int count) {
-        OrderDrink orderDrink = new OrderDrink(drink, count);
-        orderDrink.getDrink().removeQuantity(count);
-
-        return orderDrink;
     }
 
     public void updateOrder(int count) {
