@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,9 +19,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     @Query("select o from Order o where o.status = 'CANCEL'")
     List<Order> findCanceledOrder();
 
-    //전체 상품 각각의 재고보다 주문량이 많은 주문들
+    //전체 상품 각각의 재고와 주문량이 같은 주문들
     @Query("select distinct o from Order o join fetch o.orderDrinks od" +
-            " where od.count > all(select d.stockQuantity from Drink d)")
+            " where od.count = all(select d.stockQuantity from Drink d)")
     List<Order> findOrderThanDrinkStock();
 
     @Query(value = "select o from Order o join fetch o.member m",
