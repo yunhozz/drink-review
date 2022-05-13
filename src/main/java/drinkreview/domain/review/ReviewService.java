@@ -46,15 +46,16 @@ public class ReviewService {
 
     public void deleteReview(Long reviewId, Long userId) {
         Review review = this.findReview(reviewId);
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("Member is null."));
 
-        //게시글 작성자만 삭제 가능
-        if (review.getMember().getId().equals(member.getId())) {
-            reviewRepository.delete(review); //cascade : delete Comment
-
+        if (reviewRepository.isMemberNull(review.getId())) {
+            throw new IllegalStateException("Only the admin has permission.");
         } else {
-            throw new IllegalStateException("You do not have permission.");
+            //게시글 작성자만 삭제 가능
+            if (review.getMember().getId().equals(userId)) {
+                reviewRepository.delete(review); //cascade : delete Comment
+            } else {
+                throw new IllegalStateException("You do not have permission.");
+            }
         }
     }
 
