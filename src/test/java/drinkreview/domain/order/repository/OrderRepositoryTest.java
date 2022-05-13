@@ -1,6 +1,5 @@
 package drinkreview.domain.order.repository;
 
-import drinkreview.domain.Address;
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.Member;
@@ -8,7 +7,6 @@ import drinkreview.domain.order.Order;
 import drinkreview.domain.order.dto.OrderQueryDto;
 import drinkreview.domain.orderDrink.OrderDrink;
 import drinkreview.global.enums.City;
-import drinkreview.global.enums.DeliveryStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,7 +218,7 @@ class OrderRepositoryTest {
     }
 
     private Delivery createDelivery(Order order) {
-        return new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.PREPARING);
+        return Delivery.createDelivery(order, City.SEOUL, "street", "etc");
     }
 
     private OrderDrink createOrderDrink(Drink drink, int count) {

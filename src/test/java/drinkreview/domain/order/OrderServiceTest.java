@@ -1,6 +1,5 @@
 package drinkreview.domain.order;
 
-import drinkreview.domain.Address;
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.drink.dto.DrinkRequestDto;
@@ -68,7 +67,7 @@ class OrderServiceTest {
         assertThat(order1.getMember().getId()).isEqualTo(member.getId());
         assertThat(order1.getOrderDrinks()).hasSize(2);
         assertThat(order2.getOrderDrinks()).hasSize(1);
-        assertThat(history.getMemberId()).isEqualTo("qkrdbsgh");
+        assertThat(history.getMemberInfo().getMemberId()).isEqualTo("qkrdbsgh");
         assertThat(history.getOrderEntities()).hasSize(2);
     }
 
@@ -83,7 +82,7 @@ class OrderServiceTest {
         Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
         Order order = orderRepository.findById(orderId).get();
 
-        Delivery delivery = new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.PREPARING);
+        Delivery delivery = Delivery.createDelivery(order, City.SEOUL, "street", "etc");
         em.persist(delivery);
 
         orderService.updateOrder(order.getId(), id2, 4);
@@ -106,7 +105,7 @@ class OrderServiceTest {
         Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
         Order order = orderRepository.findById(orderId).get();
 
-        Delivery delivery = new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.PREPARING);
+        Delivery delivery = Delivery.createDelivery(order, City.SEOUL, "street", "etc");
         em.persist(delivery);
 
         //then
@@ -128,7 +127,7 @@ class OrderServiceTest {
         Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
         Order order = orderRepository.findById(orderId).get();
 
-        Delivery delivery = new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.DELIVERING);
+        Delivery delivery = Delivery.createDelivery(order, City.SEOUL, "street", "etc");
         em.persist(delivery);
 
         //then
@@ -150,7 +149,7 @@ class OrderServiceTest {
         Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
         Order order = orderRepository.findById(orderId).get();
 
-        Delivery delivery = new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.PREPARING);
+        Delivery delivery = Delivery.createDelivery(order, City.SEOUL, "street", "etc");
         em.persist(delivery);
 
         orderService.cancelOrder(order.getId());
@@ -171,7 +170,7 @@ class OrderServiceTest {
         Long orderId = orderService.makeOrder(member.getId(), List.of(id1, id2, id3));
         Order order = orderRepository.findById(orderId).get();
 
-        Delivery delivery = new Delivery(order, new Address(City.SEOUL, "street", "etc"), DeliveryStatus.DELIVERING);
+        Delivery delivery = Delivery.createDelivery(order, City.SEOUL, "street", "etc");
         em.persist(delivery);
 
         //then
