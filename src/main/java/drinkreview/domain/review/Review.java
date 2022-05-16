@@ -58,13 +58,11 @@ public class Review extends TimeEntity {
         this.score = score;
     }
 
-    public void updateMemberName(String memberName) {
-        this.memberName = memberName;
-    }
-
     public void deleteMember() {
-        if (this.member != null) {
-            this.member = null;
+        if (member != null) {
+            member = null;
         }
+
+        memberName = "탈퇴 멤버";
     }
 }
