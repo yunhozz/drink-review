@@ -103,12 +103,13 @@ class MemberServiceTest {
         em.persist(review1);
         em.persist(review2);
 
-        memberService.withdraw(memberId1);
+        memberService.withdraw(memberId1, "111");
 
         //then
         assertThat(review1.getMember()).isNull();
         assertThat(review2.getMember()).isNotNull();
-        assertThat(review1.getTitle()).isEqualTo("title1");
+        assertThat(review1.getMemberName()).isEqualTo("탈퇴 멤버");
+        assertThat(review2.getMemberName()).isEqualTo("yunho2");
     }
 
     private MemberRequestDto createMemberDto(String memberId, String memberPw, String name, int age, String auth) {
