@@ -1,6 +1,6 @@
 package drinkreview.api;
 
-import drinkreview.domain.comment.CommentService;
+import drinkreview.domain.comment.dto.CommentQueryDto;
 import drinkreview.domain.comment.dto.CommentResponseDto;
 import drinkreview.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +17,14 @@ import java.util.List;
 public class CommentApiController {
 
     private final CommentRepository commentRepository;
-    private final CommentService commentService;
 
-    @GetMapping("/review/{id}/list")
+    @GetMapping("/review/{id}/comment")
     public List<CommentResponseDto> commentList(@PathVariable Long reviewId) {
         return commentRepository.searchListTest(reviewId);
+    }
+
+    @GetMapping("/review/{id}/comments")
+    public List<CommentQueryDto> commentPage(@PathVariable Long reviewId) {
+        return commentRepository.searchList(reviewId);
     }
 }
