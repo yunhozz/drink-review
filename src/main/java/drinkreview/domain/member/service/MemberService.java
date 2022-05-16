@@ -53,8 +53,14 @@ public class MemberService {
     }
 
     //회원 탈퇴
-    public void withdraw(Long id) {
+    public void withdraw(Long id, String memberPw) {
         Member member = this.findMember(id);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        //비밀번호 일치 여부 확인
+        if (!encoder.matches(memberPw, member.getMemberPw())) {
+            throw new IllegalStateException("The password is different. Please enter it again.");
+        }
 
         //주문 상태인지 확인
         if (memberRepository.isOrdering(member.getId())) {
@@ -65,19 +71,9 @@ public class MemberService {
         List<Comment> comments = commentRepository.findWithUserId(id);
         List<Order> orders = orderRepository.findWithUserId(id);
 
-        for (Review review : reviews) {
-            review.deleteMember();
-            review.updateMemberName("탈퇴 멤버");
-        }
-
-        for (Comment comment : comments) {
-            comment.deleteMember();
-            comment.updateMemberName("탈퇴 멤버");
-        }
-
-        for (Order order : orders) {
-            order.deleteMember();
-        }
+        reviews.forEach(Review::deleteMember);
+        comments.forEach(Comment::deleteMember);
+        orders.forEach(Order::deleteMember);
 
         memberRepository.delete(member);
     }
