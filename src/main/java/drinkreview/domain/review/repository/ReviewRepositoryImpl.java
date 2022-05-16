@@ -81,49 +81,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public ReviewQueryDto selectReviewWithoutMember(Long reviewId) {
-        ReviewQueryDto findReview = queryFactory
-                .select(new QReviewQueryDto(
-                        review.id,
-                        review.title,
-                        review.content,
-                        review.memberName,
-                        review.score,
-                        review.view,
-                        review.createdDate,
-                        drink.id,
-                        drink.name
-                ))
-                .from(review)
-                .join(review.drink, drink)
-                .where(review.id.eq(reviewId))
-                .fetchOne();
-
-        if (findReview == null) {
-            throw new IllegalStateException("Can't find this review : " + reviewId);
-        }
-
-        List<CommentQueryDto> comments = queryFactory
-                .select(new QCommentQueryDto(
-                        comment.id,
-                        comment.content,
-                        comment.createdDate,
-                        member.id,
-                        member.memberId,
-                        member.name,
-                        comment.review.id
-                ))
-                .from(comment)
-                .join(comment.member, member)
-                .where(comment.review.id.eq(reviewId))
-                .fetch();
-
-        findReview.setComments(comments);
-
-        return findReview;
-    }
-
-    @Override
     public List<ReviewQueryDto> findReviewList() {
         List<ReviewQueryDto> reviews = queryFactory
                 .select(new QReviewQueryDto(
@@ -145,7 +102,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .fetch();
 
         List<Long> reviewIds = reviews.stream()
-                .map(reviewQueryDto -> reviewQueryDto.getReviewId())
+                .map(ReviewQueryDto::getReviewId)
                 .toList();
 
         List<CommentQueryDto> comments = queryFactory
@@ -165,7 +122,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
         //key: reviewId & value: List<CommentQueryDto>
         Map<Long, List<CommentQueryDto>> commentMap = comments.stream()
-                .collect(Collectors.groupingBy(commentQueryDto -> commentQueryDto.getReviewId()));
+                .collect(Collectors.groupingBy(CommentQueryDto::getReviewId));
 
         reviews.forEach(reviewQueryDto -> reviewQueryDto.setComments(commentMap.get(reviewQueryDto.getReviewId())));
 
