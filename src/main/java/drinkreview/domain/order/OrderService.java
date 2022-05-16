@@ -43,7 +43,7 @@ public class OrderService {
         dto.setOrderDrinks(orderDrinks);
         Order order = orderRepository.save(dto.toEntity());
 
-        Optional<OrderHistory> findHistory = orderHistoryRepository.findByUserId(member.getId());
+        Optional<OrderHistory> findHistory = orderHistoryRepository.findWithUserId(member.getId());
         OrderEntity orderEntity = new OrderEntity(order.getId());
         OrderHistory orderHistory;
 
