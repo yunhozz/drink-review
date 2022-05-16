@@ -59,7 +59,7 @@ class OrderServiceTest {
         Order order1 = orderRepository.findById(orderId1).get();
         Order order2 = orderRepository.findById(orderId2).get();
 
-        OrderHistory history = orderHistoryRepository.findByUserId(member.getId()).get();
+        OrderHistory history = orderHistoryRepository.findWithUserId(member.getId()).get();
 
         //then
         assertThat(order1.getId()).isEqualTo(orderId1);
