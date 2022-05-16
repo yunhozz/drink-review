@@ -36,8 +36,8 @@ public class ReviewApiController {
     }
 
     @GetMapping("/review/{id}")
-    public ReviewQueryDto findReview(@PathVariable("id") Long reviewId) {
-        return reviewRepository.findReview(reviewId);
+    public ReviewQueryDto selectReview(@PathVariable("id") Long reviewId) {
+        return reviewRepository.selectReview(reviewId);
     }
 
     @GetMapping("/review/list")
