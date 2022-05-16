@@ -60,18 +60,4 @@ public class ReviewQueryDto {
         this.drinkId = drinkId;
         this.drinkName = drinkName;
     }
-
-    //세부 내용 + comments + member null
-    @QueryProjection
-    public ReviewQueryDto(Long reviewId, String title, String content, String memberName, double score, int view, LocalDateTime createdDate, Long drinkId, String drinkName) {
-        this.reviewId = reviewId;
-        this.title = title;
-        this.content = content;
-        this.memberName = memberName;
-        this.score = score;
-        this.view = view;
-        this.createdDate = createdDate;
-        this.drinkId = drinkId;
-        this.drinkName = drinkName;
-    }
 }
