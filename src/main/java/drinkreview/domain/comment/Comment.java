@@ -29,7 +29,7 @@ public class Comment extends TimeEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "comment_id")
     private List<CommentChild> commentChildList = new ArrayList<>();
 
@@ -59,18 +59,16 @@ public class Comment extends TimeEntity {
         this.content = content;
     }
 
-    public void updateMemberName(String memberName) {
-        this.memberName = memberName;
-    }
-
     public void addCommentChild(CommentChild commentChild) {
         this.commentChildList.add(commentChild);
     }
 
     public void deleteMember() {
-        if (this.member != null) {
-            this.member = null;
+        if (member != null) {
+            member = null;
         }
+
+        memberName = "탈퇴 멤버";
     }
 
     //연관관계 편의 메소드
