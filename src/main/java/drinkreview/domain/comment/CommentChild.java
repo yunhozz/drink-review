@@ -23,17 +23,27 @@ public class CommentChild extends TimeEntity {
     private Member member;
 
     private String content;
+    private String memberName;
 
     @Enumerated(EnumType.STRING)
     private DeleteStatus isDeleted; //Y, N
 
-    public CommentChild(Member member, String content) {
+    public CommentChild(Member member, String content, String memberName, DeleteStatus isDeleted) {
         this.member = member;
         this.content = content;
-        this.isDeleted = DeleteStatus.N;
+        this.memberName = memberName;
+        this.isDeleted = isDeleted;
     }
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void deleteMember() {
+        if (member != null) {
+            member = null;
+        }
+
+        memberName = "탈퇴 멤버";
     }
 }
