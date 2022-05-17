@@ -63,6 +63,11 @@ public class Comment extends TimeEntity {
         this.commentChildList.add(commentChild);
     }
 
+    public void delete() {
+        content = "삭제된 코멘트입니다.";
+        isDeleted = DeleteStatus.Y;
+    }
+
     public void deleteMember() {
         if (member != null) {
             member = null;
