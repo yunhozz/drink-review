@@ -2,7 +2,6 @@ package drinkreview.domain.comment;
 
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.member.Member;
-import drinkreview.global.enums.DeleteStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,23 +24,14 @@ public class CommentChild extends TimeEntity {
     private String content;
     private String memberName;
 
-    @Enumerated(EnumType.STRING)
-    private DeleteStatus isDeleted; //Y, N
-
-    public CommentChild(Member member, String content, String memberName, DeleteStatus isDeleted) {
+    public CommentChild(Member member, String content, String memberName) {
         this.member = member;
         this.content = content;
         this.memberName = memberName;
-        this.isDeleted = isDeleted;
     }
 
     public void updateContent(String content) {
         this.content = content;
-    }
-
-    public void delete() {
-        content = "삭제된 코멘트입니다.";
-        isDeleted = DeleteStatus.Y;
     }
 
     public void deleteMember() {
