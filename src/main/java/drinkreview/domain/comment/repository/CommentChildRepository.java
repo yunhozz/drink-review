@@ -11,4 +11,8 @@ public interface CommentChildRepository extends JpaRepository<CommentChild, Long
 
     @Query("select cc from CommentChild cc join fetch cc.member m where m.id = :id")
     List<CommentChild> findWithUserId(@Param("id") Long userId);
+
+    //대댓글 개수가 하나인지 ?
+    @Query("select case when count(cc) = 1 then true else false end from CommentChild cc")
+    boolean isLastOne();
 }
