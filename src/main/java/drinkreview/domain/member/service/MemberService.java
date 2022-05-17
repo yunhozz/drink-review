@@ -1,6 +1,8 @@
 package drinkreview.domain.member.service;
 
 import drinkreview.domain.comment.Comment;
+import drinkreview.domain.comment.CommentChild;
+import drinkreview.domain.comment.repository.CommentChildRepository;
 import drinkreview.domain.comment.repository.CommentRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
@@ -25,6 +27,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final CommentChildRepository commentChildRepository;
     private final OrderRepository orderRepository;
 
     //회원 가입
@@ -41,7 +44,6 @@ public class MemberService {
     public MemberResponseDto login(String memberId, String memberPw) {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
-
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         //비밀번호 일치 여부 확인
@@ -69,10 +71,12 @@ public class MemberService {
 
         List<Review> reviews = reviewRepository.findWithUserId(id);
         List<Comment> comments = commentRepository.findWithUserId(id);
+        List<CommentChild> commentChildList = commentChildRepository.findWithUserId(id);
         List<Order> orders = orderRepository.findWithUserId(id);
 
         reviews.forEach(Review::deleteMember);
         comments.forEach(Comment::deleteMember);
+        commentChildList.forEach(CommentChild::deleteMember);
         orders.forEach(Order::deleteMember);
 
         memberRepository.delete(member);
