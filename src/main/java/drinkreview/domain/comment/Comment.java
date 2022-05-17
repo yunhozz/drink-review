@@ -29,7 +29,7 @@ public class Comment extends TimeEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "comment_id")
     private List<CommentChild> commentChildList = new ArrayList<>();
 
