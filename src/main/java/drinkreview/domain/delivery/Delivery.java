@@ -43,7 +43,7 @@ public class Delivery extends TimeEntity {
         return delivery;
     }
 
-    public void shipping() {
+    public void start() {
         if (status == DeliveryStatus.PREPARING) {
             status = DeliveryStatus.DELIVERING;
 
