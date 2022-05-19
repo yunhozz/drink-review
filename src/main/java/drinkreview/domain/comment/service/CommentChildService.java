@@ -61,6 +61,8 @@ public class CommentChildService {
                 } else {
                     commentChildRepository.delete(commentChild);
                 }
+            } else {
+                commentChildRepository.delete(commentChild);
             }
         } else {
             throw new IllegalStateException("You do not have permission.");
