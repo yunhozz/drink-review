@@ -34,7 +34,10 @@ public class Review extends TimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     private String title;
+
+    @Column(length = 2000)
     private String content;
+
     private String memberName;
     private double score;
 
