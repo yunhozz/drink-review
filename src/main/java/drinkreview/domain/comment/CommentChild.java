@@ -21,7 +21,9 @@ public class CommentChild extends TimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(length = 1000)
     private String content;
+
     private String memberName;
 
     public CommentChild(Member member, String content, String memberName) {

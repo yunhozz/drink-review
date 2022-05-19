@@ -33,7 +33,7 @@ public class Comment extends TimeEntity {
     @JoinColumn(name = "comment_id")
     private List<CommentChild> commentChildList = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 1000)
     private String content;
 
     private String memberName;
