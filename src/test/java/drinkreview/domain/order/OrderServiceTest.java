@@ -2,7 +2,6 @@ package drinkreview.domain.order;
 
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.drink.Drink;
-import drinkreview.domain.drink.dto.DrinkRequestDto;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.order.repository.OrderHistoryRepository;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +40,7 @@ class OrderServiceTest {
         member = memberDto.toEntity();
         em.persist(member);
 
-        DrinkRequestDto drinkDto = createDrinkDto("cola", "Korea", 1996, 1, 11, 2000, 100);
-        drink = drinkDto.toEntity();
+        Drink drink = createDrink("cola", "Korea", 1996, 1, 11, 2000, 100);
         em.persist(drink);
     }
 
@@ -192,16 +191,13 @@ class OrderServiceTest {
         return dto;
     }
 
-    private DrinkRequestDto createDrinkDto(String name, String country, int year, int month, int day, int price, int stockQuantity) {
-        DrinkRequestDto dto = new DrinkRequestDto();
-        dto.setName(name);
-        dto.setCountry(country);
-        dto.setYear(year);
-        dto.setMonth(month);
-        dto.setDay(day);
-        dto.setPrice(price);
-        dto.setStockQuantity(stockQuantity);
-
-        return dto;
+    private Drink createDrink(String name, String country, int year, int month, int day, int price, int stockQuantity) {
+        return Drink.builder()
+                .name(name)
+                .country(country)
+                .productionDate(LocalDate.of(year, month, day))
+                .price(price)
+                .stockQuantity(stockQuantity)
+                .build();
     }
 }

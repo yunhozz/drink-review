@@ -2,13 +2,14 @@ package drinkreview.domain.orderDrink;
 
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.drink.DrinkRepository;
-import drinkreview.domain.drink.dto.DrinkRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -21,8 +22,8 @@ class OrderDrinkServiceTest {
     @Test
     void makeOrderDrink() throws Exception {
         //given
-        DrinkRequestDto drinkDto = createDrinkDto("cola", "Korea", 1000, 1996, 1, 11);
-        Drink drink = drinkRepository.save(drinkDto.toEntity());
+        Drink drink = createDrink("cola", "Korea", 1000, 1996, 1, 11, 100);
+        drinkRepository.save(drink);
 
         //when
         Long orderDrinkId = orderDrinkService.makeOrderDrink(drink.getId(), 2);
@@ -34,15 +35,13 @@ class OrderDrinkServiceTest {
         assertThat(orderDrink.getOrderPrice()).isEqualTo(2000);
     }
 
-    private DrinkRequestDto createDrinkDto(String name, String country, int price, int year, int month, int day) {
-        DrinkRequestDto dto = new DrinkRequestDto();
-        dto.setName(name);
-        dto.setCountry(country);
-        dto.setPrice(price);
-        dto.setYear(year);
-        dto.setMonth(month);
-        dto.setDay(day);
-
-        return dto;
+    private Drink createDrink(String name, String country, int year, int month, int day, int price, int stockQuantity) {
+        return Drink.builder()
+                .name(name)
+                .country(country)
+                .productionDate(LocalDate.of(year, month, day))
+                .price(price)
+                .stockQuantity(stockQuantity)
+                .build();
     }
 }
