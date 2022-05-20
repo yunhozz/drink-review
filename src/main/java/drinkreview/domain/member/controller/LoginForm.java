@@ -2,11 +2,11 @@ package drinkreview.domain.member.controller;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 @Data
 public class LoginForm {
 
-    @NotEmpty private String memberId;
-    @NotEmpty private String memberPw;
+    @NotBlank private String memberId;
+    @NotBlank private String memberPw;
 }

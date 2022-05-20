@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -18,7 +17,7 @@ public class ReviewRequestDto {
     @NotNull private Drink drink;
     @NotBlank private String title;
     @NotBlank private String content;
-    @NotEmpty private double score;
+    private double score;
 
     public Review toEntity() {
         return Review.builder()

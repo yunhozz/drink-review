@@ -6,6 +6,7 @@ import drinkreview.domain.orderDrink.OrderDrink;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class OrderRequestDto {
 
     @NotNull private Member member;
-    @NotNull private List<OrderDrink> orderDrinks;
+    @NotEmpty private List<OrderDrink> orderDrinks;
 
     public Order toEntity() {
         return Order.createOrder(member, orderDrinks);
