@@ -30,14 +30,18 @@ public class OrderDrink extends TimeEntity {
     private int orderPrice; //음료 하나의 가격 x count = 총 가격
     private int count;
 
-    public OrderDrink(Drink drink, int count) {
+    private OrderDrink(Drink drink, int orderPrice, int count) {
+        this.drink = drink;
+        this.orderPrice = orderPrice;
+        this.count = count;
+    }
+
+    public static OrderDrink createOrderDrink(Drink drink, int count) {
         if (drink.getStatus() == DrinkStatus.OUT_OF_STOCK) {
             throw new IllegalStateException("Drink is out of stock.");
         }
 
-        this.drink = drink;
-        this.count = count;
-        this.orderPrice = drink.getPrice() * count;
+        return new OrderDrink(drink, count * drink.getPrice(), count);
     }
 
     public void updateOrder(int count) {
