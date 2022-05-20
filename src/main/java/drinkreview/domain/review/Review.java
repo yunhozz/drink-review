@@ -40,8 +40,6 @@ public class Review extends TimeEntity {
 
     private String memberName;
     private double score;
-
-    @Column(columnDefinition = "integer default 0")
     private int view;
 
     @Builder
@@ -65,7 +63,6 @@ public class Review extends TimeEntity {
         if (member != null) {
             member = null;
         }
-
         memberName = "탈퇴 멤버";
     }
 }
