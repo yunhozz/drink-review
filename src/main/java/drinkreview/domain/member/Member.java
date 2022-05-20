@@ -20,12 +20,10 @@ public class Member extends TimeEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String memberId;
 
-    @Column(nullable = false)
     private String memberPw;
-
     private String name;
     private int age;
     private String auth;
