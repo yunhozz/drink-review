@@ -1,11 +1,13 @@
 package drinkreview.domain.drink;
 
-import drinkreview.domain.drink.dto.DrinkRequestDto;
+import drinkreview.domain.drink.dto.DrinkForm;
 import drinkreview.domain.drink.dto.DrinkResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -14,10 +16,16 @@ public class DrinkService {
 
     private final DrinkRepository drinkRepository;
 
-    public Long saveDrink(DrinkRequestDto drinkRequestDto) {
-        Drink drink = drinkRequestDto.toEntity();
-        drinkRepository.save(drink);
+    public Long saveDrink(DrinkForm form) {
+        Drink drink = Drink.builder()
+                .name(form.getName())
+                .country(form.getCountry())
+                .productionDate(LocalDate.of(form.getYear(), form.getMonth(), form.getDay()))
+                .price(form.getPrice())
+                .stockQuantity(form.getStockQuantity())
+                .build();
 
+        drinkRepository.save(drink);
         return drink.getId();
     }
 
