@@ -21,9 +21,7 @@ public class Drink extends TimeEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-
     private String country;
     private LocalDate productionDate;
     private int price;
@@ -51,10 +49,6 @@ public class Drink extends TimeEntity {
     }
 
     public void updateImage(MultipartFile file) throws Exception {
-        if (this.image != null) {
-            throw new IllegalStateException("This entity's image field is not null.");
-        }
-
         Byte[] image = new Byte[file.getBytes().length];
         int i = 0;
 
