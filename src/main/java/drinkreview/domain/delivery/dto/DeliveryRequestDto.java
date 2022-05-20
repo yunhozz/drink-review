@@ -8,13 +8,12 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class DeliveryRequestDto {
 
-    @NotNull private Order order;
+    private Order order;
     @NotEmpty private City city;
     @NotBlank private String street;
     @NotBlank private String etc;

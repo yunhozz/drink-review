@@ -7,14 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class ReviewRequestDto {
 
-    @NotNull private Member member;
-    @NotNull private Drink drink;
+    private Member member;
+    private Drink drink;
     @NotBlank private String title;
     @NotBlank private String content;
     private double score;
