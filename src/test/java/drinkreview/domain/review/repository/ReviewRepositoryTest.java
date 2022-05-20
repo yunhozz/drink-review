@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -29,7 +28,7 @@ class ReviewRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
-        member = createMember("qkrdbsgh", "111", "yunho");
+        member = createMember("qkrdbsgh", "111", "yunho", "ADMIN");
         em.persist(member);
 
         drink = createDrink("drink");
@@ -39,11 +38,11 @@ class ReviewRepositoryTest {
     @Test
     void findWithKeyword() throws Exception {
         //given
-        Review review1 = createReview(member, drink, "ABCfind", "content", 1);
-        Review review2 = createReview(member, drink, "review", "findABC", 2);
-        Review review3 = createReview(member, drink, "ABCfindABC", "ABCfindABC", 3);
-        Review review4 = createReview(member, drink, "title", "content", 4);
-        Review review5 = createReview(member, drink, "title", "content", 5);
+        Review review1 = createReview(member, drink, "ABCfind", "content", member.getName(), 1);
+        Review review2 = createReview(member, drink, "review", "findABC", member.getName(), 2);
+        Review review3 = createReview(member, drink, "ABCfindABC", "ABCfindABC", member.getName(), 3);
+        Review review4 = createReview(member, drink, "title", "content", member.getName(), 4);
+        Review review5 = createReview(member, drink, "title", "content", member.getName(), 5);
 
         //when
         reviewRepository.save(review1);
@@ -63,7 +62,7 @@ class ReviewRepositoryTest {
     @Test
     void addView() throws Exception {
         //given
-        Review review = createReview(member, drink, "title", "content", 100);
+        Review review = createReview(member, drink, "title", "content", member.getName(), 100);
 
         //when
         reviewRepository.save(review);
@@ -78,8 +77,8 @@ class ReviewRepositoryTest {
     @Test
     void isMemberNull() throws Exception {
         //given
-        Review review1 = createReview(member, drink, "ABCfind", "content", 1);
-        Review review2 = createReview(null, drink, "review", "findABC", 2);
+        Review review1 = createReview(member, drink, "ABCfind", "content", member.getName(), 1);
+        Review review2 = createReview(null, drink, "review", "findABC", member.getName(), 2);
 
         //when
         reviewRepository.save(review1);
@@ -96,7 +95,7 @@ class ReviewRepositoryTest {
     @Test
     void exist() throws Exception {
         //given
-        Review review = createReview(member, drink, "review", "content", 1);
+        Review review = createReview(member, drink, "review", "content", member.getName(), 1);
 
         //when
         reviewRepository.save(review);
@@ -111,9 +110,9 @@ class ReviewRepositoryTest {
     @Test
     void searchList() throws Exception {
         //given
-        Review review1 = createReview(member, drink, "review1", "content1", 1);
-        Review review2 = createReview(member, drink, "review2", "content2", 2);
-        Review review3 = createReview(member, drink, "review3", "content3", 3);
+        Review review1 = createReview(member, drink, "review1", "content1", member.getName(), 1);
+        Review review2 = createReview(member, drink, "review2", "content2", member.getName(), 2);
+        Review review3 = createReview(member, drink, "review3", "content3", member.getName(), 3);
 
         //when
         reviewRepository.save(review1);
@@ -132,7 +131,7 @@ class ReviewRepositoryTest {
     void searchPageByScoreOrder() throws Exception {
         //given
         for (int i = 1; i <= 10; i++) {
-            Review review = createReview(member, drink, "review" + i, "content" + i, (10-i));
+            Review review = createReview(member, drink, "review" + i, "content" + i, member.getName(), (10-i));
             reviewRepository.save(review);
 
             Thread.sleep(5);
@@ -154,13 +153,13 @@ class ReviewRepositoryTest {
     void searchPageByDateOrder() throws Exception {
         //given
         for (int i = 1; i <= 10; i++) {
-            Review review = createReview(member, drink, "review" + i, "content" + i, i);
+            Review review = createReview(member, drink, "review" + i, "content" + i, member.getName(), i);
             reviewRepository.save(review);
 
             Thread.sleep(10);
         }
 
-        Review findReview = reviewRepository.findById(7L).get();
+        Review findReview = reviewRepository.findById(10L).get();
         findReview.updateField("update", "update", 100); //업데이트
 
         PageRequest pageRequest = PageRequest.of(0, 3);
@@ -172,33 +171,32 @@ class ReviewRepositoryTest {
         assertThat(result.getContent().size()).isEqualTo(3);
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result).extracting("title")
-                .containsExactly("review10", "review9", "review8");
+                .containsExactly("review10", "review9", "update");
     }
 
     @Test
-    @Commit
     void searchPageByKeyword() throws Exception {
         //given
         for (int i = 1; i <= 5; i++) {
-            Review review = createReview(member, drink, "find" + i, "content" + i, i);
+            Review review = createReview(member, drink, "find" + i, "content" + i, member.getName(), i);
             reviewRepository.save(review);
             Thread.sleep(5);
         }
 
         for (int i = 6; i <= 10; i++) {
-            Review review = createReview(member, drink, "review" + i, "find" + i, i);
+            Review review = createReview(member, drink, "review" + i, "find" + i, member.getName(), i);
             reviewRepository.save(review);
             Thread.sleep(5);
         }
 
         for (int i = 11; i <= 15; i++) {
-            Review review = createReview(member, drink, "find" + i, "find" + i, i);
+            Review review = createReview(member, drink, "find" + i, "find" + i, member.getName(), i);
             reviewRepository.save(review);
             Thread.sleep(5);
         }
 
         for (int i = 16; i <= 20; i++) {
-            Review review = createReview(member, drink, "review" + i, "content" + i, i);
+            Review review = createReview(member, drink, "review" + i, "content" + i, member.getName(), i);
             reviewRepository.save(review);
             Thread.sleep(5);
         }
@@ -216,21 +214,23 @@ class ReviewRepositoryTest {
                         "review10", "review9", "review8", "review7", "review6");
     }
 
-    private Review createReview(Member member, Drink drink, String title, String content, double score) {
+    private Review createReview(Member member, Drink drink, String title, String content, String memberName, double score) {
         return Review.builder()
                 .member(member)
                 .drink(drink)
                 .title(title)
                 .content(content)
+                .memberName(memberName)
                 .score(score)
                 .build();
     }
 
-    private Member createMember(String memberId, String memberPw, String name) {
+    private Member createMember(String memberId, String memberPw, String name, String auth) {
         return Member.builder()
                 .memberId(memberId)
                 .memberPw(memberPw)
                 .name(name)
+                .auth(auth)
                 .build();
     }
 
