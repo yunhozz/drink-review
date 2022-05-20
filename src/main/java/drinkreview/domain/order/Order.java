@@ -37,6 +37,7 @@ public class Order extends TimeEntity {
     @OneToOne(mappedBy = "order")
     private Delivery delivery;
 
+    @Column(columnDefinition = "datetime(6)")
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
@@ -99,8 +100,8 @@ public class Order extends TimeEntity {
     }
 
     public void deleteMember() {
-        if (this.member != null) {
-            this.member = null;
+        if (member != null) {
+            member = null;
         }
     }
 
