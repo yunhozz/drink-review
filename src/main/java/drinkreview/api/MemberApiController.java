@@ -74,15 +74,4 @@ public class MemberApiController {
 
         return memberRepository.searchByConditionPage(condition, pageable);
     }
-
-//    @PostConstruct
-    public void init() {
-        for (int i = 1; i <= 50; i++) {
-            memberRepository.save(new Member("qkrdbsgh" + i, "yh" + i, i));
-        }
-
-        for (int i = 51; i <= 100; i++) {
-            memberRepository.save(new Member("qkrdbsgh" + i, "yh" + i, i));
-        }
-    }
 }
