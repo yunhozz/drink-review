@@ -6,16 +6,18 @@ import drinkreview.domain.review.Review;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class ReviewRequestDto {
 
-    @NotEmpty private Member member;
-    @NotEmpty private Drink drink;
-    @NotEmpty private String title;
-    @NotEmpty private String content;
+    @NotNull private Member member;
+    @NotNull private Drink drink;
+    @NotBlank private String title;
+    @NotBlank private String content;
     @NotEmpty private double score;
 
     public Review toEntity() {

@@ -6,13 +6,16 @@ import drinkreview.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 public class CommentChildRequestDto {
 
-    private Member member;
-    private Comment comment;
-    private String content;
+    @NotNull private Member member;
+    @NotNull private Comment comment;
+    @NotBlank private String content;
 
     public CommentChild toEntity() {
         return new CommentChild(member, content, member.getName());

@@ -5,17 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
 public class MemberRequestDto {
 
-    @NotEmpty private String memberId;
-    @NotEmpty private String memberPw;
-    @NotEmpty private String name;
+    @NotBlank private String memberId;
+    @NotBlank private String memberPw;
+    @NotBlank private String name;
     @NotEmpty private int age;
-    @NotEmpty private String auth;
+    @NotBlank private String auth;
 
     public Member toEntity() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
