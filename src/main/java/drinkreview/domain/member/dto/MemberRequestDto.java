@@ -29,14 +29,4 @@ public class MemberRequestDto {
                 .auth(auth)
                 .build();
     }
-
-    public Member toEntityWithoutEncoder() {
-        return Member.builder()
-                .memberId(memberId)
-                .memberPw(memberPw)
-                .name(name)
-                .age(age)
-                .auth(auth)
-                .build();
-    }
 }
