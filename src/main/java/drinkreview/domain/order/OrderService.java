@@ -2,7 +2,6 @@ package drinkreview.domain.order;
 
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
-import drinkreview.domain.order.dto.OrderRequestDto;
 import drinkreview.domain.order.dto.OrderResponseDto;
 import drinkreview.domain.order.repository.OrderHistoryRepository;
 import drinkreview.domain.order.repository.OrderRepository;
@@ -38,10 +37,7 @@ public class OrderService {
             orderDrinks.add(orderDrink);
         }
 
-        OrderRequestDto dto = new OrderRequestDto();
-        dto.setMember(member);
-        dto.setOrderDrinks(orderDrinks);
-        Order order = orderRepository.save(dto.toEntity());
+        Order order = Order.createOrder(member, orderDrinks);
 
         Optional<OrderHistory> findHistory = orderHistoryRepository.findWithUserId(member.getId());
         OrderEntity orderEntity = new OrderEntity(order.getId());
