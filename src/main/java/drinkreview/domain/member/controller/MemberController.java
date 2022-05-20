@@ -1,13 +1,10 @@
 package drinkreview.domain.member.controller;
 
+import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.domain.member.dto.MemberRequestDto;
-import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.service.MemberService;
-import drinkreview.domain.member.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -49,22 +46,27 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginForm loginForm, BindingResult result, Model model) {
+    public String login(@Valid LoginForm loginForm, BindingResult result, HttpSession session) {
         if (result.hasErrors()) {
             return "member/login";
         }
 
-        MemberResponseDto member = memberService.login(loginForm.getMemberId(), loginForm.getMemberPw());
-        UserDetails loginMember = userDetailsService.loadUserByUsername(member.getMemberId());
-        model.addAttribute("loginMember", loginMember);
+        if (memberService.login(loginForm.getMemberId(), loginForm.getMemberPw())) {
+            UserDetails loginMember = userDetailsService.loadUserByUsername(loginForm.getMemberId());
+            session.setAttribute("loginMember", loginMember);
+        } else {
+            throw new IllegalStateException("Please insert password again.");
+        }
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler()
-                .logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
         return "redirect:/";
     }
