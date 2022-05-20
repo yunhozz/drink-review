@@ -69,16 +69,7 @@ public class MemberService {
             throw new IllegalStateException("This member has at least one order now : " + member.getId());
         }
 
-        List<Review> reviews = reviewRepository.findWithUserId(id);
-        List<Comment> comments = commentRepository.findWithUserId(id);
-        List<CommentChild> commentChildList = commentChildRepository.findWithUserId(id);
-        List<Order> orders = orderRepository.findWithUserId(id);
-
-        reviews.forEach(Review::deleteMember);
-        comments.forEach(Comment::deleteMember);
-        commentChildList.forEach(CommentChild::deleteMember);
-        orders.forEach(Order::deleteMember);
-
+        memberToNull(id); //각 엔티티에 있는 member 필드 null 로 전환
         memberRepository.delete(member);
     }
 
@@ -103,5 +94,17 @@ public class MemberService {
         if (this.findMembers().stream().anyMatch(m -> m.getMemberId().equals(memberId))) {
             throw new IllegalStateException("There is duplicated member ID.");
         }
+    }
+
+    private void memberToNull(Long id) {
+        List<Review> reviews = reviewRepository.findWithUserId(id);
+        List<Comment> comments = commentRepository.findWithUserId(id);
+        List<CommentChild> commentChildList = commentChildRepository.findWithUserId(id);
+        List<Order> orders = orderRepository.findWithUserId(id);
+
+        reviews.forEach(Review::deleteMember);
+        comments.forEach(Comment::deleteMember);
+        commentChildList.forEach(CommentChild::deleteMember);
+        orders.forEach(Order::deleteMember);
     }
 }
