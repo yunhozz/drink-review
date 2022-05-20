@@ -1,6 +1,6 @@
 package drinkreview.domain.drink;
 
-import drinkreview.domain.drink.dto.DrinkRequestDto;
+import drinkreview.domain.drink.dto.DrinkForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,14 +18,14 @@ class DrinkServiceTest {
     @Test
     void saveDrink() throws Exception {
         //given
-        DrinkRequestDto drinkDto1 = createDrinkDto("cola", "Korea", 1996, 1, 11, 1000, 10);
-        DrinkRequestDto drinkDto2 = createDrinkDto("cider", "USA", 1998, 1, 11, 2000, 20);
-        DrinkRequestDto drinkDto3 = createDrinkDto("coffee", "Japan", 1990, 1, 11, 3000, 30);
+        DrinkForm drinkForm1 = createDrinkDto("cola", "Korea", 1996, 1, 11, 1000, 10);
+        DrinkForm drinkForm2 = createDrinkDto("cider", "USA", 1998, 1, 11, 2000, 20);
+        DrinkForm drinkForm3 = createDrinkDto("coffee", "Japan", 1990, 1, 11, 3000, 30);
 
         //when
-        Long drinkId1 = drinkService.saveDrink(drinkDto1);
-        Long drinkId2 = drinkService.saveDrink(drinkDto2);
-        Long drinkId3 = drinkService.saveDrink(drinkDto3);
+        Long drinkId1 = drinkService.saveDrink(drinkForm1);
+        Long drinkId2 = drinkService.saveDrink(drinkForm2);
+        Long drinkId3 = drinkService.saveDrink(drinkForm3);
 
         Drink drink1 = drinkRepository.findById(drinkId1).get();
         Drink drink2 = drinkRepository.findById(drinkId2).get();
@@ -38,16 +38,16 @@ class DrinkServiceTest {
     }
 
 
-    private DrinkRequestDto createDrinkDto(String name, String country, int year, int month, int day, int price, int stockQuantity) {
-        DrinkRequestDto dto = new DrinkRequestDto();
-        dto.setName(name);
-        dto.setCountry(country);
-        dto.setYear(year);
-        dto.setMonth(month);
-        dto.setDay(day);
-        dto.setPrice(price);
-        dto.setStockQuantity(stockQuantity);
+    private DrinkForm createDrinkDto(String name, String country, int year, int month, int day, int price, int stockQuantity) {
+        DrinkForm form = new DrinkForm();
+        form.setName(name);
+        form.setCountry(country);
+        form.setYear(year);
+        form.setMonth(month);
+        form.setDay(day);
+        form.setPrice(price);
+        form.setStockQuantity(stockQuantity);
 
-        return dto;
+        return form;
     }
 }
