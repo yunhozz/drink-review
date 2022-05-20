@@ -41,17 +41,12 @@ public class MemberService {
     }
 
     //로그인
-    public MemberResponseDto login(String memberId, String memberPw) {
+    public boolean login(String memberId, String memberPw) {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        //비밀번호 일치 여부 확인
-        if (!encoder.matches(memberPw, member.getMemberPw())) {
-            throw new IllegalStateException("The password is different. Please enter it again.");
-        }
-
-        return new MemberResponseDto(member);
+        return encoder.matches(memberPw, member.getMemberPw());
     }
 
     //회원 탈퇴
