@@ -17,8 +17,8 @@ public class OrderDrinkService {
     public Long makeOrderDrink(Long drinkId, int count) {
         Drink drink = drinkRepository.findById(drinkId)
                 .orElseThrow(() -> new IllegalStateException("Drink is null."));
+        OrderDrink orderDrink = OrderDrink.createOrderDrink(drink, count);
 
-        OrderDrink orderDrink = new OrderDrink(drink, count);
         orderDrinkRepository.save(orderDrink);
 
         return orderDrink.getId();
