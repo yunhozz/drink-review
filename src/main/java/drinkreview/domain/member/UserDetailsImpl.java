@@ -4,38 +4,49 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDetailsImpl implements UserDetails {
 
-    private Member member;
+    private String memberId;
+    private String memberPw;
+    private String name;
+    private int age;
+    private String auth;
 
     public UserDetailsImpl(Member member) {
-        this.member = member;
+        memberId = member.getMemberId();
+        memberPw = member.getMemberPw();
+        name = member.getName();
+        age = member.getAge();
+        auth = member.getAuth();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> auth = new ArrayList<>();
-        auth.add(() -> member.getAuth());
+        Set<GrantedAuthority> roles = new HashSet<>();
+        for (String role : auth.split(",")) {
+            roles.add(new SimpleGrantedAuthority(role));
+        }
 
-        return auth;
+        return roles;
     }
 
     @Override
     public String getUsername() {
-        return member.getMemberId();
+        return memberId;
     }
 
     @Override
     public String getPassword() {
-        return member.getMemberPw();
+        return memberPw;
     }
 
     @Override
