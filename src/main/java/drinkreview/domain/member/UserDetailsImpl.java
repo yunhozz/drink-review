@@ -1,5 +1,6 @@
 package drinkreview.domain.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,9 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDetailsImpl implements UserDetails {
 
     private Member member;
@@ -20,10 +22,10 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(() -> member.getAuth());
+        List<GrantedAuthority> auth = new ArrayList<>();
+        auth.add(() -> member.getAuth());
 
-        return collection;
+        return auth;
     }
 
     @Override
