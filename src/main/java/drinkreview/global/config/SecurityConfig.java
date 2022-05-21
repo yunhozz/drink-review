@@ -1,6 +1,6 @@
 package drinkreview.global.config;
 
-import drinkreview.domain.member.service.UserDetailsServiceImpl;
+import drinkreview.domain.member.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -21,14 +21,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().permitAll()
 
                 .and()
 
                 .formLogin()
+                .usernameParameter("memberId") //default username
+                .passwordParameter("memberPw") //default password
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/login")
 
                 .and()
 
