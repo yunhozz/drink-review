@@ -41,6 +41,7 @@ public class MemberService {
     }
 
     //로그인
+    @Transactional(readOnly = true)
     public boolean login(String memberId, String memberPw) {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
