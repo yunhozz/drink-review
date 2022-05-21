@@ -15,7 +15,7 @@ public class MemberRequestDto {
     @NotBlank private String memberPw;
     @NotBlank private String name;
     private int age;
-    @NotBlank private String auth;
+    private String auth;
 
     public Member toEntity() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
