@@ -55,7 +55,7 @@ public class MemberController {
             UserDetails loginMember = userDetailsService.loadUserByUsername(loginForm.getMemberId());
             session.setAttribute("loginMember", loginMember);
         } else {
-            throw new IllegalStateException("Please insert password again.");
+            return "member/login";
         }
 
         return "redirect:/";
