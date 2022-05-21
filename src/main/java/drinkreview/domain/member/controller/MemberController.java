@@ -4,7 +4,6 @@ import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,15 +45,15 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginForm loginForm, BindingResult result, HttpSession session) {
+    public String login(@Valid LoginForm loginForm, BindingResult result) {
         if (result.hasErrors()) {
             return "member/login";
         }
 
         if (memberService.login(loginForm.getMemberId(), loginForm.getMemberPw())) {
-            UserDetails loginMember = userDetailsService.loadUserByUsername(loginForm.getMemberId());
-            session.setAttribute("loginMember", loginMember);
+            userDetailsService.loadUserByUsername(loginForm.getMemberId());
         } else {
+            result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "member/login";
         }
 
