@@ -1,8 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-<title>Hello world!</title>
+    <title>Hello world!</title>
 </head>
+
 <body>
-<h1>This is homepage</h1>
+<h1>This is homepage for anonymous!</h1>
+    <p><a th:href="@{/join}">Sign in</a></p>
+    <p><a th:href="@{/login}">Sign up</a></p>
 </body>
 </html>
