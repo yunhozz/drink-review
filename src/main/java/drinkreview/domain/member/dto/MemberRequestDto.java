@@ -14,7 +14,7 @@ public class MemberRequestDto {
     @NotBlank private String memberId;
     @NotBlank private String memberPw;
     @NotBlank private String name;
-    private int age;
+    private Integer age;
     private String auth;
 
     public Member toEntity() {
