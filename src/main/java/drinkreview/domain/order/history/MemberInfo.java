@@ -1,4 +1,4 @@
-package drinkreview.domain;
+package drinkreview.domain.order.history;
 
 import lombok.AccessLevel;
 import lombok.Getter;

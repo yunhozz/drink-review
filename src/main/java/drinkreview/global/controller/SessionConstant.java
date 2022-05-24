@@ -1,4 +1,4 @@
-package drinkreview.domain.member.controller;
+package drinkreview.global.controller;
 
 public class SessionConstant {
 

@@ -1,4 +1,4 @@
-package drinkreview.domain.order;
+package drinkreview.domain.order.history;
 
 import drinkreview.domain.TimeEntity;
 import lombok.AccessLevel;

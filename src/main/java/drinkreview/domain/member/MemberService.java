@@ -1,10 +1,9 @@
-package drinkreview.domain.member.service;
+package drinkreview.domain.member;
 
 import drinkreview.domain.comment.Comment;
 import drinkreview.domain.comment.CommentChild;
 import drinkreview.domain.comment.repository.CommentChildRepository;
 import drinkreview.domain.comment.repository.CommentRepository;
-import drinkreview.domain.member.Member;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;

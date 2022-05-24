@@ -1,5 +1,6 @@
-package drinkreview.domain.member;
+package drinkreview.domain.member.security;
 
+import drinkreview.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package drinkreview.domain;
+package drinkreview.domain.delivery;
 
 import drinkreview.global.enums.City;
 import lombok.AccessLevel;

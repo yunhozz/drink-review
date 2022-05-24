@@ -1,6 +1,7 @@
-package drinkreview.domain.member;
+package drinkreview.domain.member.security;
 
-import drinkreview.domain.member.controller.SessionConstant;
+import drinkreview.domain.member.Member;
+import drinkreview.global.controller.SessionConstant;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

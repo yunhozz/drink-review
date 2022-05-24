@@ -1,6 +1,5 @@
-package drinkreview.domain.order;
+package drinkreview.domain.order.history;
 
-import drinkreview.domain.MemberInfo;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.member.Member;
 import lombok.AccessLevel;
