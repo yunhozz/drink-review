@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ public class MemberRequestDto {
     @NotBlank private String memberId;
     @NotBlank private String memberPw;
     @NotBlank private String name;
-    private Integer age;
+    @NotNull private Integer age;
     private String auth;
 
     public Member toEntity() {
