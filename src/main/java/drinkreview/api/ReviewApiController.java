@@ -1,8 +1,5 @@
 package drinkreview.api;
 
-import drinkreview.domain.comment.repository.CommentRepository;
-import drinkreview.domain.drink.DrinkRepository;
-import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.Review;
 import drinkreview.domain.review.dto.ReviewQueryDto;
 import drinkreview.domain.review.dto.ReviewResponseDto;
@@ -20,9 +17,6 @@ import java.util.List;
 public class ReviewApiController {
 
     private final ReviewRepository reviewRepository;
-    private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
-    private final DrinkRepository drinkRepository;
 
     @GetMapping("/reviews")
     public Page<ReviewResponseDto> findPage(Pageable pageable) {
