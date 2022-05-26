@@ -76,7 +76,7 @@
                                                 <div class="bi-star-fill"></div>
                                                 <div class="bi-star-fill"></div>
                                                 <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
+                                                <div class="bi-star-half"></div>
                                             </div>
                                             <!-- Product price-->
                                             <span th:text="${drink.price} + ￦">price</span>
@@ -90,25 +90,51 @@
                             </div>
                         </form>
                     </th:block>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" th:href="@{/shop?page=0}">1</a></li>
-                            <li class="page-item"><a class="page-link" th:href="@{/shop?page=1}">2</a></li>
-                            <li class="page-item"><a class="page-link" th:href="@{/shop?page=2}">3</a></li>
-                            <li class="page-item"><a class="page-link" th:href="@{/shop?page=3}">4</a></li>
-                            <li class="page-item"><a class="page-link" th:href="@{/shop?page=4}">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:if="${!drinks.isEmpty()}">
+                        <nav th:with="
+                                pageNumber = ${drinks.pageable.pageNumber},
+                                pageSize = ${drinks.pageable.pageSize},
+                                totalPages = ${drinks.totalPages},
+                                startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                                tempEndPage = ${startPage + pageSize - 1},
+                                endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
+                             aria-label="Page navigation">
+                            <ul class="pagination">
+                                <!-- 첫번째 페이지 -->
+                                <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
+                                    <a class="page-link" th:href="@{/shop(page=1)}">
+                                        <span>&laquo;</span>
+                                        <span class="sr-only">First</span>
+                                    </a>
+                                </li>
+                                <!-- 이전 페이지 -->
+                                <li th:classappend="${drinks.first} ? 'disabled'" class="page-item">
+                                    <a class="page-link" th:href="${drinks.first} ? '#' : @{/shop(page=${#numbers.formatDecimal(startPage - pageSize, 0, -1)})}" aria-label="Previous">
+                                        <span aria-hidden="true">&lt;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <!-- 페이지 번호들 -->
+                                <li th:each="page: ${#numbers.sequence(startPage - 1, endPage - 1)}" th:classappend="${page == pageNumber} ? 'active'" class="page-item">
+                                    <a class="page-link" th:text="${page + 1}" th:href="@{/shop(page=${page})}"></a>
+                                </li>
+                                <!-- 다음 페이지 -->
+                                <li th:classappend="${drinks.last} ? 'disabled'" class="page-item">
+                                    <a class="page-link" th:href="${drinks.last} ? '#' : @{/shop(page=${#numbers.formatDecimal(startPage + pageSize, 0, -1)})}" aria-label="Next">
+                                        <span aria-hidden="true">&gt;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                                <!-- 마지막 페이지 -->
+                                <li th:classappend=" ${T(java.lang.Math).floor(totalPages/10)*10 <= startPage} ? 'disabled'" class="page-item">
+                                    <a class="page-link" th:href="@{/shop(page=${totalPages})}">
+                                        <span>&raquo;</span>
+                                        <span class="sr-only">Last</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </section>
