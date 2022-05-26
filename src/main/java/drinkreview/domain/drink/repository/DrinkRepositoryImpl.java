@@ -50,7 +50,12 @@ public class DrinkRepositoryImpl implements DrinkRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(drink.count())
+                .from(drink)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -71,6 +76,11 @@ public class DrinkRepositoryImpl implements DrinkRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(drink.count())
+                .from(drink)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 }

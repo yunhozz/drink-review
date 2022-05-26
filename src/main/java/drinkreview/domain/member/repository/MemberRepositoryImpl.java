@@ -65,7 +65,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(member.count())
+                .from(member)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -89,7 +94,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(member.count())
+                .from(member)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     private BooleanExpression memberIdEq(String memberId) {

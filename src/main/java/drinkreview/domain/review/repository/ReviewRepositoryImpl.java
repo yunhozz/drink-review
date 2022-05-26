@@ -144,7 +144,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .from(review)
                 .join(review.member, member)
                 .join(review.drink, drink)
-                .orderBy(review.lastModifiedDate.desc())
+                .orderBy(review.createdDate.desc())
                 .fetch();
     }
 
@@ -214,7 +214,12 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(review.count())
+                .from(review)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -240,7 +245,14 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(review.count())
+                .from(review)
+                .join(review.member, member).fetchJoin()
+                .join(review.drink, drink).fetchJoin()
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -266,24 +278,27 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .fetch();
 
         Map<ReviewQueryDto, Integer> countMap = new HashMap<>();
-
         for (ReviewQueryDto review : reviews) {
             int count1 = countKeyword(review.getTitle(), keyword);
             int count2 = countKeyword(review.getContent(), keyword);
-
             countMap.put(review, count1 + count2);
         }
-
         List<Map.Entry<ReviewQueryDto, Integer>> entries = new ArrayList<>(countMap.entrySet());
         Collections.sort(entries, (o1, o2) -> o2.getValue().compareTo(o1.getValue())); //내림차순 정렬
 
         List<ReviewQueryDto> sortedReviews = new ArrayList<>();
-
         for (Map.Entry<ReviewQueryDto, Integer> entry : entries) {
             sortedReviews.add(entry.getKey());
         }
 
-        return new PageImpl<>(sortedReviews, pageable, sortedReviews.size());
+        Long count = queryFactory
+                .select(review.count())
+                .from(review)
+                .join(review.member, member).fetchJoin()
+                .join(review.drink, drink).fetchJoin()
+                .fetchOne();
+
+        return new PageImpl<>(sortedReviews, pageable, count);
     }
 
     private int countKeyword(String str, String keyword) {
