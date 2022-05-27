@@ -72,7 +72,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 ))
                 .from(comment)
                 .join(comment.member, member)
-                .where(comment.review.id.eq(findReview.getReviewId()))
+                .where(comment.review.id.eq(findReview.getId()))
                 .fetch();
 
         findReview.setComments(comments);
@@ -102,7 +102,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .fetch();
 
         List<Long> reviewIds = reviews.stream()
-                .map(ReviewQueryDto::getReviewId)
+                .map(ReviewQueryDto::getId)
                 .toList();
 
         List<CommentQueryDto> comments = queryFactory
@@ -123,8 +123,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         //key: reviewId & value: List<CommentQueryDto>
         Map<Long, List<CommentQueryDto>> commentMap = comments.stream()
                 .collect(Collectors.groupingBy(CommentQueryDto::getReviewId));
-
-        reviews.forEach(reviewQueryDto -> reviewQueryDto.setComments(commentMap.get(reviewQueryDto.getReviewId())));
+        reviews.forEach(reviewQueryDto -> reviewQueryDto.setComments(commentMap.get(reviewQueryDto.getId())));
 
         return reviews;
     }
@@ -142,7 +141,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .orderBy(review.createdDate.desc())
                 .fetch();
@@ -161,14 +159,18 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .orderBy(review.score.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(review.count())
+                .from(review)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -184,14 +186,18 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .orderBy(review.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long count = queryFactory
+                .select(review.count())
+                .from(review)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
     }
 
     @Override
@@ -207,7 +213,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .orderBy(review.view.desc())
                 .offset(pageable.getOffset())
@@ -235,7 +240,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .where(review.title.contains(keyword)
                         .or(review.content.contains(keyword))
@@ -248,8 +252,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         Long count = queryFactory
                 .select(review.count())
                 .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.drink, drink).fetchJoin()
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
@@ -268,7 +270,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         drink.name
                 ))
                 .from(review)
-                .join(review.member, member)
                 .join(review.drink, drink)
                 .where(review.title.contains(keyword)
                         .or(review.content.contains(keyword))
@@ -294,8 +295,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         Long count = queryFactory
                 .select(review.count())
                 .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.drink, drink).fetchJoin()
                 .fetchOne();
 
         return new PageImpl<>(sortedReviews, pageable, count);
