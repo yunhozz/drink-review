@@ -65,9 +65,13 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
         Map<Long, List<OrderDrinkResponseDto>> orderDrinkMap = orderDrinks.stream()
                 .collect(Collectors.groupingBy(OrderDrinkResponseDto::getOrderId));
-
         orders.forEach(orderQueryDto -> orderQueryDto.setOrderDrinks(orderDrinkMap.get(orderQueryDto.getId())));
 
-        return new PageImpl<>(orders, pageable, orders.size());
+        Long count = queryFactory
+                .select(order.count())
+                .from(order)
+                .fetchOne();
+
+        return new PageImpl<>(orders, pageable, count);
     }
 }
