@@ -35,7 +35,13 @@ public class CommunityController {
     }
 
     @PostMapping
-    public String community(SearchForm searchForm, Pageable pageable, Model model) {
+    public String communitySearch(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
+                                  SearchForm searchForm, Pageable pageable, Model model) {
+        if (loginMember == null) {
+            return "member/login";
+        }
+        model.addAttribute("loginMember", loginMember);
+
         Page<ReviewQueryDto> reviews = Page.empty();
         if (searchForm.getKeyword().isEmpty()) {
             reviews = reviewRepository.searchPageByDateOrder(pageable);
