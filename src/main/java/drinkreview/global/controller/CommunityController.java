@@ -48,6 +48,6 @@ public class CommunityController {
         }
         model.addAttribute("reviews", reviews);
 
-        return "review/list";
+        return "community";
     }
 }
