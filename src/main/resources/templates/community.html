@@ -41,7 +41,7 @@
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="site-heading">
                             <h1>Community is always opened</h1>
-                            <span class="subheading">Feel free to communicate!</span>
+                            <span class="subheading" th:text="'Feel free to communicate, ' + ${loginMember.name} + '!'">user</span>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,6 @@
                     <form method="post" th:action="@{/community}" th:object="${searchForm}">
                         <input th:field="*{keyword}" type="text" placeholder="검색어를 입력해주세요">
                         <select th:field="*{orderSelect}" class="form-control">
-                            <option value="">순서</option>
                             <option th:each="order : ${T(drinkreview.domain.review.controller.OrderSelect).values()}"
                                     th:value="${order}"
                                     th:text="${order}">option</option>
@@ -69,11 +68,17 @@
                                 <h2 class="post-title">
                                     <span th:text="${review.title}">title</span>
                                 </h2>
+                                <h4 class="post-subtitle">
+                                    <span th:text="${review.content}">content</span>
+                                </h4>
                             </a>
                             <p class="post-meta">
                                 Posted by
                                 <span th:text="${review.memberName}">member name</span>
-                                on September 24, 2022
+                                on
+                                <span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm:ss')}">time</span><br>
+                                drink : <span th:text="${review.drinkName}">drink</span>&nbsp;&nbsp;&nbsp;
+                                score : <span th:text="${review.score}">score</span>
                             </p>
                         </div>
                         <!-- Divider-->
