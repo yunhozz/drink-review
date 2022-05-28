@@ -5,6 +5,7 @@ import drinkreview.domain.review.Review;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,8 @@ public class ReviewResponseDto {
     private String memberName;
     private double score;
     private int view;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
     private List<CommentResponseDto> comments;
 
     public ReviewResponseDto(Review review) {
@@ -30,6 +33,8 @@ public class ReviewResponseDto {
         this.memberName = review.getMemberName();
         this.score = review.getScore();
         this.view = review.getView();
+        this.createdDate = review.getCreatedDate();
+        this.lastModifiedDate = review.getLastModifiedDate();
         this.comments = review.getComments().stream()
                 .map(CommentResponseDto::new)
                 .toList();
