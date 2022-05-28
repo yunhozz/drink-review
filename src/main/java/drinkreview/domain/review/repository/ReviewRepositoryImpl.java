@@ -134,6 +134,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
@@ -152,6 +153,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
@@ -179,6 +181,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
@@ -206,6 +209,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
@@ -233,6 +237,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
@@ -263,6 +268,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .select(new QReviewQueryDto(
                         review.id,
                         review.title,
+                        review.content,
                         review.memberName,
                         review.score,
                         review.createdDate,
