@@ -1,6 +1,7 @@
 package drinkreview.domain.drink.dto;
 
 import drinkreview.domain.drink.Drink;
+import drinkreview.global.enums.DrinkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,8 @@ public class DrinkResponseDto {
     private Byte[] image;
     private double gpa;
     private int stockQuantity;
+    private int salesVolume;
+    private DrinkStatus status;
 
     public DrinkResponseDto(Drink drink) {
         this.id = drink.getId();
@@ -28,5 +31,7 @@ public class DrinkResponseDto {
         this.image = drink.getImage();
         this.gpa = drink.getGpa();
         this.stockQuantity = drink.getStockQuantity();
+        this.salesVolume = drink.getSalesVolume();
+        this.status = drink.getStatus();
     }
 }
