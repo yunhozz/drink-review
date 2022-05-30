@@ -35,13 +35,14 @@ public class ReviewQueryDto {
 
     //리스트
     @QueryProjection
-    public ReviewQueryDto(Long id, String title, String content, String memberName, double score, LocalDateTime createdDate, Long drinkId,
-                          String drinkName) {
+    public ReviewQueryDto(Long id, String title, String content, String memberName, double score, int view, LocalDateTime createdDate,
+                          Long drinkId, String drinkName) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.memberName = memberName;
         this.score = score;
+        this.view = view;
         this.createdDate = createdDate;
         this.drinkId = drinkId;
         this.drinkName = drinkName;
