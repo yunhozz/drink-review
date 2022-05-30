@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,9 +18,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
     List<Review> findWithKeyword(@Param("keyword") String keyword);
 
     //조회수 증가
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("update Review r set r.view = r.view + 1 where r.id = :reviewId")
-    int addView(@Param("reviewId") Long reviewId);
+    void addView(@Param("reviewId") Long reviewId);
 
     //member 필드가 null 인지 ?
     @Query("select case when r.member is null then true else false end from Review r where r.id = :id")
