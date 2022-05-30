@@ -1,6 +1,6 @@
 package drinkreview.global.controller;
 
-public class SessionConstant {
+public class LoginSessionConstant {
 
     public static final String LOGIN_MEMBER = "loginMember";
 }
