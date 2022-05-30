@@ -137,6 +137,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
@@ -156,6 +157,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
@@ -184,6 +186,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
@@ -212,6 +215,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
@@ -240,6 +244,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
@@ -271,6 +276,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.content,
                         review.memberName,
                         review.score,
+                        review.view,
                         review.createdDate,
                         drink.id,
                         drink.name
