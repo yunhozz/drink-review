@@ -1,7 +1,7 @@
 package drinkreview.domain.review;
 
 import drinkreview.domain.drink.Drink;
-import drinkreview.domain.drink.DrinkRepository;
+import drinkreview.domain.drink.repository.DrinkRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.review.dto.ReviewRequestDto;
@@ -23,9 +23,10 @@ public class ReviewService {
     public Long makeReview(ReviewRequestDto dto, Long userId, Long drinkId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
-
         Drink drink = drinkRepository.findById(drinkId)
                 .orElseThrow(() -> new IllegalStateException("Drink is null."));
+
+        drinkRepository.updateGpa(drink.getId(), dto.getScore());
 
         dto.setMember(member);
         dto.setDrink(drink);
@@ -36,17 +37,14 @@ public class ReviewService {
 
     public void updateReview(ReviewRequestDto dto, Long reviewId, Long userId) {
         Review review = this.findReview(reviewId);
-
         if (!review.getMember().getId().equals(userId)) {
             throw new IllegalStateException("You do not have permission.");
         }
-
         review.updateField(dto.getTitle(), dto.getContent(), dto.getScore());
     }
 
     public void deleteReview(Long reviewId, Long userId) {
         Review review = this.findReview(reviewId);
-
         if (reviewRepository.isMemberNull(review.getId())) {
             throw new IllegalStateException("Only the admin has permission.");
         } else {
@@ -57,10 +55,6 @@ public class ReviewService {
                 throw new IllegalStateException("You do not have permission.");
             }
         }
-    }
-
-    public void updateView(Long reviewId) {
-        reviewRepository.addView(reviewId);
     }
 
     @Transactional(readOnly = true)
