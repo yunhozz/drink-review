@@ -6,7 +6,8 @@ import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.ReviewService;
 import drinkreview.domain.review.dto.ReviewRequestDto;
 import drinkreview.domain.review.dto.ReviewResponseDto;
-import drinkreview.global.controller.SessionConstant;
+import drinkreview.domain.review.repository.ReviewRepository;
+import drinkreview.global.controller.LoginSessionConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,18 +24,20 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
     private final DrinkService drinkService;
 
     @GetMapping("/review")
     public String read(@RequestParam("id") Long reviewId, Model model) {
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
+        reviewRepository.addView(review.getId());
         model.addAttribute("review", review);
 
-        return "review/detail";
+        return "review/review-detail";
     }
 
     @GetMapping("/review/write")
-    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
+    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
                         @ModelAttribute ReviewRequestDto reviewDto, Model model) {
         if (loginMember == null) {
             return "member/login";
