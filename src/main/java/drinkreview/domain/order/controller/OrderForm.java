@@ -1,9 +1,9 @@
-package drinkreview.domain.orderDrink.dto;
+package drinkreview.domain.order.controller;
 
 import lombok.Data;
 
 @Data
-public class OrderDrinkForm {
+public class OrderForm {
 
     private Long drinkId;
     private int count;
