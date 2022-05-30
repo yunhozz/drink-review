@@ -32,12 +32,13 @@ public class Drink extends TimeEntity {
 
     private double gpa;
     private int stockQuantity;
+    private int salesVolume;
 
     @Enumerated(EnumType.STRING)
     private DrinkStatus status; //ON_SALE, OUT_OF_STOCK
 
     @Builder
-    private Drink(String name, String country, LocalDate productionDate, int price, Byte[] image, double gpa, int stockQuantity, DrinkStatus status) {
+    public Drink(String name, String country, LocalDate productionDate, int price, Byte[] image, double gpa, int stockQuantity, int salesVolume, DrinkStatus status) {
         this.name = name;
         this.country = country;
         this.productionDate = productionDate;
@@ -45,6 +46,7 @@ public class Drink extends TimeEntity {
         this.image = image;
         this.gpa = gpa;
         this.stockQuantity = stockQuantity;
+        this.salesVolume = salesVolume;
         this.status = status;
     }
 
@@ -72,6 +74,7 @@ public class Drink extends TimeEntity {
 
         if (remainQuantity == 0) {
             status = DrinkStatus.OUT_OF_STOCK;
+            this.stockQuantity = 0;
         } else {
             this.stockQuantity = remainQuantity;
         }
