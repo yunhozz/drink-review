@@ -3,7 +3,9 @@ package drinkreview.domain.orderDrink;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.order.Order;
+import drinkreview.global.enums.DeliveryStatus;
 import drinkreview.global.enums.DrinkStatus;
+import drinkreview.global.exception.NotAllowedUpdateOrderException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,14 +46,19 @@ public class OrderDrink extends TimeEntity {
         return new OrderDrink(drink, count * drink.getPrice(), count);
     }
 
-    public void updateOrder(int count) {
-        int updatedCount = this.count - count;
+    //주문 수량 변경
+    public void updateCountOfDrink(int count) {
+        if (order.getDelivery().getStatus() == DeliveryStatus.PREPARING) {
+            throw new NotAllowedUpdateOrderException("Delivery is already started.");
+        }
 
+        int updatedCount = this.count - count;
         if (updatedCount > 0) {
             drink.addQuantity(updatedCount);
-
-        } else {
+        } else if (updatedCount < 0) {
             drink.removeQuantity(Math.abs(updatedCount));
+        } else {
+            throw new NotAllowedUpdateOrderException("Order count is same.");
         }
 
         orderPrice = drink.getPrice() * count;
