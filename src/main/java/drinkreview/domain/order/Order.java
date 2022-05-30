@@ -4,10 +4,8 @@ import drinkreview.domain.TimeEntity;
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.orderDrink.OrderDrink;
-import drinkreview.global.enums.DeliveryStatus;
 import drinkreview.global.enums.OrderStatus;
 import drinkreview.global.exception.NotAllowedCancelOrderException;
-import drinkreview.global.exception.NotAllowedUpdateOrderException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +29,7 @@ public class Order extends TimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDrink> orderDrinks = new ArrayList<>();
 
     @OneToOne(mappedBy = "order")
@@ -51,32 +49,12 @@ public class Order extends TimeEntity {
 
     public static Order createOrder(Member member, List<OrderDrink> orderDrinks) {
         Order order = new Order(member, LocalDateTime.now(), OrderStatus.ORDER);
-
         for (OrderDrink orderDrink : orderDrinks) {
             order.setOrderDrink(orderDrink);
             orderDrink.createOrder();
         }
 
         return order;
-    }
-
-    //주문 수량 변경
-    public void updateCountOfDrink(OrderDrink orderDrink, int count) {
-        if (orderDrinks.stream().anyMatch(o -> o.equals(orderDrink))) {
-            if (count == orderDrink.getCount()) {
-                throw new NotAllowedUpdateOrderException("Order count is same.");
-            }
-
-            if (delivery.getStatus() == DeliveryStatus.PREPARING) {
-                orderDrink.updateOrder(count);
-
-            } else {
-                throw new NotAllowedUpdateOrderException("Delivery is already started.");
-            }
-
-        } else {
-            throw new NotAllowedUpdateOrderException("There's not order.");
-        }
     }
 
     public void complete() {
@@ -94,7 +72,6 @@ public class Order extends TimeEntity {
         for (OrderDrink orderDrink : orderDrinks) {
             orderDrink.cancelOrder();
         }
-
         delivery.canceled();
         status = OrderStatus.CANCEL;
     }
