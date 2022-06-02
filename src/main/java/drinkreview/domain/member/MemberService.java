@@ -49,6 +49,17 @@ public class MemberService {
         return encoder.matches(memberPw, member.getMemberPw());
     }
 
+    //정보 수정
+    public void update(Long id, String originPw, String newPw, String name, int age) {
+        Member member = this.findMember(id);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(originPw, member.getMemberPw())) {
+            throw new IllegalStateException("The password is different.");
+        }
+
+        member.update(encoder.encode(newPw), name, age);
+    }
+
     //회원 탈퇴
     public void withdraw(Long id, String memberPw) {
         Member member = this.findMember(id);
