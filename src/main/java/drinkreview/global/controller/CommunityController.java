@@ -21,8 +21,8 @@ public class CommunityController {
     private final ReviewRepository reviewRepository;
 
     @GetMapping
-    public String community(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
-                            @ModelAttribute SearchForm searchForm, @PageableDefault(size = 10) Pageable pageable, Model model) {
+    public String community(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
+                            @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {
             return "member/login";
         }
@@ -34,22 +34,22 @@ public class CommunityController {
         return "community";
     }
 
-    @PostMapping
-    public String communitySearch(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
-                                  SearchForm searchForm, Pageable pageable, Model model) {
+    @GetMapping("/search")
+    public String search(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
+                         @RequestParam String keyword, @RequestParam OrderSelect orderSelect, @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {
             return "member/login";
         }
         model.addAttribute("loginMember", loginMember);
 
         Page<ReviewQueryDto> reviews = Page.empty();
-        if (searchForm.getKeyword().isEmpty()) {
+        if (keyword.isEmpty()) {
             reviews = reviewRepository.searchPageByDateOrder(pageable);
         } else {
-            if (searchForm.getOrderSelect().equals(OrderSelect.DATE_ORDER)) {
-                reviews = reviewRepository.searchPageDateByKeyword(searchForm.getKeyword(), pageable);
-            } else if (searchForm.getOrderSelect().equals(OrderSelect.ACCURACY_ORDER)){
-                reviews = reviewRepository.searchPageAccuracyByKeyword(searchForm.getKeyword(), pageable);
+            if (orderSelect.equals(OrderSelect.DATE_ORDER)) {
+                reviews = reviewRepository.searchPageDateByKeyword(keyword, pageable);
+            } else if (orderSelect.equals(OrderSelect.ACCURACY_ORDER)){
+                reviews = reviewRepository.searchPageAccuracyByKeyword(keyword, pageable);
             }
         }
         model.addAttribute("reviews", reviews);
