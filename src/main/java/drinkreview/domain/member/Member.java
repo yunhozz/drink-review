@@ -36,4 +36,10 @@ public class Member extends TimeEntity {
         this.age = age;
         this.auth = auth;
     }
+
+    public void update(String memberPw, String name, int age) {
+        this.memberPw = memberPw;
+        this.name = name;
+        this.age = age;
+    }
 }
