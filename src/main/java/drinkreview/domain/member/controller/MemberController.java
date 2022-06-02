@@ -1,25 +1,31 @@
 package drinkreview.domain.member.controller;
 
-import drinkreview.domain.member.UserDetailsServiceImpl;
+import drinkreview.domain.member.MemberService;
 import drinkreview.domain.member.dto.MemberRequestDto;
-import drinkreview.domain.member.service.MemberService;
+import drinkreview.domain.member.dto.MemberResponseDto;
+import drinkreview.domain.member.dto.MemberSessionResponseDto;
+import drinkreview.domain.member.security.UserDetailsServiceImpl;
+import drinkreview.global.controller.LoginSessionConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
     private final UserDetailsServiceImpl userDetailsService;
 
-    @PostMapping("/member/join")
+    @PostMapping("/join")
     public String join(@Valid MemberRequestDto memberRequestDto, BindingResult result) {
         if (result.hasErrors()) {
             return "home";
@@ -29,7 +35,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @PostMapping("/member/login")
+    @PostMapping("/login")
     public String login(@Valid LoginForm loginForm, BindingResult result, @RequestParam(defaultValue = "/") String redirectURL) {
         if (result.hasErrors()) {
             return "home";
@@ -49,7 +55,29 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/member/logout")
+    @GetMapping("/update")
+    public String update(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute UpdateForm updateForm, Model model) {
+        if (loginMember == null) {
+            return "home";
+        }
+
+        model.addAttribute("loginMember", loginMember);
+        return "member/update";
+    }
+
+    @PostMapping("/update")
+    public String update(@Valid UpdateForm updateForm, BindingResult result) {
+        if (result.hasErrors()) {
+            return "member/update";
+        }
+
+        MemberResponseDto member = memberService.findMemberDto(updateForm.getId());
+        memberService.update(member.getId(), updateForm.getOriginPw(), updateForm.getNewPw(), updateForm.getName(), updateForm.getAge());
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -57,5 +85,15 @@ public class MemberController {
         }
 
         return "redirect:/";
+    }
+
+    @PostConstruct
+    public void init() {
+        MemberRequestDto dto = new MemberRequestDto();
+        dto.setMemberId("qwe");
+        dto.setMemberPw("qwe");
+        dto.setName("yunho");
+        dto.setAge(27);
+        memberService.join(dto);
     }
 }
