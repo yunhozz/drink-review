@@ -10,7 +10,6 @@ import drinkreview.domain.order.history.OrderHistory;
 import drinkreview.domain.order.repository.OrderHistoryRepository;
 import drinkreview.domain.order.repository.OrderRepository;
 import drinkreview.domain.orderDrink.OrderDrink;
-import drinkreview.domain.orderDrink.OrderDrinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderDrinkRepository orderDrinkRepository;
     private final OrderHistoryRepository orderHistoryRepository;
     private final MemberRepository memberRepository;
     private final DrinkRepository drinkRepository;
