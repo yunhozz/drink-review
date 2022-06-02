@@ -1,7 +1,6 @@
 package drinkreview.global.controller;
 
 import drinkreview.domain.member.controller.LoginForm;
-import drinkreview.domain.member.controller.SessionConstant;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@ModelAttribute MemberRequestDto memberRequestDto, @ModelAttribute LoginForm loginForm,
-                       @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+                       @SessionAttribute(name = LoginSessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "home";
         }
