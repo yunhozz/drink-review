@@ -40,7 +40,6 @@ public class CommentChild extends TimeEntity {
         if (member != null) {
             member = null;
         }
-
-        memberName = "탈퇴 멤버";
+        memberName = "<withdrawal member>";
     }
 }
