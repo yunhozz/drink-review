@@ -64,7 +64,7 @@
             <!-- Post preview-->
             <th:block th:each="review : ${reviews}">
                 <div class="post-preview">
-                    <a th:href="@{/community/review(id=${review.id})}">
+                    <a th:href="@{/community/review/{id}(id=${review.id})}">
                         <h2 class="post-title">
                             <span th:text="${review.title}">title</span>
                         </h2>
