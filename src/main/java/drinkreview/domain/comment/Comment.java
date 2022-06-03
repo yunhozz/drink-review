@@ -64,7 +64,7 @@ public class Comment extends TimeEntity {
     }
 
     public void delete() {
-        content = "삭제된 코멘트입니다.";
+        content = "<Deleted comment>";
         isDeleted = DeleteStatus.Y;
     }
 
@@ -72,8 +72,7 @@ public class Comment extends TimeEntity {
         if (member != null) {
             member = null;
         }
-
-        memberName = "탈퇴 멤버";
+        memberName = "<withdrawal member>";
     }
 
     //연관관계 편의 메소드
