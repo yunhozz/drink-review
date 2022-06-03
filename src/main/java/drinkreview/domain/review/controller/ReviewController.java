@@ -1,7 +1,6 @@
 package drinkreview.domain.review.controller;
 
-import drinkreview.domain.drink.DrinkService;
-import drinkreview.domain.drink.dto.DrinkSimpleResponseDto;
+import drinkreview.domain.drink.repository.DrinkRepository;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.ReviewService;
 import drinkreview.domain.review.dto.ReviewRequestDto;
@@ -25,10 +24,10 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final ReviewRepository reviewRepository;
-    private final DrinkService drinkService;
+    private final DrinkRepository drinkRepository;
 
-    @GetMapping("/review")
-    public String read(@RequestParam("id") Long reviewId, Model model) {
+    @GetMapping("/review/{id}")
+    public String read(@PathVariable("id") Long reviewId, Model model) {
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
         reviewRepository.addView(review.getId());
         model.addAttribute("review", review);
@@ -37,27 +36,56 @@ public class ReviewController {
     }
 
     @GetMapping("/review/write")
-    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
-                        @ModelAttribute ReviewRequestDto reviewDto, Model model) {
+    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto,
+                        Model model) {
         if (loginMember == null) {
             return "member/login";
         }
         model.addAttribute("loginMember", loginMember);
 
-        List<DrinkSimpleResponseDto> drinks = drinkService.findDrinkSimpleDtoList();
-        model.addAttribute("drinks", drinks);
+        List<String> drinkNames = drinkRepository.findDrinkNamesInOrder(loginMember.getId());
+        model.addAttribute("drinkNames", drinkNames);
 
         return "review/write";
     }
 
     @PostMapping("/review/write")
-    public String write(@Valid ReviewRequestDto reviewDto, BindingResult result, @RequestParam("userId") Long userId,
-                        @RequestParam("drinkId") Long drinkId) {
+    public String write(@Valid ReviewRequestDto reviewRequestDto, BindingResult result, @RequestParam("userId") Long userId, @RequestParam("drinkId") Long drinkId) {
         if (result.hasErrors()) {
             return "review/write";
         }
 
-        reviewService.makeReview(reviewDto, userId, drinkId);
+        reviewService.makeReview(reviewRequestDto, userId, drinkId);
+        return "redirect:/community";
+    }
+
+    @GetMapping("/review/{id}/update")
+    public String update(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
+                         @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
+        if (loginMember == null) {
+            return "member/login";
+        }
+
+        return "review/write";
+    }
+
+    @PostMapping("/review/{id}/update")
+    public String update(@PathVariable("id") Long reviewId, @Valid ReviewRequestDto reviewRequestDto, BindingResult result, @RequestParam("userId") Long userId) {
+        if (result.hasErrors()) {
+            return "review/write";
+        }
+
+        reviewService.updateReview(reviewRequestDto, reviewId, userId);
+        return "redirect:/community";
+    }
+
+    @GetMapping("/review/{id}/delete")
+    public String delete(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId) {
+        if (loginMember == null) {
+            return "member/login";
+        }
+
+        reviewService.deleteReview(reviewId, loginMember.getId());
         return "redirect:/community";
     }
 
