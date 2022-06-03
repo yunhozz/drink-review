@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/drink-review?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: Pyh172839!
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:tcp://localhost/~/drink-review
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
     properties:
@@ -15,10 +15,8 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000
 
-server:
-  servlet:
-    session:
-      timeout: 1800
+  h2:
+    console.enabled: true
 
 logging.level:
   org.hibernate.SQL: debug
