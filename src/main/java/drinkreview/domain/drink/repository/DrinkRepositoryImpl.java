@@ -18,22 +18,6 @@ public class DrinkRepositoryImpl implements DrinkRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<DrinkSimpleResponseDto> searchSimpleDrink() {
-        return queryFactory
-                .select(Projections.constructor(
-                        DrinkSimpleResponseDto.class,
-                        drink.id,
-                        drink.name,
-                        drink.price,
-                        drink.image,
-                        drink.gpa
-                ))
-                .from(drink)
-                .orderBy(drink.createdDate.desc())
-                .fetch();
-    }
-
-    @Override
     public Page<DrinkSimpleResponseDto> searchSimplePageDrink(Pageable pageable) {
         List<DrinkSimpleResponseDto> content = queryFactory
                 .select(Projections.constructor(
