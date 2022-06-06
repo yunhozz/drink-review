@@ -13,7 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class ReviewController {
     }
 
     @GetMapping("/review/write")
-    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto,
-                        Model model) {
+    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
+                        @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
         if (loginMember == null) {
             return "member/login";
         }
@@ -50,12 +51,19 @@ public class ReviewController {
     }
 
     @PostMapping("/review/write")
-    public String write(@Valid ReviewRequestDto reviewRequestDto, BindingResult result, @RequestParam("userId") Long userId, @RequestParam("drinkId") Long drinkId) {
+    public String write(@Valid ReviewRequestDto reviewRequestDto, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "review/write";
         }
 
-        reviewService.makeReview(reviewRequestDto, userId, drinkId);
+        HttpSession session = request.getSession();
+        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(LoginSessionConstant.LOGIN_MEMBER);
+
+        String drinkName = request.getParameter("drinkName");
+        Long drinkId = drinkRepository.findDrinkIdWithName(drinkName)
+                .orElseThrow(() -> new IllegalStateException("Can't find drink with this name : " + drinkName));
+        reviewService.makeReview(reviewRequestDto, loginMember.getId(), drinkId);
+
         return "redirect:/community";
     }
 
@@ -70,7 +78,8 @@ public class ReviewController {
     }
 
     @PostMapping("/review/{id}/update")
-    public String update(@PathVariable("id") Long reviewId, @Valid ReviewRequestDto reviewRequestDto, BindingResult result, @RequestParam("userId") Long userId) {
+    public String update(@PathVariable("id") Long reviewId, @Valid ReviewRequestDto reviewRequestDto, BindingResult result,
+                         @RequestParam("userId") Long userId) {
         if (result.hasErrors()) {
             return "review/write";
         }
@@ -87,18 +96,5 @@ public class ReviewController {
 
         reviewService.deleteReview(reviewId, loginMember.getId());
         return "redirect:/community";
-    }
-
-    @PostConstruct
-    public void init() throws Exception {
-        for (int i = 1; i <= 20; i++) {
-            ReviewRequestDto dto = new ReviewRequestDto();
-            dto.setTitle("title" + i);
-            dto.setContent("content" + i);
-            dto.setScore((double) i);
-
-            reviewService.makeReview(dto, 31L, Integer.toUnsignedLong(i));
-            Thread.sleep(5);
-        }
     }
 }
