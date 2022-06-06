@@ -27,6 +27,7 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalStateException("Drink is null."));
 
         drinkRepository.updateGpa(drink.getId(), dto.getScore());
+        drinkRepository.updateEvaluationCount(drink.getId());
 
         dto.setMember(member);
         dto.setDrink(drink);
