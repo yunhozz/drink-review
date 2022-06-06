@@ -39,6 +39,10 @@ public class OrderDrink extends TimeEntity {
     }
 
     public static OrderDrink createOrderDrink(Drink drink, int count) {
+        if (count <= 0) {
+            throw new IllegalStateException("Can't order this drink with count lower than one.");
+        }
+
         if (drink.getStatus() == DrinkStatus.OUT_OF_STOCK) {
             throw new IllegalStateException("Drink is out of stock.");
         }
