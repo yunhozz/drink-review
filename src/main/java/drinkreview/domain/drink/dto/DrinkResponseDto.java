@@ -19,7 +19,7 @@ public class DrinkResponseDto {
     private Byte[] image;
     private double gpa;
     private int stockQuantity;
-    private int salesVolume;
+    private int evaluationCount;
     private DrinkStatus status;
 
     public DrinkResponseDto(Drink drink) {
@@ -31,7 +31,7 @@ public class DrinkResponseDto {
         this.image = drink.getImage();
         this.gpa = drink.getGpa();
         this.stockQuantity = drink.getStockQuantity();
-        this.salesVolume = drink.getSalesVolume();
+        this.evaluationCount = drink.getEvaluationCount();
         this.status = drink.getStatus();
     }
 }
