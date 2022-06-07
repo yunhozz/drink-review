@@ -58,6 +58,11 @@ public class ReviewService {
         }
     }
 
+    public void addView(Long reviewId) {
+        Review review = this.findReview(reviewId);
+        reviewRepository.addView(review.getId());
+    }
+
     @Transactional(readOnly = true)
     public ReviewResponseDto findReviewDto(Long reviewId) {
         Review review = this.findReview(reviewId);
