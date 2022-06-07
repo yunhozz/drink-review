@@ -18,7 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
     List<Review> findWithKeyword(@Param("keyword") String keyword);
 
     //조회수 증가
-    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("update Review r set r.view = r.view + 1 where r.id = :reviewId")
     void addView(@Param("reviewId") Long reviewId);
