@@ -103,9 +103,7 @@ public class ReviewController {
 
         HttpSession session = request.getSession();
         MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(LoginSessionConstant.LOGIN_MEMBER);
-
-        ReviewResponseDto review = reviewService.findReviewDto(reviewId);
-        reviewService.updateReview(reviewRequestDto, review.getId(), loginMember.getId());
+        reviewService.updateReview(reviewRequestDto, reviewId, loginMember.getId());
 
         return "redirect:/community";
     }
