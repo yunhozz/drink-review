@@ -14,7 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@ModelAttribute MemberRequestDto memberRequestDto, @ModelAttribute LoginForm loginForm,
-                       @SessionAttribute(name = LoginSessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+                       @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "home";
         }
