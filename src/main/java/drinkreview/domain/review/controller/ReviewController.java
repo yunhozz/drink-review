@@ -5,7 +5,7 @@ import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.ReviewService;
 import drinkreview.domain.review.dto.ReviewRequestDto;
 import drinkreview.domain.review.dto.ReviewResponseDto;
-import drinkreview.global.controller.LoginSessionConstant;
+import drinkreview.global.controller.SessionConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,7 @@ public class ReviewController {
     private final DrinkRepository drinkRepository;
 
     @GetMapping("/{id}")
-    public String read(@PathVariable("id") Long reviewId, @SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, Model model) {
+    public String read(@PathVariable("id") Long reviewId, @SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "member/login";
         }
@@ -52,7 +52,7 @@ public class ReviewController {
     }
 
     @GetMapping("/write")
-    public String write(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto,
+    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto,
                         Model model) {
         if (loginMember == null) {
             return "member/login";
@@ -72,7 +72,7 @@ public class ReviewController {
         }
 
         HttpSession session = request.getSession();
-        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(LoginSessionConstant.LOGIN_MEMBER);
+        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(SessionConstant.LOGIN_MEMBER);
 
         String drinkName = request.getParameter("drinkName");
         Long drinkId = drinkRepository.findDrinkIdWithName(drinkName)
@@ -83,7 +83,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}/update")
-    public String update(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
+    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
                          @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
         if (loginMember == null) {
             return "member/login";
@@ -102,14 +102,14 @@ public class ReviewController {
         }
 
         HttpSession session = request.getSession();
-        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(LoginSessionConstant.LOGIN_MEMBER);
+        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(SessionConstant.LOGIN_MEMBER);
         reviewService.updateReview(reviewRequestDto, reviewId, loginMember.getId());
 
         return "redirect:/community";
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId) {
+    public String delete(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId) {
         if (loginMember == null) {
             return "member/login";
         }
