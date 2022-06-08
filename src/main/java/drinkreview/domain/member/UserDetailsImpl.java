@@ -1,6 +1,5 @@
-package drinkreview.domain.member.security;
+package drinkreview.domain.member;
 
-import drinkreview.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDetailsImpl implements UserDetails {
 
+    private Long userId;
     private String memberId;
     private String memberPw;
     private String name;
@@ -23,6 +23,7 @@ public class UserDetailsImpl implements UserDetails {
     private String auth;
 
     public UserDetailsImpl(Member member) {
+        userId = member.getId();
         memberId = member.getMemberId();
         memberPw = member.getMemberPw();
         name = member.getName();
