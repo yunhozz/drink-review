@@ -1,6 +1,5 @@
-package drinkreview.domain.orderDrink.dto;
+package drinkreview.domain.orderDrink;
 
-import drinkreview.domain.orderDrink.OrderDrink;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
