@@ -21,7 +21,7 @@ public class CommunityController {
     private final ReviewRepository reviewRepository;
 
     @GetMapping
-    public String community(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
+    public String community(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
                             @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {
             return "member/login";
@@ -35,7 +35,7 @@ public class CommunityController {
     }
 
     @GetMapping("/search")
-    public String search(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
+    public String search(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute SearchForm searchForm,
                          @RequestParam String keyword, @RequestParam OrderSelect orderSelect, @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {
             return "member/login";
