@@ -4,8 +4,8 @@ import drinkreview.domain.member.MemberService;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
-import drinkreview.domain.member.security.UserDetailsServiceImpl;
-import drinkreview.global.controller.LoginSessionConstant;
+import drinkreview.domain.member.UserDetailsServiceImpl;
+import drinkreview.global.controller.SessionConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,7 +56,7 @@ public class MemberController {
     }
 
     @GetMapping("/update")
-    public String update(@SessionAttribute(LoginSessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute UpdateForm updateForm, Model model) {
+    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute UpdateForm updateForm, Model model) {
         if (loginMember == null) {
             return "home";
         }
@@ -88,12 +88,16 @@ public class MemberController {
     }
 
     @PostConstruct
-    public void init() {
-        MemberRequestDto dto = new MemberRequestDto();
-        dto.setMemberId("qwe");
-        dto.setMemberPw("qwe");
-        dto.setName("yunho");
-        dto.setAge(27);
-        memberService.join(dto);
+    public void init() throws Exception {
+        for (int i = 1; i <= 5; i++) {
+            MemberRequestDto dto = new MemberRequestDto();
+            dto.setMemberId("qkrdbsgh" + i);
+            dto.setMemberPw("qkrdbsgh" + i);
+            dto.setName("yunho" + i);
+            dto.setAge(i);
+
+            memberService.join(dto);
+            Thread.sleep(5);
+        }
     }
 }
