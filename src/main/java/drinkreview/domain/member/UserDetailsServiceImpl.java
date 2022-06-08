@@ -1,7 +1,6 @@
-package drinkreview.domain.member.security;
+package drinkreview.domain.member;
 
-import drinkreview.domain.member.Member;
-import drinkreview.global.controller.LoginSessionConstant;
+import drinkreview.global.controller.SessionConstant;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(memberId));
 
         HttpSession session = request.getSession();
-        session.setAttribute(LoginSessionConstant.LOGIN_MEMBER, new MemberSessionResponseDto(member));
+        session.setAttribute(SessionConstant.LOGIN_MEMBER, new MemberSessionResponseDto(member));
 
         return new UserDetailsImpl(member);
     }
