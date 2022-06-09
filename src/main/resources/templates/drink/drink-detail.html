@@ -33,13 +33,6 @@
                             </ul>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                    </form>
                 </div>
             </div>
         </nav>
@@ -61,10 +54,18 @@
                             status: <span class="text-decoration-line-through" th:text="*{status}">status</span>
                         </div>
                         <form class="d-flex" method="post" th:action="@{/shop/drink/buy}" th:object="${orderForm}">
-                            <input class="form-control" type="hidden" id="drinkId" name="drinkId" th:value="${drink.id}">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="number" th:field="*{count}" style="max-width: 3rem" />
+                            <input class="form-control" type="hidden" name="drinkId" th:value="${drink.id}">
+                            <input class="form-control text-center me-3" type="number" th:field="*{count}" style="max-width: 3rem" />
                             <button class="btn btn-outline-dark flex-shrink-0" type="submit">
                                 Buy
+                            </button>
+                        </form>
+                        <form class="d-flex" method="post" th:action="@{/shop/drink/cart}" th:object="${orderForm}">
+                            <input class="form-control" type="hidden" name="drinkId" th:value="${drink.id}">
+                            <input class="form-control text-center me-3" type="number" th:field="*{count}" style="max-width: 3rem" />
+                            <button class="btn btn-outline-dark" type="submit">
+                                <i class="bi-cart-fill me-1"></i>
+                                Cart
                             </button>
                         </form>
                     </div>
