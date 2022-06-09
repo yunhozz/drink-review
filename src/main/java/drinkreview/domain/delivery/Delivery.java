@@ -1,6 +1,5 @@
 package drinkreview.domain.delivery;
 
-import drinkreview.domain.Address;
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.order.Order;
 import drinkreview.global.enums.City;
