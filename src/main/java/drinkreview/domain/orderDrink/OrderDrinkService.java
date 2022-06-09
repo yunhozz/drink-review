@@ -1,7 +1,5 @@
 package drinkreview.domain.orderDrink;
 
-import drinkreview.domain.drink.Drink;
-import drinkreview.domain.drink.repository.DrinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,15 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderDrinkService {
 
     private final OrderDrinkRepository orderDrinkRepository;
-    private final DrinkRepository drinkRepository;
-
-    public OrderDrinkResponseDto makeOrderDrink(Long drinkId, int count) {
-        Drink drink = drinkRepository.findById(drinkId)
-                .orElseThrow(() -> new IllegalStateException("Drink is null."));
-        OrderDrink orderDrink = OrderDrink.createOrderDrink(drink, count);
-
-        return new OrderDrinkResponseDto(orderDrink);
-    }
 
     public void update(Long orderDrinkId, int count) {
         OrderDrink orderDrink = this.findOrderDrink(orderDrinkId);
