@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import drinkreview.domain.order.dto.OrderQueryDto;
 import drinkreview.domain.order.dto.QOrderQueryDto;
-import drinkreview.domain.orderDrink.dto.OrderDrinkResponseDto;
+import drinkreview.domain.orderDrink.OrderDrinkResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

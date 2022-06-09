@@ -1,7 +1,7 @@
 package drinkreview.domain.order.dto;
 
 import drinkreview.domain.order.Order;
-import drinkreview.domain.orderDrink.dto.OrderDrinkResponseDto;
+import drinkreview.domain.orderDrink.OrderDrinkResponseDto;
 import drinkreview.global.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
