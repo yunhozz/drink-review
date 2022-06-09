@@ -1,5 +1,6 @@
 package drinkreview.domain.orderDrink;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,15 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartList {
 
     private Long userId;
     private List<Cart> carts = new ArrayList<>();
 
-    public CartList(Long userId, List<Cart> carts) {
+    public CartList(Long userId) {
         this.userId = userId;
-        this.carts = carts;
     }
 
     @Getter
