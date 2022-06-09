@@ -1,8 +1,8 @@
 package drinkreview.domain.drink.repository;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import drinkreview.domain.drink.dto.DrinkSimpleResponseDto;
+import drinkreview.domain.drink.dto.DrinkQueryDto;
+import drinkreview.domain.drink.dto.QDrinkQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,10 +18,23 @@ public class DrinkRepositoryImpl implements DrinkRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<DrinkSimpleResponseDto> searchSimplePageDrink(Pageable pageable) {
-        List<DrinkSimpleResponseDto> content = queryFactory
-                .select(Projections.constructor(
-                        DrinkSimpleResponseDto.class,
+    public DrinkQueryDto searchDrinkOnCart(Long drinkId) {
+        return queryFactory
+                .select(new QDrinkQueryDto(
+                        drink.id,
+                        drink.name,
+                        drink.price,
+                        drink.image
+                ))
+                .from(drink)
+                .where(drink.id.eq(drinkId))
+                .fetchOne();
+    }
+
+    @Override
+    public Page<DrinkQueryDto> searchSimplePageDrink(Pageable pageable) {
+        List<DrinkQueryDto> content = queryFactory
+                .select(new QDrinkQueryDto(
                         drink.id,
                         drink.name,
                         drink.price,
@@ -43,10 +56,9 @@ public class DrinkRepositoryImpl implements DrinkRepositoryCustom {
     }
 
     @Override
-    public Page<DrinkSimpleResponseDto> searchSimplePageDrinkByKeyword(String keyword, Pageable pageable) {
-        List<DrinkSimpleResponseDto> content = queryFactory
-                .select(Projections.constructor(
-                        DrinkSimpleResponseDto.class,
+    public Page<DrinkQueryDto> searchSimplePageDrinkByKeyword(String keyword, Pageable pageable) {
+        List<DrinkQueryDto> content = queryFactory
+                .select(new QDrinkQueryDto(
                         drink.id,
                         drink.name,
                         drink.price,
