@@ -1,7 +1,7 @@
 package drinkreview.domain.order.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import drinkreview.domain.orderDrink.dto.OrderDrinkResponseDto;
+import drinkreview.domain.orderDrink.OrderDrinkResponseDto;
 import drinkreview.global.enums.DeliveryStatus;
 import drinkreview.global.enums.OrderStatus;
 import lombok.Getter;
