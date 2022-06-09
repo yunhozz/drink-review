@@ -1,5 +1,6 @@
 package drinkreview.domain.member;
 
+import drinkreview.domain.orderDrink.CartList;
 import drinkreview.global.controller.SessionConstant;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.repository.MemberRepository;
@@ -26,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConstant.LOGIN_MEMBER, new MemberSessionResponseDto(member));
+        session.setAttribute(SessionConstant.CART_LIST, new CartList(member.getId()));
 
         return new UserDetailsImpl(member);
     }
