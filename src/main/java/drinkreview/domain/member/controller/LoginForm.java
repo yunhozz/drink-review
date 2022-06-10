@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class LoginForm {
 
-    @NotBlank private String memberId;
-    @NotBlank private String memberPw;
+    @NotBlank(message = "Please input ID again.")
+    private String memberId;
+
+    @NotBlank(message = "Please input password again.")
+    private String memberPw;
 }

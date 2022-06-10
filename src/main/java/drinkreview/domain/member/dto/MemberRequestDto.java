@@ -12,10 +12,18 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class MemberRequestDto {
 
-    @NotBlank private String memberId;
-    @NotBlank private String memberPw;
-    @NotBlank private String name;
-    @NotNull private Integer age;
+    @NotBlank(message = "Please input ID again.")
+    private String memberId;
+
+    @NotBlank(message = "Please input password again.")
+    private String memberPw;
+
+    @NotBlank(message = "Please input name again.")
+    private String name;
+
+    @NotNull(message = "Please input age again.")
+    private Integer age;
+
     private String auth;
 
     public Member toEntity() {
