@@ -4,9 +4,8 @@ import drinkreview.domain.drink.Drink;
 import drinkreview.domain.drink.repository.DrinkRepository;
 import drinkreview.domain.member.Member;
 import drinkreview.domain.member.repository.MemberRepository;
+import drinkreview.domain.order.dto.OrderHistoryResponseDto;
 import drinkreview.domain.order.dto.OrderResponseDto;
-import drinkreview.domain.order.history.OrderEntity;
-import drinkreview.domain.order.history.OrderHistory;
 import drinkreview.domain.order.repository.OrderHistoryRepository;
 import drinkreview.domain.order.repository.OrderRepository;
 import drinkreview.domain.orderDrink.OrderDrink;
@@ -57,8 +56,8 @@ public class OrderService {
     public Long makeOrderByMap(Long userId, Map<Long, Integer> orderMap) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
-
         List<OrderDrink> orderDrinks = new ArrayList<>();
+
         for (Long drinkId : orderMap.keySet()) {
             Drink drink = drinkRepository.findById(drinkId)
                     .orElseThrow(() -> new IllegalStateException("Drink is null : " + drinkId));
@@ -92,6 +91,13 @@ public class OrderService {
     public OrderResponseDto findOrderDto(Long orderId) {
         Order order = this.findOrder(orderId);
         return new OrderResponseDto(order);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderHistoryResponseDto findOrderHistoryDto(Long userId) {
+        OrderHistory orderHistory = orderHistoryRepository.findWithUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Order history is null with userId : " + userId));
+        return new OrderHistoryResponseDto(orderHistory);
     }
 
     @Transactional(readOnly = true)
