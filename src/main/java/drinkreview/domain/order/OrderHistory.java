@@ -1,4 +1,4 @@
-package drinkreview.domain.order.history;
+package drinkreview.domain.order;
 
 import drinkreview.domain.TimeEntity;
 import drinkreview.domain.member.Member;
