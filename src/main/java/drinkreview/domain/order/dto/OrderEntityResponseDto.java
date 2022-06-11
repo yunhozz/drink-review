@@ -1,6 +1,6 @@
 package drinkreview.domain.order.dto;
 
-import drinkreview.domain.order.history.OrderEntity;
+import drinkreview.domain.order.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
