@@ -1,8 +1,8 @@
 package drinkreview.api;
 
 import drinkreview.domain.drink.Drink;
-import drinkreview.domain.drink.DrinkRepository;
 import drinkreview.domain.drink.dto.DrinkResponseDto;
+import drinkreview.domain.drink.repository.DrinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
