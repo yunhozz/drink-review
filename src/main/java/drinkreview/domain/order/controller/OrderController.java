@@ -7,10 +7,12 @@ import drinkreview.domain.order.OrderService;
 import drinkreview.domain.orderDrink.Cart;
 import drinkreview.domain.orderDrink.CartList;
 import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.enums.DrinkStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -56,7 +58,7 @@ public class OrderController {
         }
 
         if (orderForm.getCount() <= 0) {
-            return "drink/drink-detail";
+            throw new IllegalStateException("Count is must be greater than 0.");
         }
 
         log.info("userId = {}", loginMember.getId());
@@ -65,6 +67,9 @@ public class OrderController {
 
         boolean isDuplicated = false;
         DrinkResponseDto drink = drinkService.findDrinkDto(orderForm.getDrinkId());
+        if (drink.getStatus() == DrinkStatus.OUT_OF_STOCK) {
+            throw new IllegalStateException("This drink is out of stock.");
+        }
         //중복되는 음료수가 존재하는 경우 수량, 가격만 update
         for (int i = 0; i < cartList.getCarts().size(); i++) {
             if (cartList.getCarts().get(i).getDrinkId().equals(drink.getId())) {
@@ -82,5 +87,10 @@ public class OrderController {
         }
 
         return "redirect:/shop";
+    }
+
+    @GetMapping("/order-list/cancel")
+    public String cancel() {
+        return null;
     }
 }
