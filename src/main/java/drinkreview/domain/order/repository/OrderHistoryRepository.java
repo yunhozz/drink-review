@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface OrderHistoryRepository extends JpaRepository<OrderHistory, Long> {
 
-    @Query("select oh from OrderHistory oh where oh.memberInfo.userId = :userId")
+    @Query("select distinct oh from OrderHistory oh join fetch oh.orderEntities oe where oh.memberInfo.userId = :userId")
     Optional<OrderHistory> findWithUserId(@Param("userId") Long userId);
 }
