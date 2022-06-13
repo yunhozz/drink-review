@@ -42,9 +42,9 @@ public class MemberController {
         }
 
         if (memberService.login(loginForm.getMemberId(), loginForm.getMemberPw())) {
-            userDetailsService.loadUserByUsername(loginForm.getMemberId());
+            userDetailsService.loadUserByUsername(loginForm.getMemberId()); //세션 생성
         } else {
-            result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            result.reject("loginFail", "The ID or password is not correct.");
             return "home";
         }
 
@@ -55,10 +55,16 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @GetMapping("/re-login")
+    public String reLogin(@ModelAttribute LoginForm loginForm) {
+        return "member/login";
+    }
+
     @GetMapping("/update")
-    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute UpdateForm updateForm, Model model) {
+    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                         @ModelAttribute UpdateForm updateForm, Model model) {
         if (loginMember == null) {
-            return "home";
+            return "redirect:/member/re-login";
         }
 
         model.addAttribute("loginMember", loginMember);

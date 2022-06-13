@@ -1,5 +1,7 @@
 package drinkreview.domain.order.controller;
 
+import drinkreview.domain.delivery.DeliveryService;
+import drinkreview.domain.delivery.dto.DeliveryRequestDto;
 import drinkreview.domain.drink.DrinkService;
 import drinkreview.domain.drink.dto.DrinkResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
@@ -7,17 +9,20 @@ import drinkreview.domain.order.OrderService;
 import drinkreview.domain.orderDrink.Cart;
 import drinkreview.domain.orderDrink.CartList;
 import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.enums.City;
 import drinkreview.global.enums.DrinkStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -27,11 +32,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final DrinkService drinkService;
+    private final DeliveryService deliveryService;
 
     @PostMapping("/drink/buy")
-    public String buyDrink(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid OrderForm orderForm, BindingResult result) {
+    public String buyDrink(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                           @Valid OrderForm orderForm, BindingResult result) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
 
         if (result.hasErrors()) {
@@ -41,16 +48,19 @@ public class OrderController {
         log.info("userId = {}", loginMember.getId());
         log.info("drinkId = {}", orderForm.getDrinkId());
         log.info("count = {}", orderForm.getCount());
-        orderService.makeOrder(loginMember.getId(), orderForm.getDrinkId(), orderForm.getCount());
+        Long orderId = orderService.makeOrder(loginMember.getId(), orderForm.getDrinkId(), orderForm.getCount());
+
+        //make delivery
+        test(orderId);
 
         return "redirect:/shop";
     }
 
     @PostMapping("/drink/cart")
-    public String addCart(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember,
+    public String addCart(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
                           @SessionAttribute(SessionConstant.CART_LIST) CartList cartList, @Valid OrderForm orderForm, BindingResult result) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
 
         if (result.hasErrors()) {
@@ -89,8 +99,50 @@ public class OrderController {
         return "redirect:/shop";
     }
 
-    @GetMapping("/order-list/cancel")
-    public String cancel() {
-        return null;
+    @GetMapping("/cart/order")
+    public String cartOrder(@SessionAttribute(SessionConstant.CART_LIST) CartList cartList, HttpServletRequest request) {
+        Map<Long, Integer> orderMap = new HashMap<>();
+        List<Cart> carts = cartList.getCarts();
+
+        for (Cart cart : carts) {
+            orderMap.put(cart.getDrinkId(), cart.getCount());
+        }
+        Long orderId = orderService.makeOrderByMap(cartList.getUserId(), orderMap);
+
+        //make delivery
+        test(orderId);
+
+        HttpSession session = request.getSession(false);
+        session.removeAttribute(SessionConstant.CART_LIST);
+        session.setAttribute(SessionConstant.CART_LIST, new CartList(cartList.getUserId()));
+
+        return "redirect:/shop";
+    }
+
+    @GetMapping("/cart/cancel/{id}")
+    public String cartCancel(@SessionAttribute(SessionConstant.CART_LIST) CartList cartList, @PathVariable("id") Long drinkId) {
+        Cart cart = cartList.getCarts().stream().filter(c -> c.getDrinkId().equals(drinkId)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Cart is null."));
+        cartList.getCarts().remove(cart);
+
+        return "redirect:/shop";
+    }
+
+    @GetMapping("/order-list/cancel/{id}")
+    public String cancel(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, @PathVariable("id") Long orderId) {
+        if (loginMember == null) {
+            return "redirect:/member/re-login";
+        }
+
+        orderService.cancelOrder(orderId);
+        return "redirect:/shop";
+    }
+
+    private void test(Long orderId) {
+        DeliveryRequestDto dto = new DeliveryRequestDto();
+        dto.setCity(City.SEOUL);
+        dto.setStreet("street");
+        dto.setEtc("etc");
+        deliveryService.makeDelivery(dto, orderId);
     }
 }

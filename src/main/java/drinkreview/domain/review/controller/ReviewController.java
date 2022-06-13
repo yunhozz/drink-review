@@ -26,9 +26,10 @@ public class ReviewController {
     private final DrinkRepository drinkRepository;
 
     @GetMapping("/{id}")
-    public String read(@PathVariable("id") Long reviewId, @SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, Model model) {
+    public String read(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                       @PathVariable("id") Long reviewId, Model model) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
 
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
@@ -52,10 +53,10 @@ public class ReviewController {
     }
 
     @GetMapping("/write")
-    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto,
-                        Model model) {
+    public String write(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                        @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
         model.addAttribute("loginMember", loginMember);
 
@@ -83,10 +84,10 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}/update")
-    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
-                         @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
+    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                         @PathVariable("id") Long reviewId, @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
 
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
@@ -109,9 +110,10 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId) {
+    public String delete(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                         @PathVariable("id") Long reviewId) {
         if (loginMember == null) {
-            return "member/login";
+            return "redirect:/member/re-login";
         }
 
         reviewService.deleteReview(reviewId, loginMember.getId());
