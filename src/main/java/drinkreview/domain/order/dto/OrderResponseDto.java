@@ -15,16 +15,18 @@ public class OrderResponseDto {
 
     private Long id;
     private Long userId;
+    private Long deliveryId;
     private LocalDateTime orderDate;
     private OrderStatus status;
     private List<OrderDrinkResponseDto> orderDrinks;
 
     public OrderResponseDto(Order order) {
-        this.id = order.getId();
-        this.userId = order.getMember().getId();
-        this.orderDate = order.getOrderDate();
-        this.status = order.getStatus();
-        this.orderDrinks = order.getOrderDrinks().stream()
+        id = order.getId();
+        userId = order.getMember().getId();
+        deliveryId = order.getDelivery().getId();
+        orderDate = order.getOrderDate();
+        status = order.getStatus();
+        orderDrinks = order.getOrderDrinks().stream()
                 .map(OrderDrinkResponseDto::new)
                 .toList();
     }
