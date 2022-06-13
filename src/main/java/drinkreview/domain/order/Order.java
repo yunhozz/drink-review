@@ -72,7 +72,9 @@ public class Order extends TimeEntity {
         for (OrderDrink orderDrink : orderDrinks) {
             orderDrink.cancelOrder();
         }
-        delivery.canceled();
+        if (delivery != null) {
+            delivery.canceled();
+        }
         status = OrderStatus.CANCEL;
     }
 
