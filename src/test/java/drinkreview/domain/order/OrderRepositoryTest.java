@@ -1,10 +1,10 @@
-package drinkreview.domain.order.repository;
+package drinkreview.domain.order;
 
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.Member;
-import drinkreview.domain.order.Order;
 import drinkreview.domain.order.dto.OrderQueryDto;
+import drinkreview.domain.order.repository.OrderRepository;
 import drinkreview.domain.orderDrink.OrderDrink;
 import drinkreview.global.enums.City;
 import org.junit.jupiter.api.BeforeEach;
@@ -222,7 +222,7 @@ class OrderRepositoryTest {
     }
 
     private OrderDrink createOrderDrink(Drink drink, int count) {
-        return new OrderDrink(drink, count);
+        return OrderDrink.createOrderDrink(drink, count);
     }
 
     private Drink createDrink(String name, int price, int stockQuantity) {

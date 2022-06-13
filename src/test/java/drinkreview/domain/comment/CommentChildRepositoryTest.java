@@ -1,6 +1,6 @@
-package drinkreview.domain.comment.repository;
+package drinkreview.domain.comment;
 
-import drinkreview.domain.comment.CommentChild;
+import drinkreview.domain.comment.repository.CommentChildRepository;
 import drinkreview.domain.member.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

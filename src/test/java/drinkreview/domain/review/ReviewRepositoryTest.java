@@ -1,9 +1,9 @@
-package drinkreview.domain.review.repository;
+package drinkreview.domain.review;
 
 import drinkreview.domain.drink.Drink;
 import drinkreview.domain.member.Member;
-import drinkreview.domain.review.Review;
 import drinkreview.domain.review.dto.ReviewQueryDto;
+import drinkreview.domain.review.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,12 +66,10 @@ class ReviewRepositoryTest {
 
         //when
         reviewRepository.save(review);
-        int result = reviewRepository.addView(review.getId());
+        reviewRepository.addView(review.getId());
 
         //then
-        assertThat(result).isEqualTo(1);
-        assertThat(review.getView()).isEqualTo(0);
-        //DB 에서 조회한 값(view = 1)을 버리고 영속성 컨텍스트에서 조회한 값(view = 0)을 반환함
+        assertThat(review.getView()).isEqualTo(0); //DB 에서 조회한 값(view = 1)을 버리고 영속성 컨텍스트에서 조회한 값(view = 0)을 반환함
     }
 
     @Test

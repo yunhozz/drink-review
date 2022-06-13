@@ -1,10 +1,9 @@
-package drinkreview.domain.member.repository;
+package drinkreview.domain.member;
 
 import drinkreview.domain.delivery.Delivery;
 import drinkreview.domain.drink.Drink;
-import drinkreview.domain.member.Member;
-import drinkreview.domain.member.MemberSearchCondition;
 import drinkreview.domain.member.dto.MemberQueryDto;
+import drinkreview.domain.member.repository.MemberRepository;
 import drinkreview.domain.order.Order;
 import drinkreview.domain.orderDrink.OrderDrink;
 import drinkreview.global.enums.City;
@@ -353,7 +352,7 @@ class MemberRepositoryTest {
     }
 
     private OrderDrink createOrderDrink(Drink drink, int count) {
-        return new OrderDrink(drink, count);
+        return OrderDrink.createOrderDrink(drink, count);
     }
 
     private Drink createDrink(String name, int price, int stockQuantity) {
