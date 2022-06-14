@@ -56,6 +56,9 @@
                         </p>
                     </div>
                 </th:block>
+                <div th:if="${order.status.name() == 'ORDER'}">
+                    <button type="button" th:onclick="|location.href='@{/shop/order-list/cancel/{id}(id=${order.id})}'|">Cancel</button>
+                </div>
                 <!-- Divider-->
                 <hr class="my-4" />
             </th:block>
