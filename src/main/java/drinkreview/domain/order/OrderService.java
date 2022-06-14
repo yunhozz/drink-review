@@ -89,7 +89,8 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderResponseDto findOrderDto(Long orderId) {
-        Order order = this.findOrder(orderId);
+        Order order = orderRepository.findWithOrderId(orderId)
+                .orElseThrow(() -> new IllegalStateException("Order is null."));
         return new OrderResponseDto(order);
     }
 
