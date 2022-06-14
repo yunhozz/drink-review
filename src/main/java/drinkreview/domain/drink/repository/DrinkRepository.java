@@ -24,7 +24,7 @@ public interface DrinkRepository extends JpaRepository<Drink, Long>, DrinkReposi
     void updateEvaluationCount(@Param("drinkId") Long drinkId);
 
     //특정 유저의 주문 리스트에 있는 음료 이름 조회
-    @Query("select distinct d.name from Order o join o.orderDrinks od join od.drink d where o.member.id = :userId")
+    @Query("select distinct d.name from Order o join o.orderDrinks od join od.drink d where o.member.id = :userId and o.status = 'ORDER'")
     List<String> findDrinkNamesInOrder(@Param("userId") Long userId);
 
     //음료수 이름으로 ID 조회
