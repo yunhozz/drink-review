@@ -59,7 +59,7 @@
                             th:value="${val}"
                             th:text="${val}">option</option>
                 </select>
-                <button type="submit" th:onclick="|location.href='@{/community/search/(keyword=*{keyword})(orderSelect=*{orderSelect})'|">검색</button>
+                <button type="submit" th:onclick="|location.href='@{/community/search/(keyword=*{keyword})(orderSelect=*{orderSelect})'|">search</button>
             </form>
             <!-- Post preview-->
             <th:block th:each="review : ${reviews}">
