@@ -20,8 +20,7 @@ public class Delivery extends TimeEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @OneToOne(mappedBy = "delivery")
     private Order order;
 
     @Embedded

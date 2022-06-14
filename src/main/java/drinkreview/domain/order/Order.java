@@ -32,7 +32,8 @@ public class Order extends TimeEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDrink> orderDrinks = new ArrayList<>();
 
-    @OneToOne(mappedBy = "order")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
     @Column(columnDefinition = "datetime(6)")
