@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
     @Query("select o from Order o join fetch o.member m where m.id = :id")
     List<Order> findWithUserId(@Param("id") Long userId);
+
+    @Query("select distinct o from Order o join fetch o.orderDrinks od where o.id = :orderId")
+    Optional<Order> findWithOrderId(@Param("orderId") Long orderId);
 
     //주문 완료된 주문건 조회
     @Query("select o from Order o where o.status = 'ORDER'")
