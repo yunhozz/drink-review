@@ -66,11 +66,10 @@
                 <!-- Divider-->
                 <hr class="my-4" />
                 <div th:text="${review.content}">content</div>
-                    <span th:if="${reviewWriter}">
-                        <button type="submit" th:onclick="|location.href='@{/community/review/{id}/update(id=${review.id})}'|">Update</button>
-                        <button type="submit" th:onclick="|location.href='@{/community/review/{id}/delete(id=${review.id})}'|">Delete</button>
-                    </span>
-                </form>
+                <span th:if="${reviewWriter}">
+                    <button type="submit" th:onclick="|location.href='@{/community/review/{id}/update(id=${review.id})}'|">Update</button>
+                    <button type="submit" th:onclick="|location.href='@{/community/review/{id}/delete(id=${review.id})}'|">Delete</button>
+                </span>
             </div>
         </div>
     </div>
