@@ -24,8 +24,7 @@ public class CommentService {
     public Long makeComment(CommentRequestDto dto, Long userId, Long reviewId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalStateException("Review is null."));
+        Review review = reviewRepository.getById(reviewId);
 
         dto.setMember(member);
         dto.setReview(review);
