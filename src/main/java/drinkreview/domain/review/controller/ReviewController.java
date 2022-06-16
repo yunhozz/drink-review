@@ -1,5 +1,8 @@
 package drinkreview.domain.review.controller;
 
+import drinkreview.domain.comment.dto.CommentChildResponseDto;
+import drinkreview.domain.comment.dto.CommentRequestDto;
+import drinkreview.domain.comment.dto.CommentResponseDto;
 import drinkreview.domain.drink.repository.DrinkRepository;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.ReviewService;
@@ -13,9 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/community/review")
@@ -27,7 +31,7 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public String read(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @PathVariable("id") Long reviewId, Model model) {
+                       @PathVariable("id") Long reviewId, @ModelAttribute CommentRequestDto commentRequestDto, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -35,18 +39,29 @@ public class ReviewController {
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
         reviewService.addView(review.getId());
         model.addAttribute("review", review);
+        model.addAttribute("comments", review.getComments());
 
         String drinkName = drinkRepository.findDrinkNameWithReviewId(reviewId)
                 .orElseThrow(() -> new IllegalStateException("Can't find drink's name."));
         model.addAttribute("drinkName", drinkName);
 
-        //review, comment 작성자만 update 버튼 표시
+        //review 작성자만 update&delete 버튼 표시
         if (review.getUserId().equals(loginMember.getId())) {
             model.addAttribute("reviewWriter", true);
         }
-        for (int i = 0; i < review.getComments().size(); i++) {
-            boolean isCommentWriter = review.getComments().get(i).getUserId().equals(loginMember.getId());
+
+        //comment, commentChild 작성자만 update&delete 버튼 표시
+        List<CommentResponseDto> comments = review.getComments();
+        Map<List<CommentChildResponseDto>, Integer> map = new HashMap<>();
+        for (CommentResponseDto comment : comments) {
+            boolean isCommentWriter = comment.getUserId().equals(loginMember.getId());
             model.addAttribute("commentWriter", isCommentWriter);
+
+            List<CommentChildResponseDto> commentChildList = comment.getCommentChildList();
+            for (CommentChildResponseDto commentChildResponseDto : commentChildList) {
+                boolean isCommentChildWriter = commentChildResponseDto.getUserId().equals(loginMember.getId());
+                model.addAttribute("commentChildWriter", isCommentChildWriter);
+            }
         }
 
         return "review/review-detail";
@@ -67,13 +82,11 @@ public class ReviewController {
     }
 
     @PostMapping("/write")
-    public String write(@Valid ReviewRequestDto reviewRequestDto, BindingResult result, HttpServletRequest request) {
+    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid ReviewRequestDto reviewRequestDto,
+                        BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "review/write";
         }
-
-        HttpSession session = request.getSession();
-        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(SessionConstant.LOGIN_MEMBER);
 
         String drinkName = request.getParameter("drinkName");
         Long drinkId = drinkRepository.findDrinkIdWithName(drinkName)
@@ -97,15 +110,13 @@ public class ReviewController {
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Long reviewId, @Valid ReviewRequestDto reviewRequestDto, BindingResult result, HttpServletRequest request) {
+    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
+                         @Valid ReviewRequestDto reviewRequestDto, BindingResult result) {
         if (result.hasErrors()) {
             return "review/update";
         }
 
-        HttpSession session = request.getSession();
-        MemberSessionResponseDto loginMember = (MemberSessionResponseDto) session.getAttribute(SessionConstant.LOGIN_MEMBER);
         reviewService.updateReview(reviewRequestDto, reviewId, loginMember.getId());
-
         return "redirect:/community";
     }
 
