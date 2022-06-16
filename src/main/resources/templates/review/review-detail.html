@@ -70,6 +70,8 @@
                     <button type="submit" th:onclick="|location.href='@{/community/review/{id}/update(id=${review.id})}'|">Update</button>
                     <button type="submit" th:onclick="|location.href='@{/community/review/{id}/delete(id=${review.id})}'|">Delete</button>
                 </span>
+                <!-- Divider-->
+                <hr class="my-4" />
             </div>
         </div>
     </div>
@@ -78,22 +80,20 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-            <th:block th:each="comment : ${review.comments}">
-                <!-- Divider-->
-                <hr class="my-4" />
+            <th:block th:each="comment : ${comments}">
                 name : <span th:text="${comment.memberName}">name</span><br>
                 <div th:text="${comment.content}">content</div>
                 <span th:if="${commentWriter}">
-                    <button type="submit" th:onclick="|location.href='@{/community/comment/{id}/update(id=${comment.id})}'|">Update</button>
-                    <button type="submit" th:onclick="|location.href='@{/community/comment/{id}/delete(id=${comment.id})}'|">Delete</button>
+                    <button type="submit" th:onclick="|location.href='@{/community/comment/update(id=${comment.id})}'|">Update</button>
+                    <button type="submit" th:onclick="|location.href='@{/community/comment/delete(id=${comment.id})}'|">Delete</button>
                 </span>
                 <!-- Divider-->
                 <hr class="my-4" />
             </th:block>
-<!--            <form method="get" th:action="@{/community/comment/write}" th:object="${commentRequestDto}">-->
-<!--                <input type="text" th:field="*{content}">-->
-<!--                <button type="submit">Write</button>-->
-<!--            </form>-->
+            <form method="post" th:action="@{/community/comment/write(reviewId=${review.id})}" th:object="${commentRequestDto}">
+                <input type="text" th:field="*{content}">
+                <button type="submit">Write</button>
+            </form>
         </div>
     </div>
 </div>
