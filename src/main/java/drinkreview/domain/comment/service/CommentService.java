@@ -24,7 +24,8 @@ public class CommentService {
     public Long makeComment(CommentRequestDto dto, Long userId, Long reviewId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
-        Review review = reviewRepository.getById(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalStateException("Review is null."));
 
         dto.setMember(member);
         dto.setReview(review);
@@ -35,12 +36,10 @@ public class CommentService {
 
     public void updateComment(CommentRequestDto dto, Long commentId) {
         Comment comment = this.findComment(commentId);
-
         //작성자만 수정 가능
         if (!comment.getMember().getId().equals(dto.getMember().getId())) {
             throw new IllegalStateException("You do not have permission.");
         }
-
         comment.updateContent(dto.getContent());
     }
 
@@ -48,7 +47,6 @@ public class CommentService {
         Comment comment = this.findComment(commentId);
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("Member is null."));
-
         //댓글 작성자만 삭제 가능
         if (comment.getMember().getId().equals(member.getId())) {
             //대댓글이 없으면 아예 삭제, 하나라도 있으면 내용만 변경
