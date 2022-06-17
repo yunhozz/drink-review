@@ -81,7 +81,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public List<ReviewQueryDto> findReviewList() {
+    public List<ReviewQueryDto> searchReviewList() {
         List<ReviewQueryDto> reviews = queryFactory
                 .select(new QReviewQueryDto(
                         review.id,

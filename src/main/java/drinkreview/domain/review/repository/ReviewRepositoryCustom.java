@@ -10,7 +10,7 @@ public interface ReviewRepositoryCustom {
 
     Boolean exist(Long reviewId);
     ReviewQueryDto selectReview(Long reviewId); //review 세부 내용
-    List<ReviewQueryDto> findReviewList();
+    List<ReviewQueryDto> searchReviewList();
     List<ReviewQueryDto> searchList();
     Page<ReviewQueryDto> searchPageByScoreOrder(Pageable pageable); //평점순
     Page<ReviewQueryDto> searchPageByDateOrder(Pageable pageable); //최신순
