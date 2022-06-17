@@ -17,6 +17,6 @@ public class CommentChildRequestDto {
     @NotBlank private String content;
 
     public CommentChild toEntity() {
-        return new CommentChild(member, content, member.getName());
+        return new CommentChild(member, comment, content, member.getName());
     }
 }
