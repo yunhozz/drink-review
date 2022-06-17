@@ -21,13 +21,18 @@ public class CommentChild extends TimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
     @Column(length = 1000)
     private String content;
 
     private String memberName;
 
-    public CommentChild(Member member, String content, String memberName) {
+    public CommentChild(Member member, Comment comment, String content, String memberName) {
         this.member = member;
+        this.comment = comment;
         this.content = content;
         this.memberName = memberName;
     }
