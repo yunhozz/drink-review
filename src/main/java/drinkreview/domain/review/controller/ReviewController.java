@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/community/review")
@@ -35,11 +34,19 @@ public class ReviewController {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
+        model.addAttribute("loginMember", loginMember);
 
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
-        reviewService.addView(review.getId());
+        List<CommentResponseDto> comments = review.getComments();
+        List<List<CommentChildResponseDto>> commentChildBigList = new ArrayList<>();
+        for (CommentResponseDto commentResponseDto : comments) {
+            List<CommentChildResponseDto> commentChildList = commentResponseDto.getCommentChildList();
+            commentChildBigList.add(commentChildList);
+        }
         model.addAttribute("review", review);
-        model.addAttribute("comments", review.getComments());
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentChildBigList", commentChildBigList);
+        reviewService.addView(review.getId());
 
         String drinkName = drinkRepository.findDrinkNameWithReviewId(reviewId)
                 .orElseThrow(() -> new IllegalStateException("Can't find drink's name."));
@@ -48,20 +55,6 @@ public class ReviewController {
         //review 작성자만 update&delete 버튼 표시
         if (review.getUserId().equals(loginMember.getId())) {
             model.addAttribute("reviewWriter", true);
-        }
-
-        //comment, commentChild 작성자만 update&delete 버튼 표시
-        List<CommentResponseDto> comments = review.getComments();
-        Map<List<CommentChildResponseDto>, Integer> map = new HashMap<>();
-        for (CommentResponseDto comment : comments) {
-            boolean isCommentWriter = comment.getUserId().equals(loginMember.getId());
-            model.addAttribute("commentWriter", isCommentWriter);
-
-            List<CommentChildResponseDto> commentChildList = comment.getCommentChildList();
-            for (CommentChildResponseDto commentChildResponseDto : commentChildList) {
-                boolean isCommentChildWriter = commentChildResponseDto.getUserId().equals(loginMember.getId());
-                model.addAttribute("commentChildWriter", isCommentChildWriter);
-            }
         }
 
         return "review/review-detail";
