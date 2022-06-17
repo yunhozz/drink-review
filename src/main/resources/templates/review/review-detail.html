@@ -83,9 +83,16 @@
             <th:block th:each="comment : ${comments}">
                 name : <span th:text="${comment.memberName}">name</span><br>
                 <div th:text="${comment.content}">content</div>
-                <span th:if="${commentWriter}">
-                    <button type="submit" th:onclick="|location.href='@{/community/comment/update(id=${comment.id})}'|">Update</button>
-                    <button type="submit" th:onclick="|location.href='@{/community/comment/delete(id=${comment.id})}'|">Delete</button>
+                <th:block th:each="commentChildList : ${commentChildBigList}">
+                    <th:block th:each="commentChild : ${commentChildList}" th:if="${commentChild.commentId == comment.id}">
+                        <span>ㄴ</span>name : <span th:text="${commentChild.memberName}">name</span><br>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span th:text="${commentChild.content}">content</span><br>
+                    </th:block>
+                </th:block>
+                <button type="button" th:onclick="|location.href='@{/community/comment/reply(reviewId=${review.id}, commentId=${comment.id})}'|">reply</button>
+                <span th:if="${comment.userId == loginMember.id}">
+                    <button type="submit" th:onclick="|location.href='@{/community/comment/update(id=${comment.id}, reviewId=${review.id})}'|">Update</button>
+                    <button type="submit" th:onclick="|location.href='@{/community/comment/delete(id=${comment.id}, reviewId=${review.id})}'|">Delete</button>
                 </span>
                 <!-- Divider-->
                 <hr class="my-4" />
