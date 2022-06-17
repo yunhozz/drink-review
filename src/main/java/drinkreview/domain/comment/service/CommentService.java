@@ -34,13 +34,9 @@ public class CommentService {
         return comment.getId();
     }
 
-    public void updateComment(CommentRequestDto dto, Long commentId) {
+    public void updateComment(Long commentId, String content) {
         Comment comment = this.findComment(commentId);
-        //작성자만 수정 가능
-        if (!comment.getMember().getId().equals(dto.getMember().getId())) {
-            throw new IllegalStateException("You do not have permission.");
-        }
-        comment.updateContent(dto.getContent());
+        comment.updateContent(content);
     }
 
     public void deleteComment(Long commentId, Long userId) {
