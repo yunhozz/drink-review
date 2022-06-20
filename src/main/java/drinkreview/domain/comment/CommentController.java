@@ -1,59 +1,91 @@
 package drinkreview.domain.comment;
 
+import drinkreview.domain.comment.dto.CommentChildRequestDto;
 import drinkreview.domain.comment.dto.CommentRequestDto;
-import drinkreview.domain.member.UserDetailsImpl;
-import drinkreview.domain.review.ReviewService;
-import drinkreview.domain.review.dto.ReviewResponseDto;
+import drinkreview.domain.comment.service.CommentChildService;
+import drinkreview.domain.comment.service.CommentService;
+import drinkreview.domain.member.dto.MemberSessionResponseDto;
+import drinkreview.global.controller.SessionConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/community/comment")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
-    private final ReviewService reviewService;
+    private final CommentChildService commentChildService;
 
-    @GetMapping("/review/{id}/comment")
-    public String commentForm(@PathVariable Long reviewId, Model model) {
-        ReviewResponseDto reviewDto = reviewService.findReviewDto(reviewId);
-        model.addAttribute("reviewId", reviewDto.getId());
-        model.addAttribute("commentDto", new CommentRequestDto());
-
-        return "comment/write";
-    }
-
-    @PostMapping("/review/{id}/comment")
-    public String saveComment(@PathVariable Long reviewId, @Valid CommentRequestDto dto, BindingResult result, HttpServletRequest request) {
+    @PostMapping("/write")
+    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid CommentRequestDto commentRequestDto,
+                        BindingResult result, @RequestParam("reviewId") Long reviewId) {
         if (result.hasErrors()) {
-            return "review/{id}/comment";
+            return "community/comment/write";
         }
 
-        ReviewResponseDto reviewDto = reviewService.findReviewDto(reviewId);
-        HttpSession session = request.getSession();
-        UserDetailsImpl memberDetails = (UserDetailsImpl) session.getAttribute("member");
-
-        if (memberDetails != null) {
-            commentService.makeComment(dto, memberDetails.getMember().getId(), reviewDto.getId());
-        }
-
-        return "redirect:/review/list";
+        commentService.makeComment(commentRequestDto, loginMember.getId(), reviewId);
+        return "redirect:/community/review/" + reviewId;
     }
 
-    @GetMapping("/review/{id}/comments")
-    public String commentList(@PathVariable Long reviewId) {
-        ReviewResponseDto reviewDto = reviewService.findReviewDto(reviewId);
+    @GetMapping("/update")
+    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                         @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId, Model model, HttpServletRequest request) {
+        if (loginMember == null) {
+            return "redirect:/member/re-login";
+        }
 
+        model.addAttribute("commentId", commentId);
+        model.addAttribute("reviewId", reviewId);
 
-        return "comment/commentList";
+        return "comment/update";
+    }
+
+    @PostMapping("/update")
+    public String update(@RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId, @RequestParam String content) {
+        commentService.updateComment(commentId, content);
+        return "redirect:/community/review/" + reviewId;
+    }
+
+    @GetMapping("/delete")
+    public String delete(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                         @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId) {
+        if (loginMember == null) {
+            return "redirect:/member/re-login";
+        }
+
+        commentService.deleteComment(commentId, loginMember.getId());
+        return "redirect:/community/review/" + reviewId;
+    }
+
+    @GetMapping("/reply")
+    public String reply(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                        @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId,
+                        @ModelAttribute CommentChildRequestDto commentChildRequestDto, Model model) {
+        if (loginMember == null) {
+            return "redirect:/member/re-login";
+        }
+
+        model.addAttribute("commentId", commentId);
+        model.addAttribute("reviewId", reviewId);
+
+        return "comment/reply";
+    }
+
+    @PostMapping("/reply")
+    public String reply(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid CommentChildRequestDto commentChildRequestDto,
+                        BindingResult result, @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId) {
+        if (result.hasErrors()) {
+            return "comment/reply";
+        }
+
+        commentChildService.makeCommentChild(commentChildRequestDto, loginMember.getId(), commentId);
+        return "redirect:/community/review/" + reviewId;
     }
 }
