@@ -14,7 +14,9 @@ public class CommentRequestDto {
 
     private Member member;
     private Review review;
-    @NotBlank private String content;
+
+    @NotBlank(message = "Please input content.")
+    private String content;
 
     public Comment toEntity() {
         return Comment.createComment(member, review, content);

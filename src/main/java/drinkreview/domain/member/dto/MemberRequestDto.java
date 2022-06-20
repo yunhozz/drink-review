@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class MemberRequestDto {
     private String name;
 
     @NotNull(message = "Please input age again.")
+    @Positive
     private Integer age;
 
     private String auth;

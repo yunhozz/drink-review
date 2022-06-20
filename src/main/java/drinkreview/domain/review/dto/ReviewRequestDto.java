@@ -15,9 +15,15 @@ public class ReviewRequestDto {
 
     private Member member;
     private Drink drink;
-    @NotBlank private String title;
-    @NotBlank private String content;
-    @NotNull private Double score;
+
+    @NotBlank(message = "Please input title.")
+    private String title;
+
+    @NotBlank(message = "Please input content.")
+    private String content;
+
+    @NotNull(message = "Please choose score.")
+    private Double score;
 
     public Review toEntity() {
         return Review.builder()

@@ -14,9 +14,15 @@ import javax.validation.constraints.NotEmpty;
 public class DeliveryRequestDto {
 
     private Order order;
-    @NotEmpty private City city;
-    @NotBlank private String street;
-    @NotBlank private String etc;
+
+    @NotEmpty(message = "Please choose city.")
+    private City city;
+
+    @NotBlank(message = "Please input street.")
+    private String street;
+
+    @NotBlank(message = "Please input etc.")
+    private String etc;
 
     public Delivery toEntity() {
         return Delivery.createDelivery(order, city, street, etc);
