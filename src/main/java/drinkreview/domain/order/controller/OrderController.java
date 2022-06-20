@@ -125,7 +125,7 @@ public class OrderController {
                 .orElseThrow(() -> new IllegalStateException("Cart is null."));
         cartList.getCarts().remove(cart);
 
-        return "redirect:/shop";
+        return "redirect:/shop/cart";
     }
 
     @GetMapping("/order-list/cancel/{id}")
@@ -135,7 +135,7 @@ public class OrderController {
         }
 
         orderService.cancelOrder(orderId);
-        return "redirect:/shop";
+        return "redirect:/shop/order-list";
     }
 
     private void test(Long orderId) {
