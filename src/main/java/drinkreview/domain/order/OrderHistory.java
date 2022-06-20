@@ -19,8 +19,7 @@ public class OrderHistory extends TimeEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_history_id")
+    @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL)
     private List<OrderEntity> orderEntities = new ArrayList<>(); //orderIds
 
     @Embedded
@@ -32,13 +31,19 @@ public class OrderHistory extends TimeEntity {
 
     public static OrderHistory createOrderHistory(Member member, OrderEntity orderEntity) {
         OrderHistory orderHistory = new OrderHistory(new MemberInfo(member.getId(), member.getMemberId(), member.getName()));
-        orderHistory.orderEntities.add(orderEntity);
+        orderHistory.setOrderEntity(orderEntity);
 
         return orderHistory;
     }
 
     public void updateOrderEntity(OrderEntity orderEntity) {
-        this.orderEntities.add(orderEntity);
+        setOrderEntity(orderEntity);
+    }
+
+    //연관관계 편의 메소드
+    private void setOrderEntity(OrderEntity orderEntity) {
+        orderEntities.add(orderEntity);
+        orderEntity.setOrderHistory(this);
     }
 }
 
