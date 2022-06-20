@@ -30,12 +30,9 @@
                     <div class="text-center text-white">
                         <!-- Page heading-->
                         <h1 class="mb-5">Welcome!! <span th:text="${loginMember.name}">name</span></h1>
-                        <form method="get" th:action="@{/member/logout}">
-                            <button class="btn btn-primary" id="submitButton" type="submit">Log Out</button>
-                        </form><br>
-                        <form method="get" th:action="@{/member/update}">
-                            <button class="btn btn-primary" id="submitButton" type="submit">Edit</button>
-                        </form>
+                        <button class="btn btn-primary" id="submitButton" type="submit" th:onclick="|location.href='@{/member/logout}'|">Log Out</button>
+                        <button class="btn btn-primary" id="submitButton" type="submit" th:onclick="|location.href='@{/member/update}'|">Edit</button>
+                        <button class="btn btn-primary" id="submitButton" type="submit" th:onclick="|location.href='@{/member/withdraw}'|">Withdraw</button>
                     </div>
                 </div>
             </div>
