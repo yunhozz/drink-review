@@ -6,14 +6,18 @@ import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -84,11 +88,40 @@ public class MemberController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
+
+        Cookie cookie = new Cookie("review", "");
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/withdraw")
+    public String withdraw(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember) {
+        if (loginMember == null) {
+            return "redirect:/member/re-login";
+        }
+
+        return "member/withdraw";
+    }
+
+    @PostMapping("/withdraw")
+    public String withdraw(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @RequestParam String pw, HttpServletRequest request) {
+        if (!StringUtils.hasLength(pw) || StringUtils.containsWhitespace(pw)) {
+            return "member/withdraw";
+        }
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        memberService.withdraw(loginMember.getId(), pw);
 
         return "redirect:/";
     }
@@ -105,5 +138,13 @@ public class MemberController {
             memberService.join(dto);
             Thread.sleep(5);
         }
+
+        MemberRequestDto dto = new MemberRequestDto();
+        dto.setMemberId("qwe");
+        dto.setMemberPw("qwe");
+        dto.setName("ADMIN");
+        dto.setAge(100);
+        dto.setAuth(Role.ADMIN.getRole());
+        memberService.join(dto);
     }
 }
