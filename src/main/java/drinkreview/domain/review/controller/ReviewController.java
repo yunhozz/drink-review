@@ -15,7 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,8 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public String read(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @PathVariable("id") Long reviewId, @ModelAttribute CommentRequestDto commentRequestDto, Model model) {
+                       @PathVariable("id") Long reviewId, @ModelAttribute CommentRequestDto commentRequestDto, HttpServletRequest request,
+                       HttpServletResponse response, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -39,6 +42,7 @@ public class ReviewController {
         ReviewResponseDto review = reviewService.findReviewDto(reviewId);
         List<CommentResponseDto> comments = review.getComments();
         List<List<CommentChildResponseDto>> commentChildBigList = new ArrayList<>();
+
         for (CommentResponseDto commentResponseDto : comments) {
             List<CommentChildResponseDto> commentChildList = commentResponseDto.getCommentChildList();
             commentChildBigList.add(commentChildList);
@@ -46,7 +50,7 @@ public class ReviewController {
         model.addAttribute("review", review);
         model.addAttribute("comments", comments);
         model.addAttribute("commentChildBigList", commentChildBigList);
-        reviewService.addView(review.getId());
+        viewCountUp(reviewId, request, response); //조회수 증가
 
         String drinkName = drinkRepository.findDrinkNameWithReviewId(reviewId)
                 .orElseThrow(() -> new IllegalStateException("Can't find drink's name."));
@@ -122,5 +126,34 @@ public class ReviewController {
 
         reviewService.deleteReview(reviewId, loginMember.getId());
         return "redirect:/community";
+    }
+
+    //조회수 증가 + 중복 방지
+    private void viewCountUp(Long reviewId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("review")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + reviewId.toString() + "]")) {
+                reviewService.addView(reviewId);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + reviewId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            reviewService.addView(reviewId);
+            Cookie newCookie = new Cookie("review","[" + reviewId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+        }
     }
 }
