@@ -22,6 +22,6 @@ public class UpdateForm {
     private String name;
 
     @NotNull(message = "Please choose age.")
-    @Positive
+    @Positive(message = "You must select positive number of age.")
     private Integer age;
 }
