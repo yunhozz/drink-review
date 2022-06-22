@@ -43,7 +43,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public boolean login(String memberId, String memberPw) {
         Member member = memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalStateException("Please insert ID again."));
+                .orElseThrow(() -> new IllegalStateException("The ID you entered is not on our membership list."));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         return encoder.matches(memberPw, member.getMemberPw());
