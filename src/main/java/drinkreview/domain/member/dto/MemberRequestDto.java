@@ -13,17 +13,17 @@ import javax.validation.constraints.Positive;
 @Setter
 public class MemberRequestDto {
 
-    @NotBlank(message = "Please input ID again.")
+    @NotBlank(message = "You must enter an ID.")
     private String memberId;
 
-    @NotBlank(message = "Please input password again.")
+    @NotBlank(message = "You must enter an password.")
     private String memberPw;
 
-    @NotBlank(message = "Please input name again.")
+    @NotBlank(message = "You must enter your name.")
     private String name;
 
-    @NotNull(message = "Please input age again.")
-    @Positive
+    @NotNull(message = "You must enter your age.")
+    @Positive(message = "You must select positive number of age.")
     private Integer age;
 
     private String auth;
