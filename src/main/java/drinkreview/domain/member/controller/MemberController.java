@@ -1,10 +1,10 @@
 package drinkreview.domain.member.controller;
 
 import drinkreview.domain.member.MemberService;
+import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.domain.member.dto.MemberRequestDto;
 import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
-import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.global.controller.SessionConstant;
 import drinkreview.global.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -41,22 +42,29 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@Valid LoginForm loginForm, BindingResult result, @RequestParam(defaultValue = "/") String redirectURL) {
+        //에러 검증
         if (result.hasErrors()) {
             return "home";
-        }
-
-        if (memberService.login(loginForm.getMemberId(), loginForm.getMemberPw())) {
-            userDetailsService.loadUserByUsername(loginForm.getMemberId()); //세션 생성
         } else {
-            result.reject("loginFail", "The ID or password is not correct.");
-            return "home";
-        }
+            try {
+                boolean isMember = memberService.login(loginForm.getMemberId(), loginForm.getMemberPw());
+                if (!isMember) {
+                    result.addError(new ObjectError("loginFail", "Passwords do not match. Insert again."));
+                }
+            } catch (Exception e) {
+                result.addError(new ObjectError("loginFail", e.getMessage()));
+            }
 
-        if (redirectURL != null) {
-            return "redirect:" + redirectURL;
-        }
+            if (result.hasErrors()) {
+                return "home";
+            }
+            userDetailsService.loadUserByUsername(loginForm.getMemberId()); //회원 세션 저장
 
-        return "redirect:/";
+            if (redirectURL != null) {
+                return "redirect:" + redirectURL;
+            }
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/re-login")
