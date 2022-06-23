@@ -8,6 +8,7 @@ import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.global.controller.SessionConstant;
 import drinkreview.global.enums.Role;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -33,6 +36,10 @@ public class MemberController {
     @PostMapping("/join")
     public String join(@Valid MemberRequestDto memberRequestDto, BindingResult result) {
         if (result.hasErrors()) {
+            List<ObjectError> errors = result.getAllErrors();
+            for (ObjectError error : errors) {
+                log.info("errorName={}", error.toString());
+            }
             return "home";
         }
 
@@ -44,6 +51,10 @@ public class MemberController {
     public String login(@Valid LoginForm loginForm, BindingResult result, @RequestParam(defaultValue = "/") String redirectURL) {
         //에러 검증
         if (result.hasErrors()) {
+            List<ObjectError> errors = result.getAllErrors();
+            for (ObjectError error : errors) {
+                log.info("errorName={}", error.toString());
+            }
             return "home";
         } else {
             try {
@@ -56,6 +67,10 @@ public class MemberController {
             }
 
             if (result.hasErrors()) {
+                List<ObjectError> errors = result.getAllErrors();
+                for (ObjectError error : errors) {
+                    log.info("errorName={}", error.toString());
+                }
                 return "home";
             }
             userDetailsService.loadUserByUsername(loginForm.getMemberId()); //회원 세션 저장
@@ -102,10 +117,12 @@ public class MemberController {
             session.invalidate();
         }
 
-        Cookie cookie = new Cookie("review", "");
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
 
         return "redirect:/";
     }
