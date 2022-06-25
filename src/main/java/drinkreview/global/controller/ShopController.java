@@ -34,8 +34,9 @@ public class ShopController {
 
     @GetMapping
     public String shop(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @SessionAttribute(SessionConstant.CART_LIST) CartList cartList, @PageableDefault(size = 8) Pageable pageable, Model model) {
-        if (loginMember == null) {
+                       @SessionAttribute(value = SessionConstant.CART_LIST, required = false) CartList cartList, @PageableDefault(size = 8) Pageable pageable,
+                       Model model) {
+        if (loginMember == null || cartList == null) {
             return "redirect:/member/re-login";
         }
 
@@ -47,7 +48,11 @@ public class ShopController {
     }
 
     @GetMapping("/cart")
-    public String cart(@SessionAttribute(SessionConstant.CART_LIST) CartList cartList, Model model) {
+    public String cart(@SessionAttribute(value = SessionConstant.CART_LIST, required = false) CartList cartList, Model model) {
+        if (cartList == null) {
+            return "redirect:/member/re-login";
+        }
+
         List<Cart> carts = cartList.getCarts();
         List<DrinkQueryDto> drinks = new ArrayList<>();
         int totalPrice = 0;
