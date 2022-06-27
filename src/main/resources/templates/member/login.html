@@ -30,20 +30,15 @@
                     <form method="post" th:action="@{/member/login}" th:object="${loginForm}" class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                         <!-- Login information input-->
                         <div class="row">
-                            <input th:field="*{memberId}" class="form-control form-control-lg" type="text" placeholder="Input ID" data-sb-validations="required,ID" />
-                            <div class="invalid-feedback" th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}">Please input ID again.</div>
-                            <input th:field="*{memberPw}" class="form-control form-control-lg" type="password" placeholder="Input Password" data-sb-validations="required,ID" />
-                            <div class="invalid-feedback" th:if="${#fields.hasErrors('memberPw')}" th:errors="*{memberPw}">Please input password again.</div>
-                            <button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
-                        </div>
-                        <!-- Submit success message-->
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3">
-                                <div class="fw-bolder">Form submission successful!</div>
+                            <div th:if="${#fields.hasGlobalErrors()}">
+                                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">login error</p>
                             </div>
+                            <input th:field="*{memberId}" th:errorclass="field-error" class="form-control" id="memberId" type="text" placeholder="Input ID"/>
+                            <div class="field-error" th:errors="*{memberId}">id error</div>
+                            <input th:field="*{memberPw}" th:errorclass="field-error" class="form-control" id="memberPw" type="password" placeholder="Input Password"/>
+                            <div class="field-error" th:errors="*{memberPw}">password error</div>
+                            <button class="btn btn-primary" type="submit">Submit</button>
                         </div>
-                        <!-- Submit error message-->
-                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                     </form>
                 </div>
             </div>

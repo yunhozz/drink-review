@@ -35,20 +35,15 @@
                     <form method="post" th:action="@{/member/login}" th:object="${loginForm}" class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                         <!-- Login information input-->
                         <div class="row">
-                            <input th:field="*{memberId}" class="form-control form-control-lg" type="text" placeholder="Input ID" data-sb-validations="required,ID" />
-                            <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">ID is required.</div><br>
-                            <input th:field="*{memberPw}" class="form-control form-control-lg" type="password" placeholder="Input Password" data-sb-validations="required,ID" />
-                            <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Password is required.</div><br>
-                            <button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
-                        </div>
-                        <!-- Submit success message-->
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3">
-                                <div class="fw-bolder">Form submission successful!</div>
+                            <div th:if="${#fields.hasGlobalErrors()}">
+                                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">login error</p>
                             </div>
+                            <input th:field="*{memberId}" th:errorclass="field-error" class="form-control" id="memberId" type="text" placeholder="Input ID"/>
+                            <div class="field-error" th:errors="*{memberId}">id error</div>
+                            <input th:field="*{memberPw}" th:errorclass="field-error" class="form-control" id="memberPw" type="password" placeholder="Input Password"/>
+                            <div class="field-error" th:errors="*{memberPw}">password error</div>
+                            <button class="btn btn-primary" type="submit">Submit</button>
                         </div>
-                        <!-- Submit error message-->
-                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                     </form>
                 </div>
             </div>
@@ -120,24 +115,19 @@
                 <form method="post" th:action="@{/member/join}" th:object="${memberRequestDto}" class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
                     <!-- Member information input-->
                     <div class="row">
-                        <input th:field="*{memberId}" class="form-control form-control-lg" type="text" placeholder="Input ID" data-sb-validations="required,ID" />
-                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">ID is required.</div><br>
-                        <input th:field="*{memberPw}" class="form-control form-control-lg" type="password" placeholder="Input Password" data-sb-validations="required,ID" />
-                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Password is required.</div><br>
-                        <input th:field="*{name}" class="form-control form-control-lg" type="text" placeholder="Input name" data-sb-validations="required,ID" />
-                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Name Address is required.</div><br>
-                        <input th:field="*{age}" class="form-control form-control-lg" type="text" placeholder="Input age" data-sb-validations="required,ID" />
-                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Age is required.</div><br>
+                        <div th:if="${#fields.hasGlobalErrors()}">
+                            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">join error</p>
+                        </div>
+                        <input th:field="*{memberId}" th:errorclass="field-error" class="form-control" type="text" placeholder="Input ID"/>
+                        <div class="field-error" th:errors="*{memberId}">id error</div>
+                        <input th:field="*{memberPw}" th:errorclass="field-error" class="form-control" type="password" placeholder="Input Password"/>
+                        <div class="field-error" th:errors="*{memberPw}">password error</div>
+                        <input th:field="*{name}" th:errorclass="field-error" class="form-control" type="text" placeholder="Input name"/>
+                        <div class="field-error" th:errors="*{name}">name error</div>
+                        <input th:field="*{age}" th:errorclass="field-error" class="form-control" type="text" placeholder="Input age"/>
+                        <div class="field-error" th:errors="*{age}">age error</div>
                         <button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
                     </div>
-                    <!-- Submit success message-->
-                    <div class="d-none" id="submitSuccessMessage">
-                        <div class="text-center mb-3">
-                            <div class="fw-bolder">Form submission successful!</div>
-                        </div>
-                    </div>
-                    <!-- Submit error message-->
-                    <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                 </form>
             </div>
         </div>
