@@ -35,8 +35,8 @@
                     <form method="post" th:action="@{/member/login}" th:object="${loginForm}" class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                         <!-- Login information input-->
                         <div class="row">
-                            <div th:if="${#fields.hasGlobalErrors()}">
-                                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">login error</p>
+                            <div th:if="${#fields.hasErrors()}">
+                                <p class="field-error" th:each="err : ${#fields.errors()}" th:text="${err}">login error</p>
                             </div>
                             <input th:field="*{memberId}" th:errorclass="field-error" class="form-control" id="memberId" type="text" placeholder="Input ID"/>
                             <div class="field-error" th:errors="*{memberId}">id error</div>
@@ -115,8 +115,8 @@
                 <form method="post" th:action="@{/member/join}" th:object="${memberRequestDto}" class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
                     <!-- Member information input-->
                     <div class="row">
-                        <div th:if="${#fields.hasGlobalErrors()}">
-                            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">join error</p>
+                        <div th:if="${#fields.hasErrors()}">
+                            <p class="field-error" th:each="err : ${#fields.errors()}" th:text="${err}">join error</p>
                         </div>
                         <input th:field="*{memberId}" th:errorclass="field-error" class="form-control" type="text" placeholder="Input ID"/>
                         <div class="field-error" th:errors="*{memberId}">id error</div>
