@@ -3,10 +3,9 @@ package drinkreview.domain.member.controller;
 import drinkreview.domain.member.MemberService;
 import drinkreview.domain.member.UserDetailsServiceImpl;
 import drinkreview.domain.member.dto.MemberRequestDto;
-import drinkreview.domain.member.dto.MemberResponseDto;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
-import drinkreview.global.controller.SessionConstant;
 import drinkreview.global.enums.Role;
+import drinkreview.global.ui.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -88,8 +87,7 @@ public class MemberController {
     }
 
     @GetMapping("/update")
-    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                         @ModelAttribute UpdateForm updateForm, Model model) {
+    public String update(@LoginMember MemberSessionResponseDto loginMember, @ModelAttribute UpdateForm updateForm, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -104,9 +102,7 @@ public class MemberController {
             return "member/update";
         }
 
-        MemberResponseDto member = memberService.findMemberDto(updateForm.getId());
-        memberService.update(member.getId(), updateForm.getOriginPw(), updateForm.getNewPw(), updateForm.getName(), updateForm.getAge());
-
+        memberService.update(updateForm.getId(), updateForm.getOriginPw(), updateForm.getNewPw(), updateForm.getName(), updateForm.getAge());
         return "redirect:/";
     }
 
@@ -128,7 +124,7 @@ public class MemberController {
     }
 
     @GetMapping("/withdraw")
-    public String withdraw(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember) {
+    public String withdraw(@LoginMember MemberSessionResponseDto loginMember) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -137,7 +133,7 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw")
-    public String withdraw(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @RequestParam String pw, HttpServletRequest request) {
+    public String withdraw(@LoginMember MemberSessionResponseDto loginMember, @RequestParam String pw, HttpServletRequest request) {
         if (!StringUtils.hasLength(pw) || StringUtils.containsWhitespace(pw)) {
             return "member/withdraw";
         }
