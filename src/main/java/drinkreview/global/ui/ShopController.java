@@ -1,4 +1,4 @@
-package drinkreview.global.controller;
+package drinkreview.global.ui;
 
 import drinkreview.domain.drink.dto.DrinkQueryDto;
 import drinkreview.domain.drink.repository.DrinkRepository;
@@ -33,8 +33,8 @@ public class ShopController {
     private final DrinkRepository drinkRepository;
 
     @GetMapping
-    public String shop(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @SessionAttribute(value = SessionConstant.CART_LIST, required = false) CartList cartList, @PageableDefault(size = 8) Pageable pageable,
+    public String shop(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+                       @SessionAttribute(value = SessionConstants.CART_LIST, required = false) CartList cartList, @PageableDefault(size = 8) Pageable pageable,
                        Model model) {
         if (loginMember == null || cartList == null) {
             return "redirect:/member/re-login";
@@ -48,7 +48,7 @@ public class ShopController {
     }
 
     @GetMapping("/cart")
-    public String cart(@SessionAttribute(value = SessionConstant.CART_LIST, required = false) CartList cartList, Model model) {
+    public String cart(@SessionAttribute(value = SessionConstants.CART_LIST, required = false) CartList cartList, Model model) {
         if (cartList == null) {
             return "redirect:/member/re-login";
         }
@@ -70,20 +70,24 @@ public class ShopController {
     }
 
     @GetMapping("/order-list")
-    public String orderList(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+    public String orderList(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
 
         List<OrderResponseDto> orders = new ArrayList<>();
-        OrderHistoryResponseDto orderHistory = orderService.findOrderHistoryDto(loginMember.getId());
+        OrderHistoryResponseDto orderHistory;
+        try {
+            orderHistory = orderService.findOrderHistoryDto(loginMember.getId());
+            for (int i = 0; i < orderHistory.getOrderEntities().size(); i++) {
+                Long orderId = orderHistory.getOrderEntities().get(i).getOrderId();
+                OrderResponseDto order = orderService.findOrderDto(orderId);
+                orders.add(order);
+            }
+            model.addAttribute("orderHistory", orderHistory);
+        } catch (Exception e) {
 
-        for (int i = 0; i < orderHistory.getOrderEntities().size(); i++) {
-            Long orderId = orderHistory.getOrderEntities().get(i).getOrderId();
-            OrderResponseDto order = orderService.findOrderDto(orderId);
-            orders.add(order);
         }
-        model.addAttribute("orderHistory", orderHistory);
         model.addAttribute("orders", orders);
 
         List<OrderDrinkResponseDto> orderDrinkList = orderDrinkService.findOrderDrinkDtoList();

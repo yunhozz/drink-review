@@ -1,4 +1,4 @@
-package drinkreview.global.controller;
+package drinkreview.global.ui;
 
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.controller.OrderSelect;
@@ -21,7 +21,7 @@ public class CommunityController {
     private final ReviewRepository reviewRepository;
 
     @GetMapping
-    public String community(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+    public String community(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
                             @ModelAttribute SearchForm searchForm, @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
@@ -35,7 +35,7 @@ public class CommunityController {
     }
 
     @GetMapping("/search")
-    public String search(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
+    public String search(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
                          @ModelAttribute SearchForm searchForm, @RequestParam String keyword, @RequestParam OrderSelect orderSelect,
                          @PageableDefault(size = 10) Pageable pageable, Model model) {
         if (loginMember == null) {

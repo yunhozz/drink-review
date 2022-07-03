@@ -1,4 +1,4 @@
-package drinkreview.global.controller;
+package drinkreview.global.ui;
 
 import drinkreview.domain.member.controller.LoginForm;
 import drinkreview.domain.member.dto.MemberRequestDto;
@@ -14,7 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@ModelAttribute MemberRequestDto memberRequestDto, @ModelAttribute LoginForm loginForm,
-                       @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+                       @SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "home";
         }

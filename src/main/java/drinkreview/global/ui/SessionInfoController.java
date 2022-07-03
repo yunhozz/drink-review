@@ -1,4 +1,4 @@
-package drinkreview.global.controller;
+package drinkreview.global.ui;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
