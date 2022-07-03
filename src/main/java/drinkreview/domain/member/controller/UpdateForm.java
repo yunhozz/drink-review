@@ -1,12 +1,14 @@
 package drinkreview.domain.member.controller;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-@Data
+@Getter
+@Setter
 public class UpdateForm {
 
     @NotNull
