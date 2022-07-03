@@ -1,6 +1,6 @@
 package drinkreview.global.ui;
 
-import drinkreview.domain.member.Member;
+import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isLoginMemberAnnotation = parameter.getParameterAnnotation(LoginMember.class) != null;
-        boolean isMemberClass = Member.class.equals(parameter.getParameterType());
+        boolean isMemberClass = MemberSessionResponseDto.class.equals(parameter.getParameterType());
 
         return isLoginMemberAnnotation && isMemberClass;
     }
