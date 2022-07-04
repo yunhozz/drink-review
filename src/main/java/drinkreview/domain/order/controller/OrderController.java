@@ -8,7 +8,8 @@ import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.order.OrderService;
 import drinkreview.domain.orderDrink.Cart;
 import drinkreview.domain.orderDrink.CartList;
-import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.ui.LoginMember;
+import drinkreview.global.ui.SessionConstants;
 import drinkreview.global.enums.City;
 import drinkreview.global.enums.DrinkStatus;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,7 @@ public class OrderController {
     private final DeliveryService deliveryService;
 
     @PostMapping("/drink/buy")
-    public String buyDrink(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                           @Valid OrderForm orderForm, BindingResult result) {
+    public String buyDrink(@LoginMember MemberSessionResponseDto loginMember, @Valid OrderForm orderForm, BindingResult result) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -57,8 +57,8 @@ public class OrderController {
     }
 
     @PostMapping("/drink/cart")
-    public String addCart(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                          @SessionAttribute(SessionConstant.CART_LIST) CartList cartList, @Valid OrderForm orderForm, BindingResult result) {
+    public String addCart(@LoginMember MemberSessionResponseDto loginMember, @SessionAttribute(SessionConstants.CART_LIST) CartList cartList,
+                          @Valid OrderForm orderForm, BindingResult result) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -100,7 +100,7 @@ public class OrderController {
     }
 
     @GetMapping("/cart/order")
-    public String cartOrder(@SessionAttribute(SessionConstant.CART_LIST) CartList cartList, HttpServletRequest request) {
+    public String cartOrder(@SessionAttribute(SessionConstants.CART_LIST) CartList cartList, HttpServletRequest request) {
         Map<Long, Integer> orderMap = new HashMap<>();
         List<Cart> carts = cartList.getCarts();
 
@@ -113,14 +113,14 @@ public class OrderController {
         test(orderId);
 
         HttpSession session = request.getSession(false);
-        session.removeAttribute(SessionConstant.CART_LIST);
-        session.setAttribute(SessionConstant.CART_LIST, new CartList(cartList.getUserId()));
+        session.removeAttribute(SessionConstants.CART_LIST);
+        session.setAttribute(SessionConstants.CART_LIST, new CartList(cartList.getUserId()));
 
         return "redirect:/shop";
     }
 
     @GetMapping("/cart/cancel/{id}")
-    public String cartCancel(@SessionAttribute(SessionConstant.CART_LIST) CartList cartList, @PathVariable("id") Long drinkId) {
+    public String cartCancel(@SessionAttribute(SessionConstants.CART_LIST) CartList cartList, @PathVariable("id") Long drinkId) {
         Cart cart = cartList.getCarts().stream().filter(c -> c.getDrinkId().equals(drinkId)).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Cart is null."));
         cartList.getCarts().remove(cart);
@@ -129,7 +129,7 @@ public class OrderController {
     }
 
     @GetMapping("/order-list/cancel/{id}")
-    public String cancel(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, @PathVariable("id") Long orderId) {
+    public String cancel(@LoginMember MemberSessionResponseDto loginMember, @PathVariable("id") Long orderId) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }

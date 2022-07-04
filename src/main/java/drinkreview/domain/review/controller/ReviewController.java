@@ -8,7 +8,7 @@ import drinkreview.domain.member.dto.MemberSessionResponseDto;
 import drinkreview.domain.review.ReviewService;
 import drinkreview.domain.review.dto.ReviewRequestDto;
 import drinkreview.domain.review.dto.ReviewResponseDto;
-import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.ui.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +31,8 @@ public class ReviewController {
     private final DrinkRepository drinkRepository;
 
     @GetMapping("/{id}")
-    public String read(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @PathVariable("id") Long reviewId, @ModelAttribute CommentRequestDto commentRequestDto, HttpServletRequest request,
-                       HttpServletResponse response, Model model) {
+    public String read(@LoginMember MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId, @ModelAttribute CommentRequestDto commentRequestDto,
+                       HttpServletRequest request, HttpServletResponse response, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -65,8 +64,7 @@ public class ReviewController {
     }
 
     @GetMapping("/write")
-    public String write(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                        @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
+    public String write(@LoginMember MemberSessionResponseDto loginMember, @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -79,8 +77,7 @@ public class ReviewController {
     }
 
     @PostMapping("/write")
-    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid ReviewRequestDto reviewRequestDto,
-                        BindingResult result, HttpServletRequest request) {
+    public String write(@LoginMember MemberSessionResponseDto loginMember, @Valid ReviewRequestDto reviewRequestDto, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "review/write";
         }
@@ -94,8 +91,8 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}/update")
-    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                         @PathVariable("id") Long reviewId, @ModelAttribute ReviewRequestDto reviewRequestDto, Model model) {
+    public String update(@LoginMember MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId, @ModelAttribute ReviewRequestDto reviewRequestDto,
+                         Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -107,8 +104,8 @@ public class ReviewController {
     }
 
     @PostMapping("/{id}/update")
-    public String update(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId,
-                         @Valid ReviewRequestDto reviewRequestDto, BindingResult result) {
+    public String update(@LoginMember MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId, @Valid ReviewRequestDto reviewRequestDto,
+                         BindingResult result) {
         if (result.hasErrors()) {
             return "review/update";
         }
@@ -118,8 +115,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                         @PathVariable("id") Long reviewId) {
+    public String delete(@LoginMember MemberSessionResponseDto loginMember, @PathVariable("id") Long reviewId) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }

@@ -5,7 +5,7 @@ import drinkreview.domain.comment.dto.CommentRequestDto;
 import drinkreview.domain.comment.service.CommentChildService;
 import drinkreview.domain.comment.service.CommentService;
 import drinkreview.domain.member.dto.MemberSessionResponseDto;
-import drinkreview.global.controller.SessionConstant;
+import drinkreview.global.ui.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +24,8 @@ public class CommentController {
     private final CommentChildService commentChildService;
 
     @PostMapping("/write")
-    public String write(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid CommentRequestDto commentRequestDto,
-                        BindingResult result, @RequestParam("reviewId") Long reviewId) {
+    public String write(@LoginMember MemberSessionResponseDto loginMember, @Valid CommentRequestDto commentRequestDto, BindingResult result,
+                        @RequestParam("reviewId") Long reviewId) {
         if (result.hasErrors()) {
             return "community/comment/write";
         }
@@ -35,8 +35,8 @@ public class CommentController {
     }
 
     @GetMapping("/update")
-    public String update(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                         @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId, Model model, HttpServletRequest request) {
+    public String update(@LoginMember MemberSessionResponseDto loginMember, @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId, Model model,
+                         HttpServletRequest request) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -54,8 +54,7 @@ public class CommentController {
     }
 
     @GetMapping("/delete")
-    public String delete(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                         @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId) {
+    public String delete(@LoginMember MemberSessionResponseDto loginMember, @RequestParam("id") Long commentId, @RequestParam("reviewId") Long reviewId) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }
@@ -65,8 +64,7 @@ public class CommentController {
     }
 
     @GetMapping("/reply")
-    public String reply(@SessionAttribute(value = SessionConstant.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                        @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId,
+    public String reply(@LoginMember MemberSessionResponseDto loginMember, @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId,
                         @ModelAttribute CommentChildRequestDto commentChildRequestDto, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
@@ -79,8 +77,8 @@ public class CommentController {
     }
 
     @PostMapping("/reply")
-    public String reply(@SessionAttribute(SessionConstant.LOGIN_MEMBER) MemberSessionResponseDto loginMember, @Valid CommentChildRequestDto commentChildRequestDto,
-                        BindingResult result, @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId) {
+    public String reply(@LoginMember MemberSessionResponseDto loginMember, @Valid CommentChildRequestDto commentChildRequestDto, BindingResult result,
+                        @RequestParam("reviewId") Long reviewId, @RequestParam("commentId") Long commentId) {
         if (result.hasErrors()) {
             return "comment/reply";
         }

@@ -33,9 +33,8 @@ public class ShopController {
     private final DrinkRepository drinkRepository;
 
     @GetMapping
-    public String shop(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember,
-                       @SessionAttribute(value = SessionConstants.CART_LIST, required = false) CartList cartList, @PageableDefault(size = 8) Pageable pageable,
-                       Model model) {
+    public String shop(@LoginMember MemberSessionResponseDto loginMember, @SessionAttribute(value = SessionConstants.CART_LIST, required = false) CartList cartList,
+                       @PageableDefault(size = 8) Pageable pageable, Model model) {
         if (loginMember == null || cartList == null) {
             return "redirect:/member/re-login";
         }
@@ -70,7 +69,7 @@ public class ShopController {
     }
 
     @GetMapping("/order-list")
-    public String orderList(@SessionAttribute(value = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+    public String orderList(@LoginMember MemberSessionResponseDto loginMember, Model model) {
         if (loginMember == null) {
             return "redirect:/member/re-login";
         }

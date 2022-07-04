@@ -7,14 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 public class HomeController {
 
     @GetMapping("/")
-    public String home(@ModelAttribute MemberRequestDto memberRequestDto, @ModelAttribute LoginForm loginForm,
-                       @SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberSessionResponseDto loginMember, Model model) {
+    public String home(@LoginMember MemberSessionResponseDto loginMember, @ModelAttribute MemberRequestDto memberRequestDto, @ModelAttribute LoginForm loginForm,
+                       Model model) {
         if (loginMember == null) {
             return "home";
         }
